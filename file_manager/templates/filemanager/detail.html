@@ -1,0 +1,429 @@
+{% load static %}<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
+  <title>
+   View Results
+  </title>
+  <meta content="This page provides access to view results and manage data" name="description"/>
+  <link href="{% static '/assets/img/y.png' %}" rel="icon" sizes="16x16" type="image/png"/>
+  <link href="{% static '/assets/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+  <link href="{% static '/assets/css/styles.min.css' %}" rel="stylesheet"/>
+  <link href="{% static '/assets/css/SO-floating-nav_15.min.css' %}" rel="stylesheet"/>
+ </head>
+ <body id="page-top">
+  <div id="wrapper">
+   <div id="nt-compact">
+    <ul>
+     <li>
+      <label style="color: rgb(255,255,255);">
+       {{ user.username }}
+      </label>
+     </li>
+     <li>
+      <a href="/files/" title="Dashboard">
+       <i class="fa fa-th-large">
+       </i>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Dashboard
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+      <a href="/files/uploadraw/" title="Upload">
+       <svg class="bi bi-hammer" fill="currentColor" height="1em" viewbox="0 0 16 16" width="1em" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9.972 2.508a.5.5 0 0 0-.16-.556l-.178-.129a5.009 5.009 0 0 0-2.076-.783C6.215.862 4.504 1.229 2.84 3.133H1.786a.5.5 0 0 0-.354.147L.146 4.567a.5.5 0 0 0 0 .706l2.571 2.579a.5.5 0 0 0 .708 0l1.286-1.29a.5.5 0 0 0 .146-.353V5.57l8.387 8.873A.5.5 0 0 0 14 14.5l1.5-1.5a.5.5 0 0 0 .017-.689l-9.129-8.63c.747-.456 1.772-.839 3.112-.839a.5.5 0 0 0 .472-.334z">
+        </path>
+       </svg>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Upload
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+      <a href="/files/maxquant/" title="Process">
+       <i class="fa fa-hand-rock-o">
+       </i>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Maxquant
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+      <a href="/files/msfragger/" title="Msfragger">
+       <i class="fa fa-creative-commons">
+       </i>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Msfragger
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+      <a href="/files/pd/" title="Protein Discoverer">
+       <i class="fa fa-product-hunt">
+       </i>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         PD
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+      <a href="/files/results/" title="Results">
+       <svg class="bi bi-caret-right-fill" fill="currentColor" height="1em" viewbox="0 0 16 16" width="1em" xmlns="http://www.w3.org/2000/svg">
+        <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z">
+        </path>
+       </svg>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Results
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+      <a href="" title="settings">
+       <i class="fa fa-cogs">
+       </i>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Settings
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+      <a href="{% url 'logout' %}" title="logout">
+       <i class="fa fa-sign-out">
+       </i>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Logout
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+      <a href="/files/help/" title="Help">
+       <svg class="bi bi-question" fill="currentColor" height="1em" viewbox="0 0 16 16" width="1em" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z">
+        </path>
+       </svg>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Support
+        </p>
+       </div>
+      </a>
+     </li>
+    </ul>
+   </div>
+   <div class="d-flex flex-column" id="content-wrapper">
+    <div id="main">
+     <script type="text/javascript">
+      console.log("{{message|safe}}")
+if ("{{message|safe}}" != "")
+    {alert("{{ message|safe }}");}
+     </script>
+     <div class="container-fluid">
+      <div>
+       <div class="row">
+        <div class="col">
+         <form enctype="multipart/form-data" method="post">
+          <div style="visibility: hidden; display:inline;">
+           <p>
+            {% csrf_token %}
+           </p>
+          </div>
+          <div style="visibility: hidden; display:inline;">
+           <p>
+            {% csrf_token %}
+           </p>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <p class="text-dark" style="font-size: 20px;text-align: center;">
+             <strong>
+              Detail
+             </strong>
+            </p>
+           </div>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <p>
+             Run ID: {{detail.pk}}
+            </p>
+            <p>
+             Plot label:
+             <input class="form-control" name="plot_label" type="text" value='{{detail.plot_label|default_if_none:"" }}'/>
+             <br/>
+            </p>
+           </div>
+           <div class="col">
+            <p>
+             Run Name:
+             <input class="form-control" name="name" type="text" value='{{detail.run_name|default_if_none:"" }}'/>
+             <br/>
+            </p>
+           </div>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <p>
+             Project Name:
+             <input class="form-control" name="projectname" type="text" value='{{detail.project_name|default_if_none:"" }}'/>
+             <br/>
+            </p>
+           </div>
+           <div class="col">
+            <p>
+             User:{{detail.creator|default_if_none:"" }}
+             <br/>
+            </p>
+           </div>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <p>
+             Description:
+             <br/>
+            </p>
+            <input class="form-control" name="desc" type="text" value='{{detail.run_desc|default_if_none:"" }}'/>
+           </div>
+           <div class="col">
+            <p>
+             Last QC Protein ID:{{detail.lastqc_protein_id|default_if_none:"" }}
+             <br/>
+            </p>
+           </div>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <p>
+             Last QC tool:{{detail.lastqc_tool|default_if_none:"" }}
+             <br/>
+            </p>
+           </div>
+           <div class="col">
+            <p>
+             Last QC Peptide ID:{{detail.lastqc_peptide_id|default_if_none:"" }}
+             <br/>
+            </p>
+           </div>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <p>
+             Last QC Time:{{detail.lastqc_time|default_if_none:"" }}
+             <br/>
+            </p>
+           </div>
+           <div class="col">
+            <p>
+             Acquisition Start Time:
+             <br/>
+             {{detail.acquisition_time|default_if_none:"" }}
+             <br/>
+             <br/>
+            </p>
+           </div>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <p>
+             Instrument Model (instrument_model):{{detail.instrument_model|default_if_none:"" }}
+             <br/>
+            </p>
+           </div>
+           <div class="col">
+            <p>
+             Instrument Serial Number(instrument_sn):{{detail.instrument_sn|default_if_none:"" }}
+             <br/>
+             <br/>
+            </p>
+           </div>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <p>
+             Column SN(column_sn):{{detail.column_sn|default_if_none:"" }}
+             <br/>
+            </p>
+           </div>
+           <div class="col">
+            <p>
+             SPE SN(spe_sn):{{detail.spe_sn|default_if_none:"" }}
+             <br/>
+             <br/>
+            </p>
+           </div>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <p>
+             Sample Type:{{detail.sample_type|default_if_none:"" }}
+             <br/>
+             <br/>
+            </p>
+           </div>
+           <div class="col">
+            <p>
+             Delete after 3 month/Temp data:
+             <select class="form-control" name="tempdata" style="width: 20%;">
+              {% if detail.temp_data == True %}
+              <option selected="" value="True">
+               Yes
+              </option>
+              <option value="False">
+               No
+              </option>
+              {% else %}
+              <option value="True">
+               Yes
+              </option>
+              <option selected="" value="False">
+               No
+              </option>
+              {% endif %}
+             </select>
+             <br/>
+            </p>
+           </div>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <p>
+             <br/>
+            </p>
+           </div>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <p>
+             Upload time:{{detail.uploaded_at|default_if_none:"" }}
+             <br/>
+            </p>
+           </div>
+           <div class="col">
+            Current:
+            <a href="/files/{{detail.current_raw.filelocation}}">
+             {{detail.current_raw.filelocation}}
+            </a>
+            <br/>
+            SSD:
+            <a href="/files/{{detail.ssd_storage.filelocation}}">
+             {{detail.ssd_storage.filelocation}}
+            </a>
+            <br/>
+            HD:
+            <a href="/files/{{detail.hd_storage.filelocation}}">
+             {{detail.hd_storage.filelocation}}
+            </a>
+            <br/>
+            Remote:
+            <a href="/files/{{detail.remote_storage.filelocation}}">
+             {{detail.remote_storage.filelocation}}
+            </a>
+            <br/>
+            Offline:Remote:
+            <a href="/files/{{detail.offline_storage.filelocation}}">
+             {{detail.offline_storage.filelocation}}
+            </a>
+            <br/>
+           </div>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            {% autoescape off %}
+  
+  {{ plot_div }}
+  {% endautoescape %}
+           </div>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <div class="form-row">
+             <div class="col">
+              <small class="form-text text-muted">
+               Type notes here
+              </small>
+              <textarea class="form-control" name="notes">{{detail.notes|default_if_none:"" }}</textarea>
+             </div>
+             <div class="col">
+              <div class="form-row">
+               <div class="col">
+                <p>
+                 Current Note file:
+                </p>
+                {% for item in notefile %}
+                <td>
+                 <a href="/files/{{ item }}">
+                  {{ item }}
+                 </a>
+                 <br/>
+                </td>
+                {% endfor %}
+               </div>
+              </div>
+              <p>
+               Add more note files:
+              </p>
+              <input class="form-control-file" name="notefile" type="file"/>
+             </div>
+            </div>
+            <div class="form-row">
+             <div class="col">
+              <button class="btn btn-primary" name="save" type="submit">
+               Save updates
+              </button>
+             </div>
+             <div class="col">
+              <button class="btn btn-primary" name="compare" type="submit">
+               Compare
+              </button>
+              <input class="form-control" name="compare_id" style="width: 30%;" type="text"/>
+             </div>
+             <div class="col">
+              <button class="btn btn-primary" name="delete" onclick="return ConfirmDelete()" style="background: var(--red);" type="submit">
+               Delete
+              </button>
+             </div>
+            </div>
+           </div>
+          </div>
+         </form>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/js/bootstrap.bundle.min.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js">
+  </script>
+  <script src="{% static '/assets/js/script.min.js' %}">
+  </script>
+  <script src="{% static '/assets/js/detail.min.js' %}">
+  </script>
+  <script src="{% static '/assets/js/SO-floating-nav_15.min.js' %}">
+  </script>
+ </body>
+</html>

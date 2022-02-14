@@ -1,0 +1,57 @@
+#vscode
+/.vscode
+
+### OSX ###
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Django #
+file_manager/__pycache__/
+data_manager/__pycache__/
+*.sqlite3
+*.log
+*.pot
+*.pyc
+*.env
+media/
+backup/
+
+#Jupiter_workflow
+Jupiter_workflow/
+
+
+
+# Python # 
+*.py[cod] 
+*$py.class 
+
+
+# C extensions
+*.so
+
+
+#temp files
+temp/
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg

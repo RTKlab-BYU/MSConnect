@@ -1,0 +1,65 @@
+#nt-compact {
+  float: left;
+  width: 60px;
+  background-color: #002E5D;
+  height: 100%;
+}
+
+#nt-compact ul {
+  margin: 0px 0px 0px 0px;
+  padding: 0px;
+}
+
+#nt-compact ul li {
+  width: 60px;
+  border-bottom: 0px #002E5D;
+  list-style: none;
+  text-align: center;
+}
+
+#nt-compact ul li:hover {
+  background: #0056b3;
+}
+
+#nt-compact ul li a {
+  font-size: 150%;
+  padding: 10px;
+  color: #ccc;
+  text-shadow: 1px 1px 0px #002E5D;
+  position: relative;
+  display: block;
+}
+
+#nt-compact ul li a div.nt-tooltip {
+  position: absolute;
+  top: 0px;
+  left: 53px;
+  font-size: 60%;
+  background: #0056b3;
+  padding: 12px;
+  padding-right: 20px;
+  border-right: 5px #002E5D;
+  border-radius: 0px 10px 10px 0px;
+  font-family: "Ubuntu Condensed, sans-serif";
+}
+
+#nt-compact ul li a div.nt-tooltip p {
+  margin: 0px;
+  padding: 0px;
+  font-size: 150%;
+}
+
+#nt-compact ul li a:hover {
+  text-shadow: 1px 1px 0px #002E5D;
+}
+
+span {
+}
+
+span {
+}
+
+not_implemented {
+  colo: gray;
+}
+

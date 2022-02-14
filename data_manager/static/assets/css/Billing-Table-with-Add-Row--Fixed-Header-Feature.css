@@ -1,0 +1,179 @@
+.tbl-wfx {
+  margin-bottom: 0px;
+}
+
+.tbl-wfx tbody {
+  display: block;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+.tbl-wfx thead {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  color: #243d49;
+  font-weight: 300 !important;
+}
+
+.tbl-wfx tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.btn-info:not(:disabled):not(.disabled).active:focus, .btn-info:not(:disabled):not(.disabled):active:focus, .show > .btn-info.dropdown-toggle:focus {
+  box-shadow: none;
+}
+
+.btn-info.focus, .btn-info:focus {
+  box-shadow: none;
+}
+
+th {
+  position: sticky;
+}
+
+.card-header {
+  box-shadow: 0 .15rem 1.75rem 0 rgba(58,59,69,.15) !important;
+}
+
+label {
+  font-size: 12px;
+  margin-bottom: .2rem;
+  color: #243d49;
+}
+
+.font-md {
+  font-size: 14px;
+}
+
+.font-sm {
+  font-size: 12px;
+}
+
+.db-graph > .card-body {
+  padding: 10px;
+  background-color: rgba(225,225,225,0.14);
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.form-control:focus {
+  color: #243d49;
+  background-color: #fff;
+  border-color: #39a19c;
+  outline: 0;
+  box-shadow: none;
+}
+
+.w-10x {
+  width: 100px;
+}
+
+.box-bg {
+  padding: 10px;
+  background-color: rgba(25,132,145,0.04);
+  border: 1px solid #bbb;
+  border-radius: 5px;
+}
+
+.w-3x {
+  width: 30px;
+}
+
+.btn-xs {
+  padding: 2px 4px;
+  font-size: 12px;
+}
+
+.btn-smd {
+  padding: 2px 4px;
+  font-size: 13px;
+}
+
+.db-graph > .card-header {
+  background: #0F2027;
+  background: -webkit-linear-gradient(to bottom, #2C5364, #203A43, #0F2027);
+  background: linear-gradient(to bottom, #2C5364, #203A43, #0F2027);
+}
+
+.db-graph {
+  border: 1px solid rgba(36,61,73,0.3);
+  border-radius: 6px;
+}
+
+.custom-select:focus {
+  color: #243d49;
+  background-color: #fff;
+  border-color: #39a19c;
+  outline: 0;
+  box-shadow: none;
+}
+
+.table thead th {
+  vertical-align: bottom;
+  border-bottom: 2px solid #e3e6f0;
+  font-weight: normal;
+}
+
+.w-3x {
+  width: 30px;
+}
+
+.text-dark-blue {
+  color: #243d49;
+}
+
+.btn-info {
+  color: #fff;
+  background-color: #243d49;
+  border-color: #243d49;
+}
+
+.btn-info.focus, .btn-info:focus, .btn-info:hover {
+  color: #fff;
+  background-color: #182830;
+  border-color: #182830;
+}
+
+a:hover {
+  text-decoration: none !important;
+}
+
+.form-control {
+  color: #243d49;
+}
+
+.custom-select {
+  color: #243d49;
+}
+
+.btn-sm {
+  padding: 2px 6px;
+}
+
+.h-15x {
+  height: 155px;
+}
+
+#wrapper {
+}
+
+i.srno {
+  counter-reset: subsection;
+}
+
+i.srno:before {
+  counter-increment: section;
+  content: counter(section);
+}
+
+div {
+  counter-reset: section;
+}
+
+not_implemented {
+  background-color: rgb(128,128,128);
+}
+
