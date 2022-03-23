@@ -6,7 +6,7 @@ import xmltodict
 
 from django_currentuser.db.models import CurrentUserField
 from django.contrib.contenttypes.models import ContentType
-
+from django.contrib.auth.models import User
 import pickle
 import os
 import subprocess
@@ -18,6 +18,7 @@ from os.path import exists
 import random
 import string
 from django.db.models.signals import post_save
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 
 from django.dispatch import receiver
@@ -266,8 +267,10 @@ def update_raw(sender, instance, **kwargs):
 
                 if (instance.qc_tool != "0" and instance.qc_tool != 0):
                     if (instance.qc_tool == "1" or instance.qc_tool == 1):
+                        # 1 is msfragger
                         new_queue = {
                             "creator": instance.creator,
+
                         }
                         new_queue_obj = MsfraggerQueue.objects.create(
                             **new_queue, )
@@ -281,9 +284,47 @@ def update_raw(sender, instance, **kwargs):
                         RawFile.objects.filter(pk=instance.pk).update(
                             qc_object_id=new_queue_obj.pk)
                     elif (instance.qc_tool == "3" or instance.qc_tool == 3):
-                        # 3 is protein discoverer
+                        # 3 is protein discoverer OTOT
                         new_queue = {
                             "creator": instance.creator,
+                            "analysis_name": instance.pk,
+                            "processing_method": InMemoryUploadedFile(open(
+                                f'media/pd/methods/qc_built_in/OTOT_'
+                                f'{instance.sample_obj}.pdProcessingWF', 'r'),
+                                None, f'OTOT_{instance.sample_obj}.'
+                                      f'pdProcessingWF', None, None, None),
+                            "consensus_method": InMemoryUploadedFile(open(
+                                f'media/pd/methods/qc_built_in/OTOT_'
+                                f'{instance.sample_obj}.pdConsensusWF', 'r'),
+                                None, f'OTOT_{instance.sample_obj}.'
+                                      f'pdConsensusWF', None, None, None),
+                        }
+                        new_queue_obj = PdQueue.objects.create(**new_queue, )
+                        new_queue_obj.rawfile.add(
+                            RawFile.objects.filter(pk=instance.pk).first())
+                        new_queue_obj.save()
+
+                        ct = ContentType.objects.get_for_model(PdQueue)
+                        RawFile.objects.filter(
+                            pk=instance.pk).update(qc_content_type=ct)
+                        RawFile.objects.filter(pk=instance.pk).update(
+                            qc_object_id=new_queue_obj.pk)
+                    elif (instance.qc_tool == "5" or instance.qc_tool == 5):
+                        # 5 is protein discoverer ITIT
+                        new_queue = {
+                            "creator": instance.creator,
+                            "analysis_name": instance.pk,
+                            "processing_method": InMemoryUploadedFile(open(
+                                f'media/pd/methods/qc_built_in/OTIT_'
+                                f'{instance.sample_obj}.pdProcessingWF', 'r'),
+                                None, f'OTIT_{instance.sample_obj}.'
+                                      f'pdProcessingWF', None, None, None),
+                            "consensus_method": InMemoryUploadedFile(open(
+                                f'media/pd/methods/qc_built_in/OTIT_'
+                                f'{instance.sample_obj}.pdConsensusWF', 'r'),
+                                None, f'OTIT_{instance.sample_obj}.'
+                                      f'pdConsensusWF', None,
+                                None, None),
                         }
                         new_queue_obj = PdQueue.objects.create(**new_queue, )
                         new_queue_obj.rawfile.add(
@@ -372,6 +413,16 @@ def update_raw(sender, instance, **kwargs):
 
         else:
             instance.note = "Not valid data file type"
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, related_name='profile',
+                                on_delete=models.SET_NULL, blank=True,
+                                null=True)
+    hide_otherresult = models.BooleanField(default=False, null=True)
+
+    def __str__(self):
+        return 'Profile of user: {}'.format(self.user.username)
 
 
 class SpectromineQueue(models.Model):
@@ -522,11 +573,11 @@ class PdQueue(models.Model):
 
     processing_method = models.FileField(
         upload_to=(f"hdstorage/proteindiscoverer/{date.today().year}/"
-                   f"{date.today().month}/{date.today().day}"),
+                   f"{date.today().month}/{date.today().day}/methods"),
         null=True, blank=True,)
     consensus_method = models.FileField(
         upload_to=(f"hdstorage/proteindiscoverer/{date.today().year}/"
-                   f"{date.today().month}/{date.today().day}"),
+                   f"{date.today().month}/{date.today().day}/methods"),
         null=True, blank=True,)
     result_file = models.FileField(
         upload_to=(f"hdstorage/proteindiscoverer/{date.today().year}/"
@@ -537,7 +588,7 @@ class PdQueue(models.Model):
                    f"{date.today().month}/{date.today().day}"),
         null=True, blank=True,)
     keep_result = models.BooleanField(default=False, null=True)
-    TMT = models.IntegerField(blank=True, null=True)
+    replace_qc = models.BooleanField(default=False, null=True)
     run_status = models.BooleanField(default=False, null=True)
     precurosr_id = models.IntegerField(blank=True, null=True)
     psm_id = models.IntegerField(blank=True, null=True)
@@ -548,6 +599,26 @@ class PdQueue(models.Model):
     creator = models.ForeignKey(settings.AUTH_USER_MODEL,
                                 on_delete=models.SET_NULL, blank=True,
                                 null=True)
+
+    def save(self, *args, **kwargs):
+        """Replace rawfile current qc with this newly crated one, this is a
+        workaround due to the processor clears the replace.qc value after
+        each put/update.
+        """
+
+        print("start")
+        if PdQueue.objects.filter(pk=self.pk).exists():
+            print("exist")
+            if PdQueue.objects.filter(pk=self.pk)[0].replace_qc is True and \
+                    self.rawfile.exists():
+                for item in self.rawfile.all():
+                    print(self.rawfile.all())
+                    ct = ContentType.objects.get_for_model(PdQueue)
+                    RawFile.objects.filter(
+                        pk=item.pk).update(qc_content_type=ct)
+                    RawFile.objects.filter(pk=item.pk).update(
+                        qc_object_id=self.pk)
+        super(PdQueue, self).save(*args, **kwargs)
 
 
 class PdWorker(models.Model):

@@ -72,10 +72,11 @@ class MsfraggerWorkerSerializer(serializers.ModelSerializer):
 class PdQueueSerializer(serializers.ModelSerializer):
     class Meta:
         model = PdQueue
-        fields = ['pk', 'run_status', 'precurosr_id', 'psm_id', 'protein_id',
+        fields = ['pk', 'run_status', 'analysis_name', 'precurosr_id',
+                  'psm_id', 'protein_id',
                   'peptide_id', 'start_time', 'finished_time', 'creator',
                   'processing_method', 'consensus_method', 'export_file',
-                  'keep_result', 'TMT', 'rawfile', 'result_file']
+                  'keep_result', 'replace_qc', 'rawfile', 'result_file']
         extra_kwargs = {
             'rawfile': {'read_only': True},
         }

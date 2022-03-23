@@ -10,6 +10,7 @@ from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.db.models.functions.datetime import TruncMonth
+from django.contrib.auth.models import Group
 import plotly.graph_objs as go
 from plotly.graph_objs import Scatter
 from plotly.offline import plot
@@ -24,12 +25,12 @@ from django.contrib.auth import get_user_model
 from django.core.files import File
 from .models import RawFile, SpectromineQueue, SpectromineWorker, NoteFile, \
     SsdStorage, MaxquantQueue, MaxquantWorker, MsfraggerQueue, \
-    MsfraggerWorker, PdQueue, PdWorker
+    MsfraggerWorker, PdQueue, PdWorker, UserProfile
+
 from .serializers import RawFileSerializer, SpectromineQueueSerializer, \
     SpectromineWorkerSerializer, MaxquantQueueSerializer, \
     MaxquantWorkerSerializer, MsfraggerQueueSerializer, \
     MsfraggerWorkerSerializer, PdQueueSerializer, PdWorkerSerializer
-
 User = get_user_model()
 startTime = time.time()
 
@@ -58,15 +59,21 @@ def dashboard(request):
     user_names = []
     user_counts = []
     for n in range(0, 30):
-        if data_daily[29-n]["date"] is not None:
-            daily_lables.append(
-                data_daily[29-n]["date"].strftime("%B-%d-%Y"))
-            daily_data.append(data_daily[29-n]["created_count"])
+        try:
+            if data_daily[29-n]["date"] is not None:
+                daily_lables.append(
+                    data_daily[29-n]["date"].strftime("%B-%d-%Y"))
+                daily_data.append(data_daily[29-n]["created_count"])
+        except IndexError:
+            print(f"Less than {29-n} days of data")
     for n in range(0, 12):
-        if data_monthly[11-n]["month"] is not None:
-            monthly_lables.append(
-                data_monthly[11-n]["month"].strftime("%B-%Y"))
-            monthly_data.append(data_monthly[11-n]["created_count"])
+        try:
+            if data_monthly[11-n]["month"] is not None:
+                monthly_lables.append(
+                    data_monthly[11-n]["month"].strftime("%B-%Y"))
+                monthly_data.append(data_monthly[11-n]["created_count"])
+        except IndexError:
+            print(f"Less than {11-n} month of data")
     for item in by_user[:10]:
         if item["creator"] is not None:
             user_names.append(User.objects.get(
@@ -140,7 +147,30 @@ def help(request):
     return render(request, 'filemanager/help.html')
 
 
+def settings_page(request):
+
+    if request.method == 'POST':
+        UserProfile.objects.filter(
+            user=request.user.id).update(hide_otherresult=request.
+                                         POST.get('hide_otherresult'))
+    if UserProfile.objects.filter(
+            user=request.user.id).first() is None:
+        form_data = {
+            'user': request.user,
+        }
+        UserProfile.objects.create(**form_data, )
+
+    args = {
+        'hide_otherresult':
+        UserProfile.objects.filter(
+            user=request.user.id).first().hide_otherresult,
+    }
+    print(args)
+    return render(request, 'filemanager/settings.html', args)
+
+
 @csrf_exempt
+@login_required
 def uploadraw(request):
     if request.method == 'POST':
         form_data = {
@@ -158,15 +188,49 @@ def uploadraw(request):
     return render(request, 'filemanager/UploadRaw.html')
 
 
+@login_required
 def results(request):
 
-    args = {
-        'RawFiles':
-        RawFile.objects.all().order_by('-pk')[:100],
-        'Current_message': "Last 100 uploaded runs",
-        "users": User.objects.all(),
+    if UserProfile.objects.filter(
+            user=request.user.id).first() is None:
+        form_data = {
+            'user': request.user,
+        }
+        UserProfile.objects.create(**form_data, )
 
-    }
+    if UserProfile.objects.filter(
+            user=request.user.id).first().hide_otherresult:
+        args = {
+            'RawFiles':
+            RawFile.objects.filter(
+                creator=request.user.id).order_by('-pk')[:100],
+            'Current_message': "Last 100 uploaded runs",
+            "users": User.objects.all(),
+
+        }
+    else:
+        all_my_groups = request.user.groups.all()
+        users_in_group = User.objects.none()
+        for group in all_my_groups:
+            users_in_group = users_in_group | Group.objects.get(
+                name=group.name).user_set.all()
+        user_id_group = []
+        for users in users_in_group:
+            user_id_group.append(users.pk)
+        my_group_runs = []
+        total_counts = 0
+        all_runs = RawFile.objects.all().order_by('-pk')[:100]
+        # hopefully enough  to get 100
+        for item in all_runs.iterator():
+            if item.creator.pk in user_id_group:
+                my_group_runs.append(item)
+            # print(item.creator.pk)
+
+        args = {
+            'RawFiles': my_group_runs,
+            'Current_message': "Last 100 uploaded runs",
+            "users": User.objects.all(),
+        }
     if request.method == 'POST' and 'data_filter' in request.POST:
         result_queryset = RawFile.objects.all().order_by('-pk')
         if request.POST.get('run_name') != "":
@@ -218,6 +282,7 @@ def results(request):
     return render(request, 'filemanager/results.html', args)
 
 
+@ login_required
 def process(request):
     args = {
         'SpectromineQueue':
@@ -239,6 +304,7 @@ def process(request):
     return render(request, 'filemanager/process.html', args)
 
 
+@ login_required
 def msfragger(request):
     args = {
         'MsfraggerQueue':
@@ -260,6 +326,7 @@ def msfragger(request):
     return render(request, 'filemanager/msfragger.html', args)
 
 
+@ login_required
 def pd(request):
     args = {
         'PdQueue':
@@ -267,6 +334,12 @@ def pd(request):
         'RawFiles':
         RawFile.objects.order_by('-pk'),
         'PdWorker': PdWorker.objects.first(),
+        'ProcessMethod': [f for f in os.listdir(
+            "media/pd/methods/process/") if f.endswith('.pdProcessingWF')],
+        'ConsensusMethod': [f for f in os.listdir(
+            "media/pd/methods/consensus/") if f.endswith('.pdConsensusWF')],
+
+
 
     }
 
@@ -275,20 +348,26 @@ def pd(request):
         if (len(request.FILES) != 0 and
                 request.POST.get('pd_process_option') == "custom"):
             pd_process_method = request.FILES['pd_process']
+            if request.POST.get('keep_method') == "True":
+                fs = FileSystemStorage(location="media/pd/methods/process/")
+                fs.save(pd_process_method.name, pd_process_method)
         else:
-            local_file = open(os.path.join(
-                "media/pd/", request.POST.get('pd_process_option') +
-                ".pdProcessingWF"))
-            pd_process_method = File(local_file)
+            process_name = request.POST.get('pd_process_option')
+            process_url = f'media/pd/methods/process/{process_name}'
+            pd_process_method = InMemoryUploadedFile(open(
+                process_url, 'r'), None, process_name, None, None, None)
 
         if (len(request.FILES) != 0 and
                 request.POST.get('pd_consensus_option') == "custom"):
             pd_consensus_method = request.FILES['pd_consensus']
+            if request.POST.get('keep_method') == "True":
+                fs = FileSystemStorage(location="media/pd/methods/consensus/")
+                fs.save(pd_consensus_method.name, pd_consensus_method)
         else:
-            local_file = open(os.path.join(
-                "media/pd/", request.POST.get('pd_consensus_option') +
-                ".pdConsensusWF"))
-            pd_consensus_method = File(local_file)
+            consensus_name = request.POST.get('pd_consensus_option')
+            consensus_url = f'media/pd/methods/consensus/{consensus_name}'
+            pd_consensus_method = InMemoryUploadedFile(open(
+                consensus_url, 'r'), None, consensus_name, None, None, None)
 
         newqueue = {
             "analysis_name": request.POST.get('analysis_name'),
@@ -296,7 +375,7 @@ def pd(request):
             "processing_method": pd_process_method,
             "consensus_method": pd_consensus_method,
             "keep_result": request.POST.get('keep_result'),
-            "TMT": request.POST.get('TMT'),
+            "replace_qc": request.POST.get('replace_qc'),
 
 
 
@@ -309,13 +388,14 @@ def pd(request):
     return render(request, 'filemanager/protein_discoverer.html', args)
 
 
+@ login_required
 def maxquant(request):
     args = {
         'MaxquantQueue':
         MaxquantQueue.objects.all().order_by('-pk')[:100],
         'RawFiles':
         RawFile.objects.all().order_by('-pk'),
-        'MaxquantWorker': MaxquantWorker.objects.first(),
+        'MaxquantWorker': MaxquantWorker.objects.all(),
 
     }
 
@@ -373,10 +453,29 @@ def maxquant(request):
     return render(request, 'filemanager/maxquant.html', args)
 
 
+@ login_required
+def maxquant_plot(request, pk, *args, **kwargs):
+    from .manxquant_plot import MaxquantPlot
+    if request.method == 'POST':
+        plot_div = MaxquantPlot(pk, request.POST.get('comparison_type'),
+                                request.POST.get('id_plot_run_1'),
+                                request.POST.get('id_plot_run_2'))
+    else:
+        plot_div = None
+
+    args = {
+        "plot_div": plot_div,
+        "RawFiles":  MaxquantQueue.objects.filter(pk=pk).first().rawfile.all,
+        "formdata": request.POST,
+    }
+    return render(request, 'filemanager/maxquant_plot.html', args)
+
+
+@ login_required
 def load_results(request, pk, *args, **kwargs):
     if pk == 9990999:  # used for debuging
-        from schedule_archive.automated_tasks import remove_unused_files
-        remove_unused_files(SsdStorage, 4)
+        from schedule_archive.automated_tasks import remote_achieve
+        remote_achieve()
 
     message = ""
     if request.method == 'POST' and 'delete' in request.POST:

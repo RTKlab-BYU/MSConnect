@@ -9,7 +9,7 @@
 # Django #
 file_manager/__pycache__/
 data_manager/__pycache__/
-*.sqlite3
+byu.sqlite3
 *.log
 *.pot
 *.pyc

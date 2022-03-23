@@ -94,6 +94,7 @@ def keep_storage_below(directory, threshold_percentage=80):
 def remote_achieve():
     no_backup_entry = RawFile.objects.filter(remote_storage__isnull=True)
     for item in no_backup_entry:
+        print(f"Backing up  {item}")
         try:
             relative_name = RawFile.objects.filter(
                 pk=item.pk)[0].hd_storage.filelocation.name
@@ -113,7 +114,9 @@ def remote_achieve():
             RawFile.objects.filter(pk=item.pk).update(
                 remote_storage=remote_obj)
             print(item.pk, " worked")
-        except OSError:
+        except Exception as err:
+            exception_type = type(err).__name__
+            print(exception_type)
             print(item.pk, " failed")
 
 

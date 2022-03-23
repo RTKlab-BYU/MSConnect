@@ -7,7 +7,11 @@
    View Protein Discoverer Process
   </title>
   <meta content="" name="description"/>
-  <link href="{% static '/assets/img/y.png' %}" rel="icon" sizes="16x16" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
   <link href="{% static '/assets/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet"/>
@@ -17,7 +21,7 @@
  </head>
  <body id="page-top">
   <div id="wrapper">
-   <div id="nt-compact">
+   <div dont-float="true" id="nt-compact">
     <ul>
      <li>
       <label style="color: rgb(255,255,255);">
@@ -95,7 +99,7 @@
       </a>
      </li>
      <li>
-      <a href="" title="settings">
+      <a href="/files/settings/" title="settings">
        <i class="fa fa-cogs">
        </i>
        <div class="nt-tooltip">
@@ -205,28 +209,16 @@
             </select>
             <label>
              <strong>
-              TMT
+              Replace QC
              </strong>
              <br/>
             </label>
-            <select class="form-control" disabled="" name="TMT">
-             <option selected="" value="8888">
+            <select class="form-control" name="replace_qc">
+             <option value="True">
+              Yes
+             </option>
+             <option selected="" value="False">
               No
-             </option>
-             <option value="0">
-              TMT 0
-             </option>
-             <option value="2">
-              TMT 2
-             </option>
-             <option value="6">
-              TMT 6
-             </option>
-             <option value="8">
-              TMT 8
-             </option>
-             <option value="16">
-              TMT 16
              </option>
             </select>
            </div>
@@ -234,49 +226,59 @@
             <p>
              Select Processing method:
             </p>
-            <div>
-             <input checked="" name="pd_process_option" type="radio" value="mbr"/>
-             <label for="huey">
-              MBR standard setting
-             </label>
-            </div>
-            <div>
-             <input checked="" name="pd_process_option" type="radio" value="nonmbr"/>
-             <label for="dewey">
-              Non-MBR standard setting
-             </label>
-            </div>
-            <div>
-             <input name="pd_process_option" type="radio" value="custom"/>
-             <label for="louie">
-              Upload your own pdProcessingWF
-             </label>
-            </div>
-            <input class="form-control-file" name="pd_process" type="file"/>
+            <select class="form-control" id="pd_process_option" name="pd_process_option">
+             {% for item in ProcessMethod %}
+             <div>
+              <option value="{{item}}">
+               {{item}}
+              </option>
+             </div>
+             {% endfor %}
+             <option value="custom">
+              custom_upload below
+             </option>
+            </select>
+            <input accept=".pdProcessingWF" class="form-control-file" name="pd_process" type="file"/>
+            <button class="btn btn-primary delete-process disabled" type="button">
+             Delete
+            </button>
            </div>
            <div class="col">
             <p>
-             Select Consensus settings:
+             Select Consensus method:
             </p>
-            <div>
-             <input name="pd_consensus_option" type="radio" value="mbr"/>
-             <label for="huey">
-              MBR standard setting
-             </label>
-            </div>
-            <div>
-             <input checked="" name="pd_consensus_option" type="radio" value="nonmbr"/>
-             <label for="dewey">
-              Non-MBR standard setting
-             </label>
-            </div>
-            <div>
-             <input name="pd_consensus_option" type="radio" value="custom"/>
-             <label for="louie">
-              Upload your own pdConsensusWF
-             </label>
-            </div>
-            <input class="form-control-file" name="pd_consensus" type="file"/>
+            <select class="form-control" id="pd_consensus_option" name="pd_consensus_option">
+             {% for item in ConsensusMethod %}
+             <div>
+              <option value="{{item}}">
+               {{item}}
+              </option>
+             </div>
+             {% endfor %}
+             <option value="custom">
+              custom_upload below
+             </option>
+            </select>
+            <input accept=".pdConsensusWF" class="form-control-file" name="pd_consensus" type="file"/>
+            <button class="btn btn-primary delete-consensus disabled" type="button">
+             Delete
+            </button>
+           </div>
+           <div class="col">
+            <label>
+             <strong>
+              Upload keep the uploaded process and consensus method for future use
+             </strong>
+             <br/>
+            </label>
+            <select class="form-control" name="keep_method">
+             <option value="True">
+              Yes
+             </option>
+             <option selected="" value="False">
+              No
+             </option>
+            </select>
            </div>
            <div class="col">
             <div class="form-row">
@@ -430,9 +432,6 @@
              export_file
             </th>
             <th>
-             TMT
-            </th>
-            <th>
              User
             </th>
             <th>
@@ -493,9 +492,6 @@
               export
              </a>
              {% endif %}
-            </td>
-            <td>
-             {{item.TMT}}
             </td>
             <td>
              {{ item.creator|default_if_none:"" }}

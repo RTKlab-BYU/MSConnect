@@ -7,7 +7,11 @@
    View Maxquant Process
   </title>
   <meta content="This page provides access to view results and manage data" name="description"/>
-  <link href="{% static '/assets/img/y.png' %}" rel="icon" sizes="16x16" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
   <link href="{% static '/assets/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet"/>
@@ -17,7 +21,7 @@
  </head>
  <body id="page-top">
   <div id="wrapper">
-   <div id="nt-compact">
+   <div dont-float="true" id="nt-compact">
     <ul>
      <li>
       <label style="color: rgb(255,255,255);">
@@ -95,7 +99,7 @@
       </a>
      </li>
      <li>
-      <a href="" title="settings">
+      <a href="/files/settings/" title="settings">
        <i class="fa fa-cogs">
        </i>
        <div class="nt-tooltip">
@@ -175,7 +179,7 @@
               </th>
               <th class="text-center w-10x" style="width: 5%;">
                <strong>
-                Fraction (32676 means none)
+                Fraction (32767 means none)
                </strong>
               </th>
               <th class="text-center w-10x" style="width: 5%;">
@@ -289,84 +293,56 @@
        </div>
        <div class="row">
         <div class="col">
-         <form enctype="multipart/form-data" method="post">
-          <div style="visibility: hidden; display:inline;">
-           <p>
-            {% csrf_token %}
-           </p>
-          </div>
-          <div style="visibility: hidden; display:inline;">
-           <p>
-            {% csrf_token %}
-           </p>
-          </div>
-          <div class="form-row">
-           <div class="col">
-            <p class="text-dark" style="font-size: 20px;text-align: center;">
-             <strong>
-              Current Workers Status
-             </strong>
-             <br/>
-            </p>
-           </div>
-          </div>
-         </form>
-        </div>
-       </div>
-       <div class="row">
-        <div class="col">
-         <p>
-          Worker Name: {{MaxquantWorker.worker_name}}
-          <br/>
+         <p class="text-dark" style="font-size: 20px;text-align: center;">
+          <strong>
+           Current Workers Status
+          </strong>
           <br/>
          </p>
         </div>
-        <div class="col">
-         <p>
-          Worker IP:
-          <br/>
-          {{MaxquantWorker.worker_ip}}
-          <br/>
-          <br/>
-         </p>
-        </div>
-        <div class="col">
-         <p>
-          Worker status:
-          <br/>
-          {{MaxquantWorker.worker_status}}
-          <br/>
-          <br/>
-         </p>
-        </div>
-       </div>
-       <div class="row">
-        <div class="col">
-         <p>
-          Current Job:
-          <br/>
-          {{MaxquantWorker.current_job}}
-          <br/>
-          <br/>
-         </p>
-        </div>
-        <div class="col">
-         <p>
-          Current Percentage:
-          <br/>
-          {{MaxquantWorker.current_percentage}}
-          <br/>
-          <br/>
-         </p>
-        </div>
-        <div class="col">
-         <p>
-          Last updated:
-          <br/>
-          {{MaxquantWorker.last_update}}
-          <br/>
-          <br/>
-         </p>
+        <div class="table-responsive text-light">
+         <table class="table table-sm" id="test_results_table">
+          <thead>
+           <tr>
+            <th>
+             Worker Number
+            </th>
+            <th>
+             Worker Name
+            </th>
+            <th>
+             Worker Ip
+            </th>
+            <th>
+             Current task PK
+            </th>
+            <th>
+             Last Update
+            </th>
+           </tr>
+          </thead>
+          <tbody>
+           {% for item in MaxquantWorker %}
+           <tr>
+            <td>
+             {{ item.pk}}
+            </td>
+            <td>
+             {{ item.worker_name}}
+            </td>
+            <td>
+             {{ item.worker_ip }}
+            </td>
+            <td>
+             {{ item.current_job.pk}}
+            </td>
+            <td>
+             {{ item.last_update}}
+            </td>
+           </tr>
+           {% endfor %}
+          </tbody>
+         </table>
         </div>
        </div>
        <div class="row">
@@ -431,7 +407,9 @@
            <tr>
             <!--                 <td>  <input name="task_record" type="checkbox" id = {{item.pk}} class="table_check_box"></td> -->
             <td>
-             {{ item.pk|default_if_none:"" }}
+             <a href="load/{{item.pk}}" target="_blank">
+              {{ item.pk|default_if_none:"" }}
+             </a>
             </td>
             <td>
              {% for unit in item.rawfile.all %}

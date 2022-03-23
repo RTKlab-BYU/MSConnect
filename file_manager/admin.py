@@ -5,5 +5,6 @@ from .models import *
 admin.site.register([
     RawFile, SpectromineQueue, SpectromineWorker, NoteFile, SsdStorage,
     HdStorage, RemoteStorage, OfflineStorage, PklStorage, MaxquantQueue,
-    MaxquantWorker, MsfraggerQueue, MsfraggerWorker, PdQueue, PdWorker
+    MaxquantWorker, MsfraggerQueue, MsfraggerWorker, PdQueue, PdWorker,
+    UserProfile
 ])

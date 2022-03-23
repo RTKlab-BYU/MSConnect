@@ -16,6 +16,10 @@ urlpatterns = [
     path("pd/", views.pd, name='Protein Discoverer'),
 
     path("help/", views.help, name='help'),
+    path("settings/", views.settings_page, name='Settings'),
+    path("maxquant/load/<int:pk>", views.maxquant_plot, name='maxquant_plot'),
+
+
 
     path("results/load/<int:pk>", views.load_results, name='load_result'),
     path('api/', views.FileList.as_view()),

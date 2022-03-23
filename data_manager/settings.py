@@ -16,7 +16,7 @@ import environ
 
 env = environ.Env()
 environ.Env.read_env()
-#used to load sensitive information, e.g., secret key, password, etc.
+# used to load sensitive information, e.g., secret key, password, etc.
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'file_manager.apps.FileManagerConfig',
     'dbbackup',  # django-dbbackup
-    "django_extensions", # for Jupiter notebook
+    "django_extensions",  # for Jupiter notebook
 ]
 
 NOTEBOOK_ARGUMENTS = [
@@ -64,7 +64,7 @@ NOTEBOOK_ARGUMENTS = [
 # setting for the dbbackup to backup database
 DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
 DBBACKUP_STORAGE_OPTIONS = {'location': 'media/hdstorage/backup/database'}
-DBBACKUP_CLEANUP_KEEP = 168 #total number of backups
+DBBACKUP_CLEANUP_KEEP = 168  # total number of backups
 
 
 MIDDLEWARE = [
@@ -106,7 +106,8 @@ WSGI_APPLICATION = 'data_manager.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'public.sqlite3',
+
     }
 }
 
@@ -116,16 +117,20 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.'
+                'UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation.'
+                'MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.'
+                'CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.'
+                'NumericPasswordValidator',
     },
 ]
 
@@ -156,7 +161,8 @@ STATIC_ROOT = "static/"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.'
+                                'pagination.PageNumberPagination',
     'DATETIME_FORMAT': "%Y-%m-%d %H:%M:%S",
     'PAGE_SIZE': 10,
     'DEFAULT_PERMISSION_CLASSES': [
