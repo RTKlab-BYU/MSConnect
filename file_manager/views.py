@@ -25,7 +25,7 @@ from django.contrib.auth import get_user_model
 from django.core.files import File
 from .models import RawFile, SpectromineQueue, SpectromineWorker, NoteFile, \
     SsdStorage, MaxquantQueue, MaxquantWorker, MsfraggerQueue, \
-    MsfraggerWorker, PdQueue, PdWorker, UserProfile
+    MsfraggerWorker, PdQueue, PdWorker, UserProfile, HdStorage, SsdStorage
 
 from .serializers import RawFileSerializer, SpectromineQueueSerializer, \
     SpectromineWorkerSerializer, MaxquantQueueSerializer, \
@@ -485,6 +485,51 @@ def load_results(request, pk, *args, **kwargs):
             return HttpResponseRedirect("/files/results/")
         else:
             message = "Sorry, you don't own this record"
+
+    # change file name according to record name
+    if request.method == 'POST' and 'update_file_name' in request.POST:
+        if request.user == RawFile.objects.filter(pk=pk)[0].creator or\
+                RawFile.objects.filter(pk=pk)[0].creator is None:
+            current_record_name = RawFile.objects.filter(pk=pk)[0].run_name
+            currenent_hd = RawFile.objects.filter(pk=pk)[
+                0].hd_storage.filelocation.name
+            new_hd = os.path.join(os.path.dirname(currenent_hd),
+                                  current_record_name + ".raw")
+            if (currenent_hd != new_hd):
+                try:
+                    os.rename(os.path.join(settings.MEDIA_ROOT,
+                                           currenent_hd), os.path.join(
+                        settings.MEDIA_ROOT, new_hd))
+                    if(os.path.exists(os.path.join(
+                            settings.MEDIA_ROOT, new_hd))):
+                        HdStorage.objects.filter(
+                            pk=RawFile.objects.filter(pk=pk)[
+                                0].hd_storage.pk).update(filelocation=new_hd)
+
+                except WindowsError:
+                    message = "Sorry, file name already exist"
+
+                if (RawFile.objects.filter(pk=pk)[0].ssd_storage):
+                    current_ssd = RawFile.objects.filter(pk=pk)[
+                        0].ssd_storage.filelocation.name
+                    new_ssd = os.path.join(os.path.dirname(current_ssd),
+                                           current_record_name + ".raw")
+                    try:
+                        os.rename(os.path.join(settings.MEDIA_ROOT,
+                                               current_ssd), os.path.join(
+                            settings.MEDIA_ROOT, new_ssd))
+                        if(os.path.exists(os.path.join(
+                                settings.MEDIA_ROOT, new_ssd))):
+                            SsdStorage.objects.filter(
+                                pk=RawFile.objects.filter(pk=pk)[
+                                    0].ssd_storage.pk).update(
+                                        filelocation=new_ssd)
+
+                    except WindowsError:
+                        message = "Sorry, file name already exist"
+        else:
+            message = "Sorry, you don't own this record"
+
     if request.method == 'POST' and 'save' in request.POST:
         print(request.POST)
         if request.user == RawFile.objects.filter(pk=pk)[0].creator or\
