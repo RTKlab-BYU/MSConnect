@@ -174,8 +174,8 @@ def update_raw(sender, instance, **kwargs):
                     instrument_model=data["InstrumentProperties"][0]["value"])
                 RawFile.objects.filter(pk=instance.pk).update(
                     instrument_sn=data["InstrumentProperties"][2]["value"])
-                RawFile.objects.filter(pk=instance.pk).update(
-                    sample_type=data["SampleData"][0]["value"])
+                # RawFile.objects.filter(pk=instance.pk).update(
+                #     sample_type=data["SampleData"][0]["value"])
                 to_tz = timezone.get_default_timezone()
                 file_year, file_month, file_date = RawFile.objects.\
                     filter(pk=instance.pk)[
