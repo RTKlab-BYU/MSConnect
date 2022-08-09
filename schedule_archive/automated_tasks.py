@@ -4,6 +4,8 @@ from datetime import datetime, timedelta
 from file_manager.models import RawFile, SpectromineQueue, SpectromineWorker, \
     NoteFile, SsdStorage, HdStorage, RemoteStorage, OfflineStorage
 import os
+import subprocess
+
 import shutil
 from django.conf import settings
 
@@ -103,17 +105,22 @@ def remote_achieve():
                 "hdstorage", "remote_archive", 1)
             new_name = new_name.replace(
                 ".raw", ".7z", 1)
-            import subprocess
             subprocess.run(['7z', 'a',  os.path.join(
                 settings.MEDIA_ROOT, new_name), current_raw,
                 "-mx=9", "-mmt=2"])
-            pklform = {
-                "filelocation": new_name,
-            }
-            remote_obj = RemoteStorage.objects.create(**pklform, )
-            RawFile.objects.filter(pk=item.pk).update(
-                remote_storage=remote_obj)
-            print(item.pk, " worked")
+
+            if(os.path.exists(os.path.join(
+                    settings.MEDIA_ROOT, new_name))):
+                pklform = {
+                    "filelocation": new_name,
+                }
+                remote_obj = RemoteStorage.objects.create(**pklform, )
+                RawFile.objects.filter(pk=item.pk).update(
+                    remote_storage=remote_obj)
+                print(item.pk, " remote backup finished")
+            else:
+                print(item.pk, " remote backup failed")
+
         except Exception as err:
             exception_type = type(err).__name__
             print(exception_type)
