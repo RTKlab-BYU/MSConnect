@@ -1,0 +1,433 @@
+{% load static %}<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
+  <title>
+   View Record Details
+  </title>
+  <meta content="This page provides access to view record details" name="description"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet"/>
+  <link href="{% static '/assets/css/styles.min.css' %}" rel="stylesheet"/>
+  <link href="{% static '/assets/css/SO-floating-nav_15.min.css' %}" rel="stylesheet"/>
+ </head>
+ <body id="page-top">
+  <div id="wrapper">
+   <div dont-float="true" id="nt-compact">
+    <ul>
+     <li>
+      <label style="color: rgb(255,255,255);">
+       {{ user.username }}
+      </label>
+     </li>
+     <li>
+      <a href="/files/" title="Dashboard">
+       <i class="fa fa-th-large">
+       </i>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Dashboard
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+     </li>
+     <li>
+      <a href="/files/visualization/" title="Visualization">
+       <i class="fa fa-vimeo">
+       </i>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Visualization
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+      <a href="/files/processing/" title="Processing Center">
+       <i class="fa fa-product-hunt">
+       </i>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Processing
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+      <a href="/files/records/" title="Records">
+       <svg class="bi bi-caret-right-fill" fill="currentColor" height="1em" viewbox="0 0 16 16" width="1em" xmlns="http://www.w3.org/2000/svg">
+        <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z">
+        </path>
+       </svg>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Records
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+      <a href="/files/settings/" title="settings">
+       <i class="fa fa-cogs">
+       </i>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Settings
+        </p>
+       </div>
+      </a>
+      <a href="/" onmouseover="javascript:event.target.port=8080" title="Advance">
+       <i class="icon ion-android-warning">
+       </i>
+       <div class="nt-tooltip">
+        <p style="font-family: 'Ubuntu Condensed', sans-serif;">
+         Advance
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+      <a href="{% url 'logout' %}" title="logout">
+       <i class="fa fa-sign-out">
+       </i>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Logout
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+      <a href="/files/help/" title="Help">
+       <svg class="bi bi-question" fill="currentColor" height="1em" viewbox="0 0 16 16" width="1em" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z">
+        </path>
+       </svg>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Help
+        </p>
+       </div>
+      </a>
+     </li>
+    </ul>
+   </div>
+   <div class="d-flex flex-column" id="content-wrapper">
+    <div id="main">
+     <script type="text/javascript">
+      console.log("{{message|safe}}")
+if ("{{message|safe}}" != "")
+    {alert("{{ message|safe }}");}
+     </script>
+     <div class="container-fluid">
+      <div>
+       <div class="row">
+        <div class="col">
+         <form enctype="multipart/form-data" method="post">
+          <div style="visibility: hidden; display:inline;">
+           <p>
+            {% csrf_token %}
+           </p>
+          </div>
+          <div style="visibility: hidden; display:inline;">
+           <p>
+            {% csrf_token %}
+           </p>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <p class="text-dark" style="font-size: 20px;text-align: center;">
+             <strong>
+              Record Details
+             </strong>
+            </p>
+           </div>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <p>
+             Run ID: {{detail.pk}}
+            </p>
+           </div>
+           <div class="col">
+            <p>
+             Run Name:
+             <input class="form-control" name="record_name" type="text" value='{{detail.record_name|default_if_none:"" }}'/>
+             <br/>
+            </p>
+           </div>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <p>
+             Project Name:
+             <br/>
+            </p>
+            <td>
+             <a href="/files/records/sampleinfo/{{detail.pk}}" target="_blank">
+              {{ detail.project_name|default:"No_project_name"}}
+             </a>
+             <br/>
+             {{detail.sample_type|default_if_none:""}}
+     {{detail.factor_1_name|default_if_none:""}}:
+     {{detail.factor_1_value|default_if_none:""}}
+     {{detail.factor_2_name|default_if_none:""}}:
+     {{detail.factor_2_value|default_if_none:""}}  
+        {{detail.factor_3_name|default_if_none:""}}:
+     {{detail.factor_3_value|default_if_none:""}}     {{detail.factor_4_name|default_if_none:""}}:
+     {{detail.factor_4_value|default_if_none:""}}     {{detail.factor_5_name|default_if_none:""}}:
+     {{detail.factor_5_value|default_if_none:""}}
+    {{detail.factor_6_name|default_if_none:""}}:
+     {{detail.factor_6_value|default_if_none:""}}
+    {{detail.factor_7_name|default_if_none:""}}:
+     {{detail.factor_7_value|default_if_none:""}}
+    {{detail.factor_8_name|default_if_none:""}}:
+     {{detail.factor_8_value|default_if_none:""}}
+             <div class="col">
+              <p>
+               User:{{detail.record_creator|default_if_none:"" }}
+               <br/>
+              </p>
+             </div>
+             <div class="form-row">
+              <div class="col">
+               <p>
+                Description:
+                <br/>
+               </p>
+               <input class="form-control" name="desc" type="text" value='{{detail.record_description|default_if_none:"" }}'/>
+              </div>
+              <div class="col">
+               <p>
+                Last QC tool:{{detail.quanlity_check.processing_app.name|default_if_none:"" }}
+                <br/>
+               </p>
+               <p>
+                Last QC Time:{{detail.quanlity_check.finish_time|default_if_none:"" }}
+                <br/>
+               </p>
+               <p>
+                Last QC number1 :{{detail.quanlity_check.output_QC_number_1|default_if_none:"" }}
+                <br/>
+               </p>
+               <p>
+                Last QC number2 :{{detail.quanlity_check.output_QC_number_2|default_if_none:"" }}
+                <br/>
+               </p>
+               <p>
+                Last QC number3 :{{detail.quanlity_check.output_QC_number_3|default_if_none:"" }}
+                <br/>
+               </p>
+               <p>
+                Last QC number4 :{{detail.quanlity_check.output_QC_number_4|default_if_none:"" }}
+                <br/>
+               </p>
+              </div>
+             </div>
+             <div class="form-row">
+              <div class="col">
+              </div>
+              <div class="col">
+              </div>
+             </div>
+             <div class="form-row">
+              <div class="col">
+              </div>
+              <div class="col">
+               <p>
+                Acquisition Start Time:
+                <br/>
+                {{detail.acquisition_time|default_if_none:"" }}
+                <br/>
+                <br/>
+               </p>
+              </div>
+             </div>
+             <div class="form-row">
+              <div class="col">
+               <p>
+                Instrument Model (instrument_model):{{detail.instrument_model|default_if_none:"" }}
+                <br/>
+               </p>
+              </div>
+              <div class="col">
+               <p>
+                Instrument Serial Number(instrument_sn):{{detail.instrument_sn|default_if_none:"" }}
+                <br/>
+                <br/>
+               </p>
+              </div>
+             </div>
+             <div class="form-row">
+              <div class="col">
+               <p>
+                Column SN(column_sn):{{detail.column_sn|default_if_none:"" }}
+                <br/>
+               </p>
+              </div>
+              <div class="col">
+               <p>
+                SPE SN(spe_sn):{{detail.spe_sn|default_if_none:"" }}
+                <br/>
+                <br/>
+               </p>
+              </div>
+             </div>
+             <div class="form-row">
+              <div class="col">
+               <p>
+                Delete after 3 month/Temp data:
+                <select class="form-control" name="is_temp" style="width: 20%;">
+                 {% if detail.is_temp == True %}
+                 <option selected="" value="True">
+                  Yes
+                 </option>
+                 <option value="False">
+                  No
+                 </option>
+                 {% else %}
+                 <option value="True">
+                  Yes
+                 </option>
+                 <option selected="" value="False">
+                  No
+                 </option>
+                 {% endif %}
+                </select>
+                <br/>
+               </p>
+              </div>
+             </div>
+             <div class="form-row">
+              <div class="col">
+               <p>
+                <br/>
+               </p>
+              </div>
+             </div>
+             <div class="form-row">
+              <div class="col">
+               <p>
+                Upload time:{{detail.uploaded_time|default_if_none:"" }}
+                <br/>
+               </p>
+              </div>
+              <div class="col">
+               <p>
+                All storage links
+                <br/>
+               </p>
+               <!--...
+Current:<a href="/files/{{detail.current_raw.filelocation}}">{{detail.current_raw.filelocation}}</a><br />
+SSD:<a href="/files/{{detail.ssd_storage.filelocation}}">{{detail.ssd_storage.filelocation}}</a><br />
+HD:<a href="/files/{{detail.hd_storage.filelocation}}">{{detail.hd_storage.filelocation}}</a><br />
+Remote:<a href="/files/{{detail.remote_storage.filelocation}}">{{detail.remote_storage.filelocation}}</a><br />
+Offline:Remote:<a href="/files/{{detail.offline_storage.filelocation}}">{{detail.offline_storage.filelocation}}</a><br />
+ -->
+               {% for storage in storages %}
+                    Storage {{ storage.type}}:
+               <td>
+                <a href="/files/{{ storage.link }}">
+                 {{ storage.link}}
+                </a>
+                <br/>
+               </td>
+               {% endfor %}
+               <button class="btn btn-primary" name="update_file_name" type="submit">
+                Update File name to Current saved record name(storage 1)
+               </button>
+              </div>
+             </div>
+             <div class="form-row">
+              <div class="col">
+               {% autoescape off %}
+  
+  {{ plot_div }}
+  {% endautoescape %}
+              </div>
+             </div>
+             <div class="form-row">
+              <div class="col">
+               <div class="form-row">
+                <div class="col">
+                 <small class="form-text text-muted">
+                  Type notes here
+                 </small>
+                 <textarea class="form-control" name="notes">{{detail.notes|default_if_none:"" }}</textarea>
+                </div>
+                <div class="col">
+                 <div class="form-row">
+                  <div class="col">
+                   <p>
+                    Current attachment file:
+                   </p>
+                   {% for item in notefile %}
+                   <td>
+                    <a href="/files/{{ item }}">
+                     {{ item }}
+                    </a>
+                    <br/>
+                   </td>
+                   {% endfor %}
+                  </div>
+                 </div>
+                 <p>
+                  Add more attachment files:
+                 </p>
+                 <input class="form-control-file" name="attachment" type="file"/>
+                </div>
+               </div>
+               <div class="form-row">
+                <div class="col">
+                 <button class="btn btn-primary" name="save" type="submit">
+                  Save updates
+                 </button>
+                </div>
+                <div class="col">
+                 <button class="btn btn-primary" name="compare" type="submit">
+                  Compare
+                 </button>
+                 <input class="form-control" name="compare_id" style="width: 30%;" type="text"/>
+                </div>
+                <div class="col">
+                 <button class="btn btn-primary" name="delete" onclick="return ConfirmDelete()" style="background: var(--red);" type="submit">
+                  Delete
+                 </button>
+                </div>
+               </div>
+              </div>
+             </div>
+             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+             </script>
+             <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/js/bootstrap.bundle.min.js">
+             </script>
+             <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js">
+             </script>
+             <script src="{% static '/assets/js/script.min.js' %}">
+             </script>
+             <script src="{% static '/assets/js/SO-floating-nav_15.min.js' %}">
+             </script>
+            </td>
+           </div>
+          </div>
+         </form>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

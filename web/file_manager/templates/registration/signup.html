@@ -1,0 +1,99 @@
+{% load static %}<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
+  <title>
+   Register
+  </title>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet"/>
+  <link href="{% static '/assets/css/styles.min.css' %}" rel="stylesheet"/>
+  <link href="{% static '/assets/css/SO-floating-nav_15.min.css' %}" rel="stylesheet"/>
+ </head>
+ <body class="bg-gradient-primary">
+  <div class="container">
+   <div class="card shadow-lg o-hidden border-0 my-5">
+    <div class="card-body p-0">
+     <div class="row">
+      <div class="col text-center align-self-center">
+       <img src="{% static '/assets/img/photo-1600577916048-804c9191e36c.avif' %}" style="width: 100%;"/>
+      </div>
+      <div class="col-auto col-lg-7">
+       <div class="p-5">
+        <h3 class="text-left text-dark align-items-center mb-4">
+         <strong>
+          Create an Account
+         </strong>
+        </h3>
+        <div class="text-center">
+        </div>
+        <form method="post">
+         <div style="visibility: hidden; display:inline;">
+          <p>
+           {% csrf_token %}
+          </p>
+         </div>
+         {% for field in form %}
+         <div>
+          <p>
+          </p>
+          <h4>
+           {{ field.label_tag }}
+          </h4>
+          <h4>
+           {{ field }}
+          </h4>
+          {% if field.help_text %}
+          <div>
+           <h6 class="field.help_text" style="color: gray">
+            {{ field.help_text }}
+           </h6>
+          </div>
+          {% endif %}
+          {% for error in field.errors %}
+          <div>
+           <h6 style="color: red">
+            {{ error }}
+           </h6>
+          </div>
+          {% endfor %}
+         </div>
+         {% endfor %}
+         <button class="btn btn-primary btn-block text-white btn-user" type="submit">
+          Register Account
+         </button>
+        </form>
+        <div class="text-center">
+        </div>
+        <div class="text-center">
+         <a class="small" href="/">
+          Already have an account? Login!
+         </a>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/js/bootstrap.bundle.min.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js">
+  </script>
+  <script src="{% static '/assets/js/script.min.js' %}">
+  </script>
+  <script src="{% static '/assets/js/SO-floating-nav_15.min.js' %}">
+  </script>
+ </body>
+</html>

@@ -1,0 +1,576 @@
+{% load static %}<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
+  <title>
+   Processing Center
+  </title>
+  <meta content="" name="description"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet"/>
+  <link href="{% static '/assets/css/styles.min.css' %}" rel="stylesheet"/>
+  <link href="{% static '/assets/css/SO-floating-nav_15.min.css' %}" rel="stylesheet"/>
+ </head>
+ <body id="page-top">
+  <div id="wrapper">
+   <div dont-float="true" id="nt-compact">
+    <ul>
+     <li>
+      <label style="color: rgb(255,255,255);">
+       {{ user.username }}
+      </label>
+     </li>
+     <li>
+      <a href="/files/" title="Dashboard">
+       <i class="fa fa-th-large">
+       </i>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Dashboard
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+     </li>
+     <li>
+      <a href="/files/visualization/" title="Visualization">
+       <i class="fa fa-vimeo">
+       </i>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Visualization
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+      <a href="/files/processing/" title="Processing Center">
+       <i class="fa fa-product-hunt">
+       </i>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Processing
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+      <a href="/files/records/" title="Records">
+       <svg class="bi bi-caret-right-fill" fill="currentColor" height="1em" viewbox="0 0 16 16" width="1em" xmlns="http://www.w3.org/2000/svg">
+        <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z">
+        </path>
+       </svg>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Records
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+      <a href="/files/settings/" title="settings">
+       <i class="fa fa-cogs">
+       </i>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Settings
+        </p>
+       </div>
+      </a>
+      <a href="/" onmouseover="javascript:event.target.port=8080" title="Advance">
+       <i class="icon ion-android-warning">
+       </i>
+       <div class="nt-tooltip">
+        <p style="font-family: 'Ubuntu Condensed', sans-serif;">
+         Advance
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+      <a href="{% url 'logout' %}" title="logout">
+       <i class="fa fa-sign-out">
+       </i>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Logout
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+      <a href="/files/help/" title="Help">
+       <svg class="bi bi-question" fill="currentColor" height="1em" viewbox="0 0 16 16" width="1em" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z">
+        </path>
+       </svg>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Help
+        </p>
+       </div>
+      </a>
+     </li>
+    </ul>
+   </div>
+   <div class="d-flex flex-column" id="content-wrapper">
+    <div id="main">
+     <div class="container-fluid">
+      <div>
+       <div class="row">
+        <div class="col">
+         <form enctype="multipart/form-data" method="post">
+          <div style="visibility: hidden; display:inline;">
+           <p>
+            {% csrf_token %}
+           </p>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <p class="text-dark" style="font-size: 20px;text-align: center;">
+             <strong>
+              Data Processing Center
+             </strong>
+             <br/>
+            </p>
+            <p class="text-dark" style="font-size: 20px;text-align: center;">
+             <strong>
+              Current Data Processing Apps
+             </strong>
+             <br/>
+            </p>
+           </div>
+          </div>
+         </form>
+        </div>
+       </div>
+       <div class="row">
+        <div class="col">
+         <form enctype="multipart/form-data" method="post">
+          <div style="visibility: hidden; display:inline;">
+           <p>
+            {% csrf_token %}
+           </p>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <div class="form-row">
+             {% for app in processing_apps %}
+             <div class="col">
+              <a href="/files/processing/{{ app.app_url }}">
+               <img height="80" src="/{{app.icon}}"/>
+               {{ app.name}}
+              </a>
+             </div>
+             {% endfor %}
+            </div>
+           </div>
+          </div>
+          <div style="visibility: hidden; display:inline;">
+           <p>
+            {% csrf_token %}
+           </p>
+          </div>
+         </form>
+         <form enctype="multipart/form-data" method="post">
+          <div style="visibility: hidden; display:inline;">
+           <p>
+            {% csrf_token %}
+           </p>
+          </div>
+          <div style="visibility: hidden; display:inline;">
+           <p>
+            {% csrf_token %}
+           </p>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <p class="text-dark" style="font-size: 20px;text-align: center;">
+             <br/>
+            </p>
+           </div>
+          </div>
+         </form>
+        </div>
+       </div>
+       <div class="row">
+        <div class="col">
+         <p class="text-dark" style="font-size: 20px;text-align: center;">
+          <strong>
+           Current Workers Status
+          </strong>
+          <br/>
+         </p>
+        </div>
+        <div class="table-responsive text-light">
+         <table class="table table-sm">
+          <thead>
+           <tr>
+            <th>
+             worker proceesing app
+            </th>
+            <th>
+             worker seq number
+            </th>
+            <th>
+             worker_ip
+            </th>
+            <th>
+             worker_name
+            </th>
+            <th>
+             worker_last_ping
+            </th>
+            <th>
+             worker last job
+            </th>
+           </tr>
+          </thead>
+          <tbody>
+           {{workers}}
+        {% for item in workers %}
+           <tr>
+            <td>
+             {{ item.processing_app.name}}
+            </td>
+            <td>
+             {{ item.seq_number}}
+            </td>
+            <td>
+             {{ item.worker_ip}}
+            </td>
+            <td>
+             {{ item.worker_name}}
+            </td>
+            <td>
+             {{ item.last_update}}
+            </td>
+            <td>
+             {{ item.current_job}}
+            </td>
+           </tr>
+           {% endfor %}
+          </tbody>
+         </table>
+        </div>
+       </div>
+       <form method="post">
+        <div style="visibility: hidden; display:inline;">
+         <p>
+          {% csrf_token %}
+         </p>
+        </div>
+        <div class="form-row">
+         <div class="col">
+          <p class="text-dark" style="font-size: 20px;text-align: center;">
+           <strong>
+            Search Queue
+           </strong>
+          </p>
+         </div>
+        </div>
+        <div class="form-row">
+         <div class="col">
+          <p>
+           Queue Pk(record number) range (e.g., 4000-4200)
+           <input class="form-control" name="pk_range" type="text" value="{{formdata.pk_range}}"/>
+          </p>
+         </div>
+         <div class="col">
+          <p>
+           Contain record (e.g., 3821,4051, or logic)
+           <input class="form-control" name="contained_record" type="text" value="{{formdata.contained_record}}"/>
+          </p>
+         </div>
+        </div>
+        <div class="form-row">
+         <div class="col">
+          <p>
+           Process Name
+           <input class="form-control" name="process_name" type="text" value="{{formdata.process_name}}"/>
+          </p>
+         </div>
+         <div class="col">
+          <p>
+           Process Creator
+          </p>
+          <select name="process_creator" width="100%">
+           <option value="">
+            All
+           </option>
+           {% for item in users %}
+           <div>
+            {% if formdata.process_creator == item.pk|stringformat:"i" %}
+            <option selected="" value="{{item.pk}}">
+             {{item.username}}
+            </option>
+            {% else %}
+            <option value="{{item.pk}}">
+             {{item.username}}
+            </option>
+            {% endif %}
+           </div>
+           {% endfor %}
+          </select>
+         </div>
+        </div>
+        <div class="form-row">
+         <div class="col">
+          <p>
+           QC1 range (e.g., 3800-4100)
+           <input class="form-control" name="qc_range" type="text" value="{{formdata.qc_range}}"/>
+          </p>
+         </div>
+         <div class="col">
+          <p>
+           Process apps
+          </p>
+          <select name="process_app" width="100%">
+           <option value="">
+            All
+           </option>
+           {% for item in process_apps %}
+           <div>
+            {% if formdata.process_app == item.pk|stringformat:"i" %}
+            <option selected="" value="{{item.pk}}">
+             {{item.name}}
+            </option>
+            {% else %}
+            <option value="{{item.pk}}">
+             {{item.name}}
+            </option>
+            {% endif %}
+           </div>
+           {% endfor %}
+          </select>
+         </div>
+        </div>
+        <div class="form-row">
+         <div class="col">
+          <p>
+           Finish time from
+           <input class="form-control" id="startdate" name="start_time" type="date" value="{{formdata.start_time}}"/>
+          </p>
+         </div>
+         <div class="col">
+          <p>
+           Finish time up to
+           <input class="form-control" id="enddate" name="end_time" type="date" value="{{formdata.end_time}}"/>
+          </p>
+         </div>
+        </div>
+        <div class="form-row">
+         <div class="col">
+         </div>
+         <div class="col">
+          <button class="btn btn-primary" name="data_filter" type="submut">
+           Search
+          </button>
+         </div>
+         <div class="col">
+          <button class="btn btn-primary" type="reset">
+           Clear
+          </button>
+         </div>
+        </div>
+       </form>
+       <div class="row">
+        <div class="col">
+         <p style="text-align: left;font-weight: bold;font-size: 150%;">
+          {{ Current_message}}
+         </p>
+         <p class="text-dark" style="font-size: 20px;text-align: center;">
+          <strong>
+           Data Processing Queue
+          </strong>
+          <br/>
+         </p>
+        </div>
+        <div class="table-responsive text-light">
+         <table class="table table-sm" id="test_results_table">
+          <thead>
+           <tr>
+            <th>
+             Queue Pk
+            </th>
+            <th>
+             Record files pk
+            </th>
+            <th>
+             Analysis names
+            </th>
+            <th>
+             processing_app
+            </th>
+            <th>
+             Run finished?
+            </th>
+            <th>
+             worker_hostname
+            </th>
+            <th>
+             output_QC_number_1
+            </th>
+            <th>
+             output_QC_number_2
+            </th>
+            <th>
+             process_creator
+            </th>
+            <th>
+             Process started
+            </th>
+            <th>
+             Process finshed
+            </th>
+            <th>
+             input_file_1
+            </th>
+            <th>
+             input_file_2
+            </th>
+            <th>
+             output_file_1
+            </th>
+            <th>
+             output_file_2
+            </th>
+            <th>
+             output_QC_number_3
+            </th>
+            <th>
+             output_QC_number_4
+            </th>
+            <th>
+             input_file_3
+            </th>
+            <th>
+             output_file_3
+            </th>
+           </tr>
+          </thead>
+          <tbody>
+           {% for item in processing_queue %}
+           <tr>
+            <td>
+             {{ item.pk|default_if_none:"" }}
+            </td>
+            <td>
+             {% for unit in item.sample_records.all %}
+                    {{ unit.pk}}  
+                        {% endfor %}
+            </td>
+            <td>
+             {{ item.processing_name}}
+            </td>
+            <td>
+             {{ item.processing_app.name}}
+            </td>
+            <td>
+             {{ item.run_status}}
+            </td>
+            <td>
+             {{ item.worker_hostname}}
+            </td>
+            <td>
+             {{ item.output_QC_number_1}}
+            </td>
+            <td>
+             {{ item.output_QC_number_2}}
+            </td>
+            <td>
+             {{ item.process_creator}}
+            </td>
+            <td>
+             {{ item.start_time}}
+            </td>
+            <td>
+             {{ item.finish_time}}
+            </td>
+            <td>
+             {% if item.input_file_1 %}
+             <a href="/files/{{item.input_file_1|default_if_none:1}}">
+              input_file_1
+             </a>
+             {% endif %}
+            </td>
+            <td>
+             {% if item.input_file_2 %}
+             <a href="/files/{{item.input_file_2|default_if_none:1}}">
+              input_file_2
+             </a>
+             {% endif %}
+            </td>
+            <td>
+             {% if item.output_file_1 %}
+             <a href="/files/{{item.output_file_1|default_if_none:1}}">
+              output_file_1
+             </a>
+             {% endif %}
+            </td>
+            <td>
+             {% if item.output_file_2 %}
+             <a href="/files/{{item.output_file_2|default_if_none:1}}">
+              output_file_2
+             </a>
+             {% endif %}
+            </td>
+            <td>
+             {{ item.output_QC_number_3}}
+            </td>
+            <td>
+             {{ item.output_QC_number_4}}
+            </td>
+            <td>
+             {% if item.input_file_3 %}
+             <a href="/files/{{item.input_file_3|default_if_none:1}}">
+              input_file_3
+             </a>
+             {% endif %}
+            </td>
+            <td>
+             {% if item.output_file_3 %}
+             <a href="/files/{{item.output_file_3|default_if_none:1}}">
+              output_file_3
+             </a>
+             {% endif %}
+            </td>
+           </tr>
+           {% endfor %}
+          </tbody>
+         </table>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <div class="col">
+  </div>
+  <div class="col">
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/js/bootstrap.bundle.min.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js">
+  </script>
+  <script src="{% static '/assets/js/script.min.js' %}">
+  </script>
+  <script src="{% static '/assets/js/results.min.js' %}">
+  </script>
+  <script src="{% static '/assets/js/SO-floating-nav_15.min.js' %}">
+  </script>
+ </body>
+</html>
