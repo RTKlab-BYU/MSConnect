@@ -1,0 +1,35 @@
+version: "1.0"
+services:
+  nginx:
+    build: ./nginx/
+    restart: always
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+      - web_static:/var/www/datamanager/assets/:ro
+    ports:
+      - "8090:80"
+    depends_on:
+      - django
+  django:
+    build: ./web/
+    restart: always
+    command: >
+      sh -c "/venv/bin/python3 manage.py collectstatic --noinput   && /venv/bin/uwsgi   --ini /app/datamanager.uwsgi.ini --enable-threads"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+      - web_static:/app/static/
+      - type: bind
+        source: //d/docker/primary_storage #host folder in windows, means d:/docker/primary_raw
+        target: //app/media//primary_storage
+      - type: bind
+        source: //d/docker/secondary_storage # means d:/docker/secondary_raw
+        target: //app/media//secondary_storage
+      - type: bind
+        source: //d/docker/remote_storage #means d:/docker/remote
+        target: //app/media//remote_storage
+      - type: bind
+        source: //d/docker/offline_storage #means d:/docker/offline
+        target: //app/media//offline_storage
+volumes:
+  uwsgi_data:
+  web_static:
