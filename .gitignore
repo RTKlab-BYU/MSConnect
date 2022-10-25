@@ -14,7 +14,6 @@ byu.sqlite3
 *.pot
 *.pyc
 *.env
-media/
 backup/
 
 #Jupiter_workflow
@@ -55,3 +54,9 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+
+
+# temp files
+web/data_conversion_v0_to_v1/
+web/file_manager/__pycache__
+web/temp_2022-10-18/
