@@ -1,0 +1,216 @@
+{% load static %}<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
+  <title>
+   Help
+  </title>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
+  <link href="{% static '/assets/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet"/>
+  <link href="{% static '/assets/css/styles.min.css' %}" rel="stylesheet"/>
+  <link href="{% static '/assets/css/SO-floating-nav_15.min.css' %}" rel="stylesheet"/>
+ </head>
+ <body>
+  <div dont-float="true" id="nt-compact">
+   <ul>
+    <li>
+     <label style="color: rgb(255,255,255);">
+      {{ user.username }}
+     </label>
+    </li>
+    <li>
+     <a href="/files/" title="Dashboard">
+      <i class="fa fa-th-large">
+      </i>
+      <div class="nt-tooltip">
+       <p style="font-family:'Ubuntu Condensed', sans-serif;">
+        Dashboard
+       </p>
+      </div>
+     </a>
+    </li>
+    <li>
+    </li>
+    <li>
+     <a href="/files/visualization/" title="Visualization">
+      <i class="fa fa-vimeo">
+      </i>
+      <div class="nt-tooltip">
+       <p style="font-family:'Ubuntu Condensed', sans-serif;">
+        Visualization
+       </p>
+      </div>
+     </a>
+    </li>
+    <li>
+     <a href="/files/processing/" title="Processing Center">
+      <i class="fa fa-product-hunt">
+      </i>
+      <div class="nt-tooltip">
+       <p style="font-family:'Ubuntu Condensed', sans-serif;">
+        Processing
+       </p>
+      </div>
+     </a>
+    </li>
+    <li>
+     <a href="/files/records/" title="Records">
+      <svg class="bi bi-caret-right-fill" fill="currentColor" height="1em" viewbox="0 0 16 16" width="1em" xmlns="http://www.w3.org/2000/svg">
+       <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z">
+       </path>
+      </svg>
+      <div class="nt-tooltip">
+       <p style="font-family:'Ubuntu Condensed', sans-serif;">
+        Records
+       </p>
+      </div>
+     </a>
+    </li>
+    <li>
+     <a href="/files/settings/" title="settings">
+      <i class="fa fa-cogs">
+      </i>
+      <div class="nt-tooltip">
+       <p style="font-family:'Ubuntu Condensed', sans-serif;">
+        Settings
+       </p>
+      </div>
+     </a>
+     <a href="/" onmouseover="javascript:event.target.port=8080" title="Advance">
+      <i class="icon ion-android-warning">
+      </i>
+      <div class="nt-tooltip">
+       <p style="font-family: 'Ubuntu Condensed', sans-serif;">
+        Advance
+       </p>
+      </div>
+     </a>
+    </li>
+    <li>
+     <a href="{% url 'logout' %}" title="logout">
+      <i class="fa fa-sign-out">
+      </i>
+      <div class="nt-tooltip">
+       <p style="font-family:'Ubuntu Condensed', sans-serif;">
+        Logout
+       </p>
+      </div>
+     </a>
+    </li>
+    <li>
+     <a href="/files/help/" title="Help">
+      <svg class="bi bi-question" fill="currentColor" height="1em" viewbox="0 0 16 16" width="1em" xmlns="http://www.w3.org/2000/svg">
+       <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z">
+       </path>
+      </svg>
+      <div class="nt-tooltip">
+       <p style="font-family:'Ubuntu Condensed', sans-serif;">
+        Help
+       </p>
+      </div>
+     </a>
+    </li>
+   </ul>
+  </div>
+  <section class="contact-clean">
+   <form data-bss-recipient="08480c779b8d73b09192cd13ad587f8a" style="width: 80%;max-width: 80%;">
+    <h2 class="text-center">
+     Help
+    </h2>
+    <div class="form-group">
+     <a href="/signup/">
+      Signup for a new account
+     </a>
+    </div>
+    <div class="form-group">
+     <a href="/admin/">
+      Admin
+     </a>
+    </div>
+    <div class="form-group">
+     <a href="/" onmouseover="javascript:event.target.port=8080">
+      Jupyter Notebook
+     </a>
+    </div>
+    <div class="form-group">
+     <a href="/download/Raw_file_uploader/publish.htm">
+      Download Latest Uploader
+     </a>
+    </div>
+    <div class="form-group">
+     <a href="/download/Spectromine_worker.zip">
+      Download Latest Spectromine Worker
+     </a>
+    </div>
+    <div class="form-group">
+     <p>
+      Why I can't load the network driver?
+      <br/>
+      If everything else is working, try change HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters\AllowInsecureGuestAuth to "1"
+      <br/>
+      <br/>
+     </p>
+     <p>
+      Why I can't load the network driver?
+      <br/>
+      If everything else is working, try change HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters\AllowInsecureGuestAuth to "1"
+      <br/>
+     </p>
+     <p>
+      How to mount network drives?
+      <br/>
+      type \\10.37.240.41\ or \\192.168.102.188\, into your address line of file browser with user name rtklabsmb, password: rtklab77, network drives are read only.
+      <br/>
+     </p>
+     <p>
+      Why my file didn't upload?
+      <br/>
+      If everything else is working, then most likely because of Xcalibur Qual Browser. For whatever reason, if you open a file with Xcalibur Qual Browser, It can't be uploaded. Free sytle is fine. I believe Thermo is retiring Qual Browser.
+      <br/>
+     </p>
+    </div>
+    <div class="form-group">
+    </div>
+    <div class="form-group">
+    </div>
+   </form>
+  </section>
+  <div class="row" style="text-align: center;">
+   <div class="col">
+    <footer class="bg-white sticky-footer">
+     <div class="container my-auto">
+      <div class="text-center my-auto copyright">
+       <span>
+        Copyright © 2022 PDM
+        <a href="/contact/">
+         Contact us
+        </a>
+       </span>
+      </div>
+     </div>
+    </footer>
+   </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/js/bootstrap.bundle.min.js">
+  </script>
+  <script src="{% static '/assets/js/smart-forms.min.js' %}">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js">
+  </script>
+  <script src="{% static '/assets/js/script.min.js' %}">
+  </script>
+  <script src="{% static '/assets/js/SO-floating-nav_15.min.js' %}">
+  </script>
+ </body>
+</html>
