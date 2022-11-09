@@ -225,6 +225,34 @@
         </div>
         <div class="form-row">
          <div class="col">
+          <label>
+           <strong>
+            Replace the original data file with converted mzML format
+           </strong>
+          </label>
+          <select class="form-control" name="replace_raw_with_mzML">
+           {% if settings.replace_raw_with_mzML == True %}
+           <option selected="" value="True">
+            Yes
+           </option>
+           <option value="False">
+            No
+           </option>
+           {% else %}
+           <option value="True">
+            Yes
+           </option>
+           <option selected="" value="False">
+            No
+           </option>
+           {% endif %}
+          </select>
+         </div>
+         <div class="col">
+         </div>
+        </div>
+        <div class="form-row">
+         <div class="col">
           <button class="btn btn-primary" name="save_settings" type="submit">
            Save
           </button>

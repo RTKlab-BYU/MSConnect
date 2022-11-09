@@ -124,6 +124,10 @@
     </ul>
    </div>
    <div class="d-flex flex-column" id="content-wrapper">
+    <script type="text/javascript">
+     if ("{{message|safe}}" != "")
+    {alert("{{ message|safe }}");}
+    </script>
     <div id="main">
      <div class="container-fluid">
       <form enctype="multipart/form-data" method="post">
@@ -191,7 +195,7 @@
         <div class="col">
          <p class="text-center">
           <strong>
-           Auto-backup strategy(how often new files are backed up, modification takes affect after reboot)
+           Auto-backup strategy(how often new files are backed up, modification takes effect after reboot)
           </strong>
          </p>
         </div>
@@ -225,7 +229,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-          primary_storage
+          Primary_storage
           <br/>
          </label>
         </div>
@@ -254,7 +258,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-          secondary_storage
+          Secondary_storage
           <br/>
          </label>
         </div>
@@ -313,7 +317,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-          remote_storage
+          Remote_storage
           <br/>
          </label>
         </div>
@@ -372,7 +376,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-          offline_storage
+          Offline_storage
           <br/>
          </label>
         </div>
@@ -449,7 +453,7 @@
         <div class="col">
          <p class="text-center">
           <strong>
-           Auto-Purge strategy (Delete after n days, 0 = never, purge performs daily, modification takes affect after reboot)
+           Auto-Purge strategy (Delete after n days, 0 = never, purge performs daily, modification takes effect after reboot)
           </strong>
          </p>
         </div>
@@ -463,19 +467,19 @@
         </div>
         <div class="col">
          <label class="col-form-label">
-          Database backup
+          Database Purge
           <br/>
          </label>
         </div>
         <div class="col">
          <label class="col-form-label">
-          Raw file backup
+          Raw file Purge
           <br/>
          </label>
         </div>
         <div class="col">
          <label class="col-form-label">
-          Processed file backup
+          Processed file Purge
           <br/>
          </label>
         </div>
@@ -483,7 +487,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-          primary_storage
+          Primary_storage
           <br/>
          </label>
         </div>
@@ -527,7 +531,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-          secondary_storage
+          Secondary_storage
           <br/>
          </label>
         </div>
@@ -586,7 +590,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-          remote_storage
+          Remote_storage
           <br/>
          </label>
         </div>
@@ -645,7 +649,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-          offline_storage
+          Offline_storage
           <br/>
          </label>
         </div>
@@ -785,7 +789,7 @@
         <div class="col">
          <p class="text-center">
           <strong>
-           System File backup and restore option(takes affect after reboot)
+           System/Supplements File backup and restore option(takes effect after reboot)
           </strong>
           <br/>
          </p>
@@ -841,21 +845,21 @@
        </div>
        <div class="form-row">
         <div class="col">
-         <p class="text-center">
+         <p class="text-center" style="color: var(--red);">
           <strong>
-           Backup Management(Restoration, deletion, copying, etc)
+           Backup Management(Restoration, deletion, copying, etc,), Please read manual at github wiki before start.
           </strong>
          </p>
          <div class="form-row">
           <div class="col">
            <label class="col-form-label">
-            Source
+            Source Device
             <br/>
            </label>
           </div>
           <div class="col">
            <label class="col-form-label">
-            Target
+            Target device(only used for migration)
             <br/>
            </label>
           </div>
@@ -867,13 +871,7 @@
           </div>
           <div class="col">
            <label class="col-form-label">
-            Data type
-            <br/>
-           </label>
-          </div>
-          <div class="col">
-           <label class="col-form-label">
-            index range/number(2-5)
+            Parameters, restoration index, etc.
             <br/>
            </label>
           </div>
@@ -914,28 +912,24 @@
           <div class="col">
            <select class="form-control" name="action_type">
             <option selected="" value="0">
-             Replace_from_source_to_target
+             Restore rawfile from backup
             </option>
             <option value="1">
-             Remove_from_source
-            </option>
-           </select>
-          </div>
-          <div class="col">
-           <select class="form-control" name="data_type">
-            <option selected="" value="0">
-             Database
-            </option>
-            <option value="1">
-             Raw file
+             restore processed file from backup
             </option>
             <option value="2">
-             Processed File
+             Restore system file from backup
+            </option>
+            <option value="3">
+             Copy database backups to Primary backup
+            </option>
+            <option value="4">
+             Copy all files to new Storage(migration)
             </option>
            </select>
           </div>
           <div class="col">
-           <input class="form-control" name="index_range" type="text"/>
+           <input class="form-control" name="restore_para" type="text"/>
           </div>
          </div>
          <div class="form-row">

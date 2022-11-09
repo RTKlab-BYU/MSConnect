@@ -1,26 +1,33 @@
 from django.contrib.auth.models import User
 from .models import FileStorage, SampleRecord, UserSettings, SystemSettings, \
-    WorkerStatus, DataAnalysisQueue, Review, \
-    AppAuthor, ProcessingApp, VisualizationApp
+    WorkerStatus, DataAnalysisQueue, ProcessingApp, VisualizationApp
 from rest_framework import serializers
 
 
 class FileStorageSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileStorage
-        fields = ['pk', 'file_location', 'file_type', 'modified_time']
+        fields = ['pk', 'file_location', 'file_type']
+
+
+class ProcessingAppSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProcessingApp
+        fields = ['pk', 'name']
 
 
 class SampleRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = SampleRecord
-        fields = ['pk', 'record_name', 'record_description',
-                  'instrument_model', 'instrument_SN', "column_sn", "spe_sn",
-                  "quanlity_check", "is_temp", "record_creator",
-                  "acquisition_time", "uploaded_time", "temp_rawfile",
-                  "sample_info", "file_size", "is_processed",
-                  "file_storage_indeces", "cache_pkl", "file_attachments",
-                  "newest_raw"]
+        fields = ['pk', 'record_name', 'record_description', "file_vendor",
+                  'instrument_model', 'instrument_sn', "column_sn", "spe_sn",
+                  "is_temp", "record_creator", "uploaded_time", "temp_rawfile",
+                  "project_name", "sample_type", "factor_1_name", "newest_raw",
+                  "factor_1_value", "factor_2_name", "factor_2_value",
+                  "factor_3_name", "factor_3_value", "factor_4_name",
+                  "factor_4_value", "factor_5_name", "factor_5_value",
+                  "factor_6_name", "factor_6_value", "factor_7_name",
+                  "factor_7_value", "factor_8_name", "factor_8_value"]
 
 
 class WorkerStatusSerializer(serializers.ModelSerializer):

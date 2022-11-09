@@ -1,4 +1,11 @@
+import logging
 from operator import truediv
+from django.utils.timezone import utc
+from datetime import datetime, timedelta
+import subprocess
+import random
+import string
+import requests
 from rest_framework import permissions
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -22,6 +29,7 @@ import glob
 from django.core import management
 from django.contrib.admin.views.decorators import staff_member_required
 
+from zipfile import ZipFile
 
 import shutil
 import time
@@ -31,16 +39,25 @@ from django.core.files.storage import FileSystemStorage
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.contrib.auth import get_user_model
 from django.core.files import File
+<<<<<<< HEAD
 
+=======
+from django.core.files import File
+from os.path import basename
+from urllib.request import urlretrieve, urlcleanup
+from urllib.parse import urlsplit
+>>>>>>> 357d529 (Feb Prototype)
 from .models import FileStorage, SampleRecord, UserSettings, SystemSettings, \
-    WorkerStatus, DataAnalysisQueue, Review, \
-    AppAuthor, ProcessingApp, VisualizationApp
+    WorkerStatus, DataAnalysisQueue, ProcessingApp, VisualizationApp
 from .serializers import FileStorageSerializer,  SampleRecordSerializer, \
-    WorkerStatusSerializer, DataAnalysisQueueSerializer
+    WorkerStatusSerializer, DataAnalysisQueueSerializer, \
+    ProcessingAppSerializer
 from django.conf import settings
 
 User = get_user_model()
 startTime = time.time()
+
+logger = logging.getLogger(__name__)
 
 
 # used for authenticated through API, will return render error on server log
@@ -84,6 +101,9 @@ def user_settings(request):
             user=request.user.id).update(hide_othersresult=request.
                                          POST.get('hide_othersresult'))
         UserSettings.objects.filter(
+            user=request.user.id).update(replace_raw_with_mzML=request.
+                                         POST.get('replace_raw_with_mzML'))
+        UserSettings.objects.filter(
             user=request.user.id).update(qc_1_name=request.
                                          POST.get('qc_1_name'))
         UserSettings.objects.filter(
@@ -116,33 +136,41 @@ def user_settings(request):
     # generate list of all apps with presets as a list
     qc_preset_dict = {}
     for item in ProcessingApp.objects.all():
-        for n in range(1, 11):
+        for n in range(1, 9):
             preset_name = getattr(item, f"preset_{n}")
             if preset_name:
                 # format for qc_pro_tool is process_app_pk_"qc"_preset_number
                 preset_key = str(item.pk)+"qc"+str(n)
                 qc_preset_dict[preset_key] = item.name + \
                     f"_{n}_" + preset_name.name
+        for n in range(1, 3):
+            preset_name = getattr(item, f"user_preset_{n}")
+            if preset_name:
+                # format for qc_pro_tool is process_app_pk_"qc"_preset_number
+                preset_key = str(item.pk)+"qc"+str(n)
+                qc_preset_dict[preset_key] = item.name + \
+                    f"_{n}_" + preset_name.name
     qc_preset_dict["None"] = "None"
-
     args = {
         'settings':
         UserSettings.objects.filter(
             user=request.user.id).first(),
         'qc_settings': qc_preset_dict,
-        'all_database_backups': glob.glob(
-            os.path.join(settings.MEDIA_ROOT,
-                         "primary_storage/database_backup/*.gz")),
     }
     return render(request, 'filemanager/user_settings.html', args)
 
 
 @staff_member_required
 def system_settings(request):
+<<<<<<< HEAD
     backup_options = ["Hourly", "Daily",
                       "Weekly", "Monthly", "None"]
     purge_options = ["0", "90", "180", "360", "1000", "3600"]  # days as unit
     schedule_setting_file = "system_configure/schedule.pkl"
+=======
+
+    message = ""
+>>>>>>> b8377cc (before modify app store structure)
 
     if request.method == 'POST' and 'rollback' in request.POST:
 
@@ -190,6 +218,292 @@ def system_settings(request):
         # for production server
         os.system('/venv/bin/uwsgi --reload /app/datamanager-master.pid')
 
+    elif request.method == 'POST' and 'start_process' in request.POST:
+
+        if request.POST.get('action_type') == "0":  # restore raw file
+            para = request.POST.get('restore_para')
+            try:
+                index_list = para.split("-")
+                start_index = int(index_list[0])
+                end_index = int(index_list[1])
+                restored_list = ""
+                for n in range(start_index, end_index+1):
+                    try:
+                        record = SampleRecord.objects.filter(pk=n)[0]
+                        for item in record.file_storage_indeces.all():
+                            if int(item.file_type) == int(
+                                    request.POST.get('source')) + 1 and \
+                                    os.path.splitext(
+                                        item.file_location.name)[
+                                            1][1:] == "7z":
+                                temp_folder = settings.TEMP_FOLDER
+                                cmd = ['7z',
+                                       'x',
+                                       os.path.join(
+                                           settings.MEDIA_ROOT,
+                                           item.file_location.name),
+                                       '-o' + temp_folder]
+                                process_output = subprocess.check_output(cmd)
+                                logger.info(
+                                    f"{item.file_location.name} unzipped"
+                                    f"{process_output}")
+
+                                file_year, file_month, file_day = \
+                                    record.acquisition_time.year, \
+                                    record.acquisition_time.month, \
+                                    record.acquisition_time.day
+
+                                if record.project_name != "":
+                                    file_dir = f"primary_storage/rawfiles/" \
+                                        f"{file_year}/{file_month}/" \
+                                        f"{record.project_name}/"
+                                else:
+                                    file_dir = f"primary_storage/rawfiles/" \
+                                        f"{file_year}/" \
+                                        f"{file_month}/{file_day}/"
+                                file_name = ""
+                                for f in os.listdir(temp_folder):
+                                    if f.split(".")[0] == \
+                                            os.path.os.path.splitext(
+                                            item.file_location.name)[
+                                            0].split('/')[-1]:
+                                        file_name = f
+                                    else:
+                                        os.remove(temp_folder+f)
+                                if file_name != "":
+                                    target_file_path = file_dir + file_name
+                                else:
+                                    continue
+                                if os.path.exists(os.path.join(
+                                    settings.MEDIA_ROOT,
+                                        target_file_path)):
+                                    random_str = "".join(
+                                        random.choice(
+                                            string.ascii_lowercase
+                                        ) for i in range(4))
+                                    file_name_part, file_ext_part = \
+                                        os.path.splitext(target_file_path)
+                                    target_file_path = file_name_part + \
+                                        "_" + random_str + "_" + file_ext_part
+                                shutil.move(
+                                    temp_folder + file_name,
+                                    os.path.join(
+                                        settings.MEDIA_ROOT, target_file_path))
+
+                                FileStorageform = {
+                                    "file_location": target_file_path,
+                                    "file_type": 1
+                                }
+
+                                if int(record.newest_raw.file_type) == 1:
+                                    record.file_storage_indeces.remove(
+                                        record.newest_raw)
+                                saved_storage = FileStorage.objects.create(
+                                    **FileStorageform, )
+
+                                record.file_storage_indeces.add(saved_storage)
+                                record.newest_raw = saved_storage
+                                record.uploaded_time = datetime.now()
+                                record.save()
+                        logger.info(
+                            f"Recrod {record.pk}, "
+                            f"{record.newest_raw.file_location}"
+                            f" has been restored.")
+                        restored_list = restored_list + \
+                            str(record.pk) + ", "
+                    except Exception as err:
+                        logger.error(f"{err} occurred during restore "
+                                     f"{n} raw file")
+                message = f"The following record's raw file has " \
+                    f"been processed {restored_list}," \
+                    f" please verify or view log to see if it successed."
+            except Exception as err:
+                message += f"parameter need to be in index-index,"
+                f" e.g., 203-204 format to restore 203 and 204. {err}"
+                logger.info(message)
+        if request.POST.get('action_type') == "1":  # restore processed file
+            para = request.POST.get('restore_para')
+            try:
+                index_list = para.split("-")
+                start_index = int(index_list[0])
+                end_index = int(index_list[1])
+                restored_list = ""
+                for n in range(start_index, end_index+1):
+                    try:
+                        record = DataAnalysisQueue.objects.filter(pk=n)[0]
+                        for item in record.backup_indeces.all():
+                            if int(item.file_type) == int(
+                                    request.POST.get('source')) + 6 and \
+                                    os.path.splitext(
+                                        item.file_location.name)[
+                                            1][1:] == "7z":
+                                temp_folder = settings.TEMP_FOLDER
+
+                                cmd = ['7z',
+                                       'x',
+                                       os.path.join(
+                                           settings.MEDIA_ROOT,
+                                           item.file_location.name),
+                                       '-o' + temp_folder]
+                                process_output = subprocess.check_output(cmd)
+                                logger.info(
+                                    f"process file "
+                                    f"{item.file_location.name} unzipped"
+                                    f"{process_output}")
+
+                                file_year, file_month, file_day = \
+                                    record.submit_time.year,  \
+                                    record.submit_time.month, \
+                                    record.submit_time.day
+
+                                file_dir = f"{settings.STORAGE_LIST[0]}/" \
+                                    f"dataqueue/{file_year}/" \
+                                    f"{file_month}/{file_day}/{record.pk}/"
+
+                                check_folder = os.path.isdir(os.path.join(
+                                    settings.MEDIA_ROOT, file_dir))
+                                if not check_folder:
+                                    os.makedirs(os.path.join(
+                                        settings.MEDIA_ROOT, file_dir))
+                                for f in os.listdir(temp_folder):
+                                    file_prefix = f.split("-")[0]
+                                    if file_prefix in \
+                                            settings.PROCESS_FILE_LIST:
+                                        target_file_path = file_dir + f
+                                        if os.path.exists(os.path.join(
+                                            settings.MEDIA_ROOT,
+                                                target_file_path)):
+                                            random_str = "".join(
+                                                random.choice(
+                                                    string.ascii_lowercase
+                                                ) for i in range(4))
+                                            file_name_part, file_ext_part = \
+                                                os.path.splitext(
+                                                    target_file_path)
+                                            target_file_path = \
+                                                file_name_part + \
+                                                "_" + random_str + \
+                                                "_" + file_ext_part
+                                        shutil.move(
+                                            temp_folder + f,
+                                            os.path.join(
+                                                settings.MEDIA_ROOT,
+                                                target_file_path))
+                                        old_value = getattr(record,
+                                                            file_prefix).name
+                                        old_file =\
+                                            os.path.join(
+                                                settings.MEDIA_ROOT, old_value
+                                            )
+                                        setattr(record, file_prefix,
+                                                target_file_path)
+
+                                        if os.path.exists(old_file) and \
+                                                old_value != target_file_path:
+                                            os.remove(old_file)
+                                        logger.info(
+                                            f"Process record {record.pk}, "
+                                            f"{file_prefix}"
+                                            f" has been restored.")
+                                    else:
+                                        os.remove(temp_folder+f)
+
+                        record.finish_time = datetime.now()
+                        record.save()
+                        logger.info(
+                            f"Process record {record.pk}, "
+                            f" has been restored.")
+                        restored_list = restored_list + \
+                            str(record.pk) + ", "
+                    except Exception as err:
+                        logger.error(f"{err} occurred during restore "
+                                     f"{n} process record")
+                message = f"The following process record's file has " \
+                    f"been processed {restored_list}," \
+                    f" please verify or view log to see if it successed."
+            except Exception as err:
+                message += f"parameter need to be in index-index,"
+                f" e.g., 203-204 format to restore 203 and 204. {err}"
+                logger.info(message)
+        if request.POST.get('action_type') == "2":  # restore system file
+            para = request.POST.get('restore_para')
+            try:
+                if int(para) in range(-7, 1):
+                    date_offset = int(para)
+                    source_drive = request.POST.get('source')
+
+                    restore_day = datetime.now() + \
+                        timedelta(days=int(date_offset))
+
+                    week_day = restore_day.strftime('%A')
+                    logger.info(f"Start the Restoration of systemfiles from "
+                                f"{settings.STORAGE_LIST[int(source_drive)]} "
+                                f" from {week_day}")
+                    zipname = os.path.join(
+                        settings.MEDIA_ROOT,
+                        f"{settings.STORAGE_LIST[int(source_drive)]}"
+                        f"/system_file_backups/"
+                        f"backup_{week_day}.7z")
+
+                    cmd = ['7z', 'x',  zipname, '-o' +
+                           os.path.join(
+                               settings.MEDIA_ROOT,
+                               settings.STORAGE_LIST[0]+"/"), '-y']
+                    process_output = subprocess.check_output(cmd)
+                    message = message + \
+                        f"Restore Process finished with {process_output}"
+                    logger.info(message)
+                else:
+                    message = f"Valid number is -6 to 0, see wiki for more."
+            except Exception as error:
+                message = f"No valid parameter or backup found, {error} "
+                logger.info(message)
+        if request.POST.get('action_type') == "3":  # Copy database to primary
+            source_drive = int(request.POST.get('source'))
+
+            backup_database_folder = os.path.join(
+                settings.MEDIA_ROOT,
+                settings.STORAGE_LIST[source_drive],
+                "database_backup/")
+            target_database_folder = os.path.join(
+                settings.MEDIA_ROOT,
+                settings.STORAGE_LIST[0],
+                "database_backup/")
+            for f in os.listdir(backup_database_folder):
+                try:
+                    shutil.copy(
+                        backup_database_folder + f, target_database_folder
+                    )
+                except Exception as error:
+                    message = f"Error occurred during moveing {f}, {error} "
+                    logger.info(message)
+            message = f"Finished processing databse file "\
+                f"in {backup_database_folder} "
+            logger.info(message)
+        if request.POST.get('action_type') == "4":
+            # Copy all files to new Storage(migration)
+            source_drive = int(request.POST.get('source'))
+            target_drive = int(request.POST.get('target'))
+
+            source_folder = os.path.join(
+                settings.MEDIA_ROOT,
+                settings.STORAGE_LIST[source_drive])
+            target_folder = os.path.join(
+                settings.MEDIA_ROOT,
+                settings.STORAGE_LIST[target_drive])
+
+            try:
+                output = shutil.copytree(
+                    source_folder, target_folder, dirs_exist_ok=True)
+            except Exception as error:
+                message = f"Error occurred during migrating " \
+                          f"{source_folder} to {target_folder}, {error}. "
+            else:
+                message = f"Finished processing migrating " \
+                          f"{source_folder} to {target_folder}. "
+            finally:
+                logger.info(message + output)
+
     schedule_setting_dict = {}
     if os.path.isfile(schedule_setting_file):
         with open(schedule_setting_file, 'rb') as f:
@@ -197,11 +511,12 @@ def system_settings(request):
     backup_list = glob.glob(
         os.path.join(settings.MEDIA_ROOT,
                      "primary_storage/database_backup/*.gz"))
+    backup_list.sort(key=os.path.getmtime)
     backup_list.reverse()
     args = {
         'all_database_backups': backup_list,
-        'backup_options': backup_options,
-        'purge_options': purge_options,
+        'backup_options': settings.BACKUP_OPTIONS,
+        'purge_options': settings.PURGE_OPTIONS,
         'current_backup':
             SystemSettings.objects.first().auto_backup_settings,
         'current_purge':
@@ -209,7 +524,8 @@ def system_settings(request):
         'schedule': schedule_setting_dict,
         'storage_options': settings.STORAGE_LIST,
         'current_sysfile_backup':
-            SystemSettings.objects.first().systemfile_backup_settings
+            SystemSettings.objects.first().systemfile_backup_settings,
+        "message": message,
 
     }
     return render(request, 'filemanager/system_settings.html', args)
@@ -236,7 +552,7 @@ def records(request):
                     result_queryset = result_queryset.filter(
                         pk__lte=pk_range[1]).order_by('-pk')
             except Exception as ex:
-                print(ex)
+                logger.error(f"Error during PK_range search {ex}")
 
         if request.POST.get('qc_range') != "":
             try:
@@ -250,7 +566,7 @@ def records(request):
                         quanlity_check__output_QC_number_1__lte=qc_range[
                             1]).order_by('-pk')
             except Exception as ex:
-                print(ex)
+                logger.error(f"Error during qc_range search {ex}")
         if request.POST.get('record_name') != "":
             result_queryset = result_queryset.filter(
                 record_name__contains=request.POST.
@@ -289,7 +605,7 @@ def records(request):
 
         if request.POST.get('project_name') != "":
             result_queryset = result_queryset.filter(
-                sample_info__sample_project__contains=request.POST.get(
+                project_name__contains=request.POST.get(
                     'project_name')).order_by('-pk')
 
         args = {
@@ -321,25 +637,8 @@ def records(request):
 
             }
         else:
-            all_my_groups = request.user.groups.all()
-            users_in_group = User.objects.none()
-            for group in all_my_groups:
-                users_in_group = users_in_group | Group.objects.get(
-                    name=group.name).user_set.all()
-            user_id_group = []
-            for users in users_in_group:
-                user_id_group.append(users.pk)
-            my_group_runs = []
-            total_counts = 0
-            all_runs = SampleRecord.objects.all().order_by('-pk')[:100]
-            # hopefully enough  to get 100
-            for item in all_runs.iterator():
-                if item.record_creator.pk in user_id_group:
-                    my_group_runs.append(item)
-                # print(item.creator.pk)
-
             args = {
-                'Records': my_group_runs,
+                'Records': SampleRecord.objects.all().order_by('-pk')[:100],
                 'Current_message': "Last 100 uploaded runs",
                 "users": User.objects.all(),
             }
@@ -378,7 +677,7 @@ def load_record(request, pk, *args, **kwargs):
                 0].record_creator or\
                 SampleRecord.objects.filter(pk=pk)[0].record_creator is None:
             SampleRecord.objects.filter(pk=pk).delete()
-            return HttpResponseRedirect("/files/results/")
+            return HttpResponseRedirect("/files/records/")
         else:
             message = "Sorry, you don't own this record"
 
@@ -439,10 +738,12 @@ def load_record(request, pk, *args, **kwargs):
                 SampleRecord.objects.filter(pk=compareid)[
             0].cache_pkl.file_location.name
                 is not None):
-            filename = SampleRecord.objects.filter(pk=pk)[
-                0].cache_pkl.file_location.name
-            filename2 = SampleRecord.objects.filter(pk=compareid)[
-                0].cache_pkl.file_location.name
+            filename = os.path.join(settings.MEDIA_ROOT,
+                                    SampleRecord.objects.filter(pk=pk)[
+                                        0].cache_pkl.file_location.name)
+            filename2 = os.path.join(settings.MEDIA_ROOT,
+                                     SampleRecord.objects.filter(pk=compareid)[
+                                         0].cache_pkl.file_location.name)
             with open(filename, 'rb') as handle:
                 plot_data = pickle.load(handle)
             with open(filename2, 'rb') as handle2:
@@ -465,14 +766,6 @@ def load_record(request, pk, *args, **kwargs):
                                       yaxis='y1',
                                       visible='legendonly',
                                       line=dict(width=1,)),
-                              Scatter(x=plot_data["MS1_RT"],
-                                      y=plot_data["MS1_Basemz"],
-                                      mode='lines',
-                                      name='m/z',
-                                      opacity=0.8,
-                                      marker_color='yellow',
-                                      visible='legendonly',
-                                      yaxis='y1'),
                               Scatter(x=plot_data["MS2_RT"],
                                       y=plot_data["MS2_Injectiontime"],
                                       mode='lines',
@@ -498,14 +791,6 @@ def load_record(request, pk, *args, **kwargs):
                                       yaxis='y1',
                                       visible='legendonly',
                                       line=dict(width=1,)),
-                              Scatter(x=plot_data2["MS1_RT"],
-                                      y=plot_data2["MS1_Basemz"],
-                                      mode='lines',
-                                      name=f'{compareid} m/z',
-                                      opacity=0.8,
-                                      marker_color='dodgerblue',
-                                      visible='legendonly',
-                                      yaxis='y1'),
                               Scatter(x=plot_data2["MS2_RT"],
                                       y=plot_data2["MS2_Injectiontime"],
                                       mode='lines',
@@ -525,9 +810,16 @@ def load_record(request, pk, *args, **kwargs):
 
     else:
         if (SampleRecord.objects.filter(pk=pk)[
+<<<<<<< HEAD
                 0].cache_pkl.file_location.name is not None):
             filename = SampleRecord.objects.filter(pk=pk)[
                 0].cache_pkl.file_location.name
+=======
+                0].cache_pkl is not None):
+            filename = os.path.join(settings.MEDIA_ROOT,
+                                    SampleRecord.objects.filter(pk=pk)[
+                                        0].cache_pkl.file_location.name)
+>>>>>>> b8377cc (before modify app store structure)
             try:
                 with open(filename, 'rb') as handle:
                     plot_data = pickle.load(handle)
@@ -550,14 +842,6 @@ def load_record(request, pk, *args, **kwargs):
                                               yaxis='y1',
                                               visible='legendonly',
                                               line=dict(width=1,)),
-                                      Scatter(x=plot_data["MS1_RT"],
-                                              y=plot_data["MS1_Basemz"],
-                                              mode='lines',
-                                              name='m/z',
-                                              opacity=0.8,
-                                              marker_color='blue',
-                                              visible='legendonly',
-                                              yaxis='y1'),
                                       Scatter(x=plot_data["MS2_RT"],
                                               y=plot_data["MS2_Injectiontime"],
                                               mode='lines',
@@ -565,7 +849,8 @@ def load_record(request, pk, *args, **kwargs):
                                               opacity=0.8,
                                               marker_color='blue',
                                               visible='legendonly',
-                                              yaxis='y2')],
+                                              yaxis='y2')
+                                      ],
                                      "layout":
                                      go.Layout(
                                          yaxis=dict(title='Ion Intensity /Ab'),
@@ -607,7 +892,15 @@ def load_record(request, pk, *args, **kwargs):
 
 @ login_required
 def sample_info(request, pk, *args, **kwargs):
+    """_summary_
 
+    Args:
+        request (_type_): _description_
+        pk (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     message = ""
     # TODO chagne to a little elegant soltuion for udpating
     if request.method == 'POST' and 'save' in request.POST:
@@ -677,7 +970,8 @@ def processing_center(request):
                     result_queryset = result_queryset.filter(
                         pk__lte=pk_range[1]).order_by('-pk')
             except Exception as ex:
-                print(ex)
+                logger.error(f"Error during process PK_range search {ex}")
+
         if request.POST.get('qc_range') != "":
             try:
                 qc_range = request.POST.get('qc_range').split("-")
@@ -690,7 +984,8 @@ def processing_center(request):
                         output_QC_number_1__lte=qc_range[
                             1]).order_by('-pk')
             except Exception as ex:
-                print(ex)
+                logger.error(f"Error during process QC_range search {ex}")
+
         if request.POST.get('process_name') != "":
             result_queryset = result_queryset.filter(
                 processing_name__contains=request.POST.
@@ -727,7 +1022,8 @@ def processing_center(request):
                             sample_records=record).order_by('-pk')
 
             except Exception as ex:
-                print(ex)
+                logger.warning(
+                    f"warning during process contained_record search {ex}")
 
             finally:
                 result_queryset = combined
@@ -763,6 +1059,300 @@ def visual_center(request):
     return render(request, 'filemanager/visualization_center.html', args)
 
 
+<<<<<<< HEAD
+=======
+@staff_member_required
+def app_center(request):
+    """_used to donwload processing, visualization apps from server,
+    install/enable new apps, update installed apps_
+
+    """
+    process_file_list = ["icon", "install_package", "process_package", ]
+    visual_file_list = ["icon", "install_package", ]
+
+    store_url = SystemSettings.objects.first().app_store_server
+    response = requests.get(store_url + "/apps/api/ProcessingApp/")
+    process_app_list = response.json()
+    visual_response = requests.get(
+        SystemSettings.objects.first().app_store_server +
+        "/apps/api/VisualizationApp/")
+    visual_app_list = visual_response.json()
+    if request.method == 'POST':
+        for actions in request.POST.keys():
+            if "removeapp_" in actions:  # remove app from PDM
+                a_list = actions.split("_")
+                if a_list[1] == "p":
+                    for item in process_file_list:  # delete all the files
+                        try:
+                            file_url = getattr(ProcessingApp.objects.filter(
+                                pk=int(a_list[2]))[0], item)
+                            os.remove(os.path.join(
+                                settings.MEDIA_ROOT, file_url.name))
+                        except Exception as err:
+                            logger.warning(f"While Deleting {item}, {err}")
+                    ProcessingApp.objects.filter(pk=int(a_list[2])).delete()
+                if a_list[1] == "v":
+                    for item in visual_file_list:
+                        try:
+                            file_url = getattr(VisualizationApp.objects.filter(
+                                pk=int(a_list[2]))[0], item)
+                            os.remove(os.path.join(
+                                settings.MEDIA_ROOT, file_url.name))
+                        except Exception as err:
+                            logger.warning(f"While Deleting {item}, {err}")
+
+                    VisualizationApp.objects.filter(pk=int(a_list[2])).delete()
+
+            if "downloadapp_" in actions:  # download app from store to PDM
+                a_list = actions.split("_")
+                if a_list[1] == "p":
+                    app_info = requests.get(
+                        store_url + f"/apps/api/ProcessingApp/{a_list[2]}/")
+                    app_info = app_info.json()
+                    # check if already exist, update files if version is old
+                    if_exist = ProcessingApp.objects.filter(
+                        UUID=app_info['UUID'])
+                    if if_exist.count() != 0:
+                        selected_app = if_exist[0]
+                        if selected_app.downloaded_version != app_info[
+                                'lastest_version']:
+                            # delete old files, download new files, update ver
+                            for item in process_file_list:
+                                try:
+                                    file_url = getattr(selected_app, item)
+                                    os.remove(os.path.join(
+                                        settings.MEDIA_ROOT, file_url.name))
+                                    download_to_file_field(
+                                        app_info[item],
+                                        getattr(selected_app,
+                                                item))
+                                except Exception as err:
+                                    logger.warning(
+                                        f"While Deleting {item}, {err}")
+                                else:
+                                    selected_app.downloaded_version = app_info[
+                                        'lastest_version']
+                    else:
+                        formdata = {
+                            "name": app_info['name'],
+                            "downloaded_version": app_info['lastest_version'],
+                            "UUID": app_info['UUID'],
+                            "progam_file_name": app_info['progam_file_name'],
+                            "app_author": app_info['app_author'],
+                            "app_homepage_url":
+                                store_url + "/apps/details/2/" +
+                            str(app_info['id'])
+
+                        }
+                        new_process = ProcessingApp.objects.create(
+                            **formdata, )
+                        for item in process_file_list:
+                            download_to_file_field(app_info[item],
+                                                   getattr(new_process, item))
+                if a_list[1] == "v":
+                    app_info = requests.get(
+                        store_url + f"/apps/api/VisualizationApp/{a_list[2]}/")
+                    app_info = app_info.json()
+                    if_exist = VisualizationApp.objects.filter(
+                        UUID=app_info['UUID'])
+                    if if_exist.count() != 0:
+                        selected_app = if_exist[0]
+                        if selected_app.downloaded_version != app_info[
+                                'lastest_version']:
+                            # delete old files, download new files, update ver
+                            for item in visual_file_list:
+                                try:
+                                    file_url = getattr(selected_app, item)
+                                    os.remove(os.path.join(
+                                        settings.MEDIA_ROOT, file_url.name))
+                                    download_to_file_field(
+                                        app_info[item],
+                                        getattr(selected_app,
+                                                item))
+                                except Exception as err:
+                                    logger.warning(
+                                        f"While Deleting {item}, {err}")
+                                else:
+                                    selected_app.downloaded_version = app_info[
+                                        'lastest_version']
+                                    selected_app.support_process_apps = \
+                                        app_info['support_process_apps']
+                    else:
+
+                        formdata = {
+                            "name": app_info['name'],
+                            "downloaded_version": app_info['lastest_version'],
+                            "UUID": app_info['UUID'],
+                            "progam_file_name": app_info['progam_file_name'],
+                            "support_process_apps":
+                                app_info['support_process_apps'],
+                            "app_author": app_info['app_author'],
+                            "app_homepage_url":
+                                store_url + "/apps/details/1/" +
+                            str(app_info['id'])
+
+                        }
+                        new_visaul = VisualizationApp.objects.create(
+                            **formdata, )
+                        for item in visual_file_list:
+                            download_to_file_field(app_info[item],
+                                                   getattr(new_visaul, item))
+            if "switch_enable_" in actions:  # enabled and disable apps
+                a_list = actions.split("_")
+                if a_list[-2] == "p":
+                    is_enabled = ProcessingApp.objects.filter(
+                        pk=a_list[-1]).first().is_enabled
+                    ProcessingApp.objects.filter(pk=a_list[-1]).update(
+                        is_enabled=not is_enabled)
+                if a_list[-2] == "v":
+                    is_enabled = VisualizationApp.objects.filter(
+                        pk=a_list[-1]).first().is_enabled
+                    VisualizationApp.objects.filter(pk=a_list[-1]).update(
+                        is_enabled=not is_enabled)
+            if "uninstall_" in actions:
+                a_list = actions.split("_")
+                if a_list[-2] == "p":
+                    app_obj = ProcessingApp.objects.filter(
+                        pk=a_list[-1])[0]
+                    app_obj.is_installed = False
+                    app_obj.is_enabled = False  # redundant
+                    app_obj.installed_version = None
+                    file_name = app_obj.progam_file_name
+                    try:
+                        os.remove(os.path.join(
+                            "file_manager/"
+                            f"processing_apps/{file_name}.py"))
+                        os.remove(
+                            f"file_manager/templates/filemanager/"
+                            f"{file_name}.html")
+                    except OSError:
+                        logger.error("file not found while try to uninstall ",
+                                     file_name)
+                    # remove all system presets (system and user presets)
+                    for n in range(1, 9):
+                        preset_file = getattr(app_obj, f"preset_{n}")
+                        if preset_file:
+                            try:
+                                os.remove(preset_file.path)
+                            finally:
+                                setattr(app_obj, f"preset_{n}", None)
+                    for n in range(1, 3):
+                        preset_file = getattr(app_obj, f"user_preset_{n}")
+                        if preset_file:
+                            try:
+                                os.remove(preset_file.path)
+                            finally:
+                                setattr(app_obj, f"user_preset_{n}", None)
+                    app_obj.save()
+                if a_list[-2] == "v":
+                    VisualizationApp.objects.filter(pk=a_list[-1]).update(
+                        is_installed=False)
+                    VisualizationApp.objects.filter(pk=a_list[-1]).update(
+                        is_enabled=False)  # redundant
+                    VisualizationApp.objects.filter(pk=a_list[-1]).update(
+                        installed_version=None)
+                    file_name = VisualizationApp.objects.filter(
+                        pk=a_list[-1])[0].progam_file_name
+                    os.remove(os.path.join(
+                        "file_manager/"
+                        f"visualization_apps/{file_name}.py"))
+                    try:
+                        os.remove(
+                            f"file_manager/templates/filemanager/"
+                            f"{file_name}.html")
+                    except OSError:
+                        logger.error("file not found while try to uninstall ",
+                                     file_name)
+
+            if "toinstall_" in actions or "toupdate" in actions:
+                a_list = actions.split("_")
+                if a_list[-2] == "p":
+                    process_app = ProcessingApp.objects.filter(
+                        pk=a_list[-1]).first()
+                    attached_file_version_string =\
+                        process_app.install_package.name
+                    attached_version = float(
+                        attached_file_version_string.split("version")[1])
+
+                    file_name = process_app.progam_file_name
+                    installaton_file = os.path.join(
+                        settings.MEDIA_ROOT,
+                        attached_file_version_string)
+
+                    if os.path.exists(installaton_file):
+                        logger.info(
+                            f'Extracting all the files now to install '
+                            f'{installaton_file}')
+                        archive = ZipFile(installaton_file)
+                        preset_index = 1
+                        for file in archive.namelist():
+                            if file.endswith('.py'):
+                                archive.extract(
+                                    file, 'file_manager/processing_apps')
+                            if file.endswith('.html'):
+                                archive.extract(
+                                    file, 'file_manager/templates/filemanager')
+                            if file.endswith('.zip'):
+                                archive.extract(
+                                    file, f"media/{settings.STORAGE_LIST[0]}"
+                                    "/systemfiles/presets/")
+                                setattr(process_app,
+                                        f"preset_{preset_index}",
+                                        f"{settings.STORAGE_LIST[0]}"
+                                        "/systemfiles/presets/" + file)
+                                preset_index += 1
+
+                    process_app.is_installed = True
+                    process_app.installed_version = attached_version
+                    process_app.last_install = datetime.now()
+                    process_app.save()
+
+                elif a_list[-2] == "v":
+                    visual_app = VisualizationApp.objects.filter(
+                        pk=a_list[-1]).first()
+                    attached_file_version_string = \
+                        visual_app.install_package.name
+                    attached_version = float(
+                        attached_file_version_string.split("version")[1])
+                    file_name = visual_app.progam_file_name
+                    installaton_file = os.path.join(
+                        settings.MEDIA_ROOT,
+                        attached_file_version_string)
+                    if os.path.exists(installaton_file):
+                        logger.info(
+                            f'Extracting all the files now to install '
+                            f'{installaton_file}')
+                        archive = ZipFile(installaton_file)
+                        for file in archive.namelist():
+                            if file.endswith('.py'):
+                                archive.extract(
+                                    file, 'file_manager/visualization_apps')
+                            if file.endswith('.html'):
+                                archive.extract(
+                                    file, 'file_manager/templates/filemanager')
+                    visual_app.is_installed = True
+                    visual_app.installed_version = attached_version
+                    visual_app.last_install = datetime.now()
+                    visual_app.save()
+
+    args = {
+        'server_visualization_apps':
+        visual_app_list["results"],
+        'server_processing_apps':
+        process_app_list["results"],
+
+        'visualization_apps':
+        VisualizationApp.objects.all(),
+        'processing_apps':
+        ProcessingApp.objects.all(),
+        'store_url': store_url,
+
+    }
+
+    return render(request, 'filemanager/app_center.html', args)
+
+
+>>>>>>> 6f55db5 (before processor client side)
 @ csrf_exempt
 @ login_required
 def uploader(request):  # internal test purpose
@@ -810,10 +1400,34 @@ class WorkerStatusViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
+class ProcessingAppViewset(viewsets.ModelViewSet):
+    queryset = ProcessingApp.objects.filter(is_installed=True).order_by('pk')
+    serializer_class = ProcessingAppSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
 class DataAnalysisQueueViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows DataAnalysisQueue to be viewed or edited.
     """
-    queryset = DataAnalysisQueue.objects.all().order_by('pk')
+    queryset = DataAnalysisQueue.objects.filter(
+        run_status=False).filter().order_by('-pk')
     serializer_class = DataAnalysisQueueSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        process_app_id = self.request.query_params.get('processappid')
+        if process_app_id:
+            return qs.filter(processing_app=int(process_app_id))
+        else:
+            return qs
+
+
+# https://goodcode.io/articles/django-download-url-to-file-field/
+def download_to_file_field(url, field):
+    try:
+        tempname, _ = urlretrieve(url)
+        field.save(basename(urlsplit(url).path), File(open(tempname, 'rb')))
+    finally:
+        urlcleanup()

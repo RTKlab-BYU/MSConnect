@@ -126,8 +126,7 @@
    <div class="d-flex flex-column" id="content-wrapper">
     <div id="main">
      <script type="text/javascript">
-      console.log("{{message|safe}}")
-if ("{{message|safe}}" != "")
+      if ("{{message|safe}}" != "")
     {alert("{{ message|safe }}");}
      </script>
      <div class="container-fluid">
@@ -135,11 +134,6 @@ if ("{{message|safe}}" != "")
        <div class="row">
         <div class="col">
          <form enctype="multipart/form-data" method="post">
-          <div style="visibility: hidden; display:inline;">
-           <p>
-            {% csrf_token %}
-           </p>
-          </div>
           <div style="visibility: hidden; display:inline;">
            <p>
             {% csrf_token %}

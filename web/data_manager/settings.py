@@ -12,17 +12,56 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-import environ
+from django.core.management.utils import get_random_secret_key
 
+
+DEFAULT_SCHEDULE = {
+    'schedule_hourly': '5',
+    'schedule_daily': '3',
+    'schedule_weekly': '6',
+    'schedule_monthly': '3'
+}
+STORAGE_LIST = ["primary_storage", "secondary_storage", "remote_storage",
+                "offline_storage", "None"]
+
+BACKUP_OPTIONS = ["Hourly", "Daily",
+                  "Weekly", "Monthly", "None"]
+
+
+PURGE_OPTIONS = ["0", "90", "180", "360", "1000", "3600"]  # days as unit
+
+
+DEFAULT_MZML_CONVERSION_SETTING = {
+    "docker_image": "proteowizard/pwiz-skyline-i-agree-to-the-vendor-licenses",
+    "command_list_before_file": ["wine", "msconvert"],
+    "command_list_after_file": ["-o", "/data"]
+
+}
+
+<<<<<<< HEAD
 env = environ.Env()
 environ.Env.read_env()
 # used to load sensitive information, e.g., secret key, password, etc.
+=======
+
+PROCESS_FILE_LIST = ["input_file_1", "input_file_2", "input_file_3",
+                     "output_file_1", "output_file_2", "output_file_3", ]
+
+
+TEMP_FOLDER = "/temp/"
+
+
+FILE_CONVERT_RETRY = 6
+# during local debug, load local .env, instead of rely on docker passed value
+if "DEBUG" not in os.environ:
+    from dotenv import load_dotenv
+    load_dotenv('data_manager/.debug.env')
+
+>>>>>>> b8377cc (before modify app store structure)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-STORAGE_LIST = ["primary_storage", "secondary_storage", "remote_storage",
-                "offline_storage", "None"]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -51,8 +90,10 @@ INSTALLED_APPS = [
     'file_manager.apps.FileManagerConfig',
     'dbbackup',  # django-dbbackup
     "django_extensions",  # for Jupiter notebook
+    "log_viewer",  # for view log
 ]
 
+<<<<<<< HEAD
 NOTEBOOK_ARGUMENTS = [
     # exposes IP and port
     '--ip=0.0.0.0',
@@ -63,11 +104,86 @@ NOTEBOOK_ARGUMENTS = [
     '--NotebookApp.password=''',
     '--notebook-dir=~/Jupiter_workflow'
 ]
+=======
+
+log_folder = 'media/primary_storage/log/'
+
+if not os.path.isdir(log_folder):
+    os.makedirs(log_folder)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'standard': {
+            'format': '[%(levelname)s] %(asctime)s  %(name)s: %(message)s'
+        },
+    },
+    'handlers': {
+        'default': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': f'{log_folder}Django_all.log',
+            'maxBytes': 1024*1024*25,  # 25 MB
+            'backupCount': 5,
+            'formatter': 'standard',
+        },
+
+        'errors': {
+            'level': 'WARNING',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': f'{log_folder}Django_error.log',
+            'maxBytes': 1024*1024*25,  # 25 MB
+            'backupCount': 5,
+            'formatter': 'standard',
+        },
+        'request_handler': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': f'{log_folder}/django_request.log',
+            'maxBytes': 1024*1024*25,  # 25 MB
+            'backupCount': 5,
+            'formatter': 'standard',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['default', 'errors'],
+            'level': 'DEBUG',
+            'propagate': True
+        },
+        'django.request': {
+            'handlers': ['request_handler'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+    }
+}
+
+# settings for django log viewer
+LOG_VIEWER_FILES_PATTERN = '*.log*'
+LOG_VIEWER_FILES_DIR = 'media/primary_storage/log/'
+LOG_VIEWER_PAGE_LENGTH = 100       # total log lines per-page
+LOG_VIEWER_MAX_READ_LINES = 10000  # total log lines will be read
+# Max log files loaded in Datatable per page
+LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE = 50
+LOG_VIEWER_PATTERNS = ['[INFO]', '[DEBUG]',
+                       '[WARNING]', '[ERROR]', '[CRITICAL]']
+# String regex expression to exclude the log from line
+LOG_VIEWER_EXCLUDE_TEXT_PATTERN = None
+
+# Optionally you can set the next variables in order to customize the admin:
+LOG_VIEWER_FILE_LIST_TITLE = "Django Log viewer"
+LOG_VIEWER_FILE_LIST_STYLES = "/static/css/my-custom.css"
+
+
+>>>>>>> b8377cc (before modify app store structure)
 # setting for the dbbackup to backup database
 DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
 DBBACKUP_STORAGE_OPTIONS = {
     'location': 'media/primary_storage/database_backup'}
 DBBACKUP_CLEANUP_KEEP = 168  # total number of backups
+DBBACKUP_HOSTNAME = "PDM_Server"
 DBBACKUP_CONNECTORS = {
     'default': {
         'CONNECTOR': 'dbbackup.db.sqlite.SqliteCPConnector',
@@ -189,9 +305,64 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = env('EMAIL_HOST')
-EMAIL_PORT = env('EMAIL_PORT')
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_BACKEND = os.environ['EMAIL_BACKEND']
+EMAIL_HOST = os.environ['EMAIL_HOST']
+EMAIL_PORT = os.environ['EMAIL_PORT']
+EMAIL_USE_TLS = os.environ['EMAIL_USE_TLS']
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+
+
+juptier_folder = os.path.join(
+    MEDIA_ROOT, f"{STORAGE_LIST[0]}/JupiterNotebook")
+
+check_dir = os.path.isdir(juptier_folder)
+
+if not check_dir:
+    os.makedirs(juptier_folder)
+NOTEBOOK_ARGUMENTS = [
+    # exposes IP and port
+    '--ip=0.0.0.0',
+    '--port=8080',
+    # disables the browser
+    '--allow-root',
+    '--no-browser',
+    f'--NotebookApp.token={os.environ["JUPTER_PASSWORD"]}',
+    '--NotebookApp.password=''',
+    f'--notebook-dir={juptier_folder}'
+]
+
+
+# Database
+# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+database_file = os.path.join(
+    MEDIA_ROOT, f"{STORAGE_LIST[0]}/database.sqlite3")
+
+
+# init_database = os.path.join(
+#     MEDIA_ROOT, "backup.sqlite3")
+
+# is_database = os.path.isfile(database_file)
+
+# if not is_database:
+#     import shutil
+#     shutil.copyfile(init_database, database_file)
+
+#########################################################
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': database_file,
+
+    }
+}
+SCHEDULE_SETTING_FILE = os.path.join(
+    MEDIA_ROOT,
+    f"{STORAGE_LIST[0]}/systemfiles/schedule.pkl")
+
+DEFAULT_SCHEDULE = {
+    'schedule_hourly': '5',
+    'schedule_daily': '3',
+    'schedule_weekly': '6',
+    'schedule_monthly': '3'
+}

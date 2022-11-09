@@ -1,0 +1,76 @@
+/*
+django-log-viwer
+https://github.com/agusmakmun/django-log-viewer
+*/
+
+.django__log__viewer .results {
+  margin-right: 280px;
+  width: auto;
+}
+.django__log__viewer .results ol {
+  margin: 0;
+  padding-left: 1.5em
+}
+.django__log__viewer .footer-action {
+  margin: 1em 0
+}
+.django__log__viewer .pull-left {
+  float: left;
+}
+.django__log__viewer .pull-right {
+  float: right;
+}
+.django__log__viewer .btn-download {
+  color: #fff;
+  margin: .5em;
+  margin-top: 0;
+  font-size: 13px;
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 15px;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  -ms-border-radius: 15px;
+  -o-border-radius: 15px;
+  background-color: #79aec8;
+  border-color: rgba(27,31,35,.15);
+  box-shadow: 0 1px 0 rgba(27,31,35,.1), inset 0 1px 0 hsla(0,0%,100%,.03);
+}
+table#log-entries thead th {
+  padding: 10px 18px;
+  border-bottom: 1px solid #e1e1e1;
+}
+table#log-entries.no-footer {
+  border-bottom: 1px solid #e1e1e1;
+}
+#log-entries_length, #log-entries_length {
+  margin: .5em 0;
+}
+#log-files-list_length {
+  width: 100%;
+  text-align: center;
+  float: none;
+}
+#log-files-list_filter {
+  float: none;
+  text-align: center;
+  padding: 0.5em 0.2em;
+}
+#log-files-list td {
+  font-size: 1em;
+  padding: 1em;
+}
+#log-files-list_info {
+  float: none;
+  text-align: center;
+  width: 100%;
+}
+#log-files-list_paginate {
+  float: none;
+  text-align: center;
+  margin-top: 1em;
+  width: 100%;
+}
+#log-files-list_paginate .paginate_button {
+  display: inline-block;
+}
