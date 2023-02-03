@@ -54,9 +54,20 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+web/media/
 
 
 # temp files
 web/data_conversion_v0_to_v1/
 web/file_manager/__pycache__
+<<<<<<< HEAD
 web/temp_2022-10-18/
+=======
+web/temp_2022-10-18/
+web/cache/
+
+# raw file
+*.raw
+*.zip
+*.z7
+>>>>>>> 357d529 (Feb Prototype)

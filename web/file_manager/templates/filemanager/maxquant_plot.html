@@ -4,9 +4,9 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
   <title>
-   View Results
+   Processing Center
   </title>
-  <meta content="This page provides access to view results and manage data" name="description"/>
+  <meta content="" name="description"/>
   <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
   <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
   <link href="{% static '/assets/img/main.png' %}" rel="icon" sizes="400x400" type="image/png"/>
@@ -41,6 +41,7 @@
       </a>
      </li>
      <li>
+<<<<<<< HEAD:web/file_manager/templates/filemanager/maxquant_plot.html
      </li>
      <li>
       <a href="/files/visualization/" title="Visualization">
@@ -54,6 +55,21 @@
       </a>
      </li>
      <li>
+=======
+     </li>
+     <li>
+      <a href="/files/visualization/" title="Visualization">
+       <i class="fa fa-vimeo">
+       </i>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Visualization
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+>>>>>>> adding_process_node:web/file_manager/templates/filemanager/visualization_center.html
       <a href="/files/processing/" title="Processing Center">
        <i class="fa fa-product-hunt">
        </i>
@@ -125,15 +141,69 @@
    </div>
    <div class="d-flex flex-column" id="content-wrapper">
     <div id="main">
-     <script type="text/javascript">
-      console.log("{{message|safe}}")
-if ("{{message|safe}}" != "")
-    {alert("{{ message|safe }}");}
-     </script>
      <div class="container-fluid">
       <div>
        <div class="row">
         <div class="col">
+         <form enctype="multipart/form-data" method="post">
+          <div style="visibility: hidden; display:inline;">
+           <p>
+            {% csrf_token %}
+           </p>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <p class="text-dark" style="font-size: 20px;text-align: center;">
+             <strong>
+              Visualization Center
+             </strong>
+             <br/>
+            </p>
+            <p class="text-dark" style="font-size: 20px;text-align: center;">
+             <strong>
+              Current Data Visualization Apps
+             </strong>
+             <br/>
+            </p>
+           </div>
+          </div>
+         </form>
+        </div>
+       </div>
+       <div class="row">
+        <div class="col">
+         <form enctype="multipart/form-data" method="post">
+          <div style="visibility: hidden; display:inline;">
+           <p>
+            {% csrf_token %}
+           </p>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <div class="form-row">
+             {% for app in visualization_apps %}
+             <div class="col">
+              <a href="/files/visual/{{ app.UUID }}/">
+               <img height="80" src="/{{app.icon}}"/>
+               {{ app.name}}
+              </a>
+             </div>
+             {% endfor %}
+            </div>
+           </div>
+          </div>
+<<<<<<< HEAD
+=======
+          <button class="btn btn-primary" name="get_more" onclick="window.location.href='/files/app_center/';" type="button">
+           Get More
+          </button>
+>>>>>>> 6f55db5 (before processor client side)
+          <div style="visibility: hidden; display:inline;">
+           <p>
+            {% csrf_token %}
+           </p>
+          </div>
+         </form>
          <form enctype="multipart/form-data" method="post">
           <div style="visibility: hidden; display:inline;">
            <p>
@@ -148,97 +218,9 @@ if ("{{message|safe}}" != "")
           <div class="form-row">
            <div class="col">
             <p class="text-dark" style="font-size: 20px;text-align: center;">
-             <strong>
-              Plotting Maxquant Data
-             </strong>
+             <br/>
             </p>
            </div>
-          </div>
-          <div class="form-row">
-           <div class="col">
-            <p class="text-dark" style="font-size: 20px;text-align: center;">
-             <strong>
-              Comparison between runs
-             </strong>
-            </p>
-           </div>
-          </div>
-          <div class="form-row">
-           <p>
-            Select Comparison Type
-           </p>
-           <select class="form-control" name="comparison_type">
-            {% if formdata.comparison_type == 'intensity' %}
-            <option value="identification">
-             Identification
-            </option>
-            <option selected="" value="intensity">
-             Intensity
-            </option>
-            {% else %}
-            <option selected="" value="identification">
-             Identification
-            </option>
-            <option value="intensity">
-             Intensity
-            </option>
-            {% endif %}
-           </select>
-          </div>
-          <div class="form-row">
-           <p>
-            Select Run id 1(in this run for ID)
-           </p>
-           <select class="form-control" id="id_plot_run_1" name="id_plot_run_1">
-            {% for item in RawFiles %}
-            <div>
-             {% if formdata.id_plot_run_1 == item.pk|stringformat:"i" %}
-             <option selected="" value="{{item.pk}}">
-              {{item.pk}}_{{item.run_name}}
-             </option>
-             {% else %}
-             <option value="{{item.pk}}">
-              {{item.pk}}_{{item.run_name}}
-             </option>
-             {% endif %}
-            </div>
-            {% endfor %}
-           </select>
-          </div>
-          <div class="form-row">
-           <p>
-            Select Run id 2 (not in this run)
-           </p>
-           <select class="form-control" id="id_plot_run_2" name="id_plot_run_2">
-            {% for item in RawFiles %}
-            <div>
-             {% if formdata.id_plot_run_2 == item.pk|stringformat:"i" %}
-             <option selected="" value="{{item.pk}}">
-              {{item.pk}}_{{item.run_name}}
-             </option>
-             {% else %}
-             <option value="{{item.pk}}">
-              {{item.pk}}_{{item.run_name}}
-             </option>
-             {% endif %}
-            </div>
-            {% endfor %}
-           </select>
-           <div class="col">
-           </div>
-          </div>
-          <div class="form-row">
-           <div class="col">
-            <button class="btn btn-primary" name="compare" type="submit">
-             Compare
-            </button>
-           </div>
-          </div>
-          <div class="form-row">
-           {% autoescape off %}
-  
-  {{ plot_div }}
-  {% endautoescape %}
           </div>
          </form>
         </div>
@@ -248,9 +230,15 @@ if ("{{message|safe}}" != "")
     </div>
    </div>
   </div>
+  <div class="col">
+  </div>
+  <div class="col">
+  </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js">
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/js/bootstrap.bundle.min.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js">
   </script>
   <script src="{% static '/assets/js/script.min.js' %}">
   </script>

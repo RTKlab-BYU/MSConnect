@@ -41,6 +41,10 @@
       </a>
      </li>
      <li>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD:web/file_manager/templates/filemanager/maxquant_plot.html
+>>>>>>> adding_process_node
      </li>
      <li>
       <a href="/files/visualization/" title="Visualization">
@@ -54,6 +58,24 @@
       </a>
      </li>
      <li>
+<<<<<<< HEAD
+=======
+=======
+     </li>
+     <li>
+      <a href="/files/visualization/" title="Visualization">
+       <i class="fa fa-vimeo">
+       </i>
+       <div class="nt-tooltip">
+        <p style="font-family:'Ubuntu Condensed', sans-serif;">
+         Visualization
+        </p>
+       </div>
+      </a>
+     </li>
+     <li>
+>>>>>>> adding_process_node:web/file_manager/templates/filemanager/visualization_center.html
+>>>>>>> adding_process_node
       <a href="/files/processing/" title="Processing Center">
        <i class="fa fa-product-hunt">
        </i>

@@ -26,6 +26,12 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.contenttypes import fields
 from .File_converter import FileConverter
+<<<<<<< HEAD
+=======
+import logging
+
+logger = logging.getLogger(__name__)
+>>>>>>> adding_process_node
 
 
 class FileStorage(models.Model):
@@ -47,6 +53,11 @@ class SampleRecord(models.Model):
     record_name = models.TextField(max_length=100, blank=True, null=True)
     record_description = models.TextField(
         max_length=1000, blank=True, null=True)
+<<<<<<< HEAD
+=======
+    file_vendor = models.TextField(
+        max_length=100, blank=True, null=True)  # vendor and type
+>>>>>>> adding_process_node
     instrument_model = models.TextField(max_length=100, blank=True, null=True)
     instrument_sn = models.TextField(max_length=100, blank=True, null=True)
 
@@ -65,7 +76,11 @@ class SampleRecord(models.Model):
     acquisition_time = models.DateTimeField(blank=True, null=True)
     uploaded_time = models.DateTimeField(auto_now_add=True)
     temp_rawfile = models.FileField(
+<<<<<<< HEAD
         upload_to=f"{settings.STORAGE_LIST[0]}/temp/", blank=True, null=True)
+=======
+        upload_to="temp/", blank=True, null=True)
+>>>>>>> adding_process_node
     file_size = models.DecimalField(default=0, max_digits=5,
                                     decimal_places=3, blank=True, null=True)
     is_processed = models.BooleanField(default=False, null=True)
@@ -123,17 +138,32 @@ def process_uploaded(sender, instance, **kwargs):
     """
 
     if not instance.is_processed:
+<<<<<<< HEAD
         convert = FileConverter(instance, FileStorage)
+=======
+        convert = FileConverter(
+            instance,
+            FileStorage,
+            UserSettings.objects.filter(user=instance.record_creator))
+>>>>>>> adding_process_node
 
         if convert.sucess:
             # Automatically create QC based on user settings(app/preset)
             if UserSettings.objects.filter(
+<<<<<<< HEAD
                     user=instance.record_creator.pk).first() is None:
+=======
+                    user=instance.record_creator).first() is None:
+>>>>>>> adding_process_node
                 auto_qc = "None"
 
             else:
                 auto_qc = UserSettings.objects.filter(
+<<<<<<< HEAD
                     pk=instance.record_creator.pk).first(
+=======
+                    user=instance.record_creator.pk).first(
+>>>>>>> adding_process_node
                 ).QC_pro_tool
             if auto_qc != "None":
 
@@ -161,6 +191,7 @@ def process_uploaded(sender, instance, **kwargs):
                     for target_file in z.namelist():
                         for n in range(1, 4):
                             if target_file.startswith(f'input_file_{n}'):
+<<<<<<< HEAD
                                 with z.open(target_file) as myfile:
                                     with io.BytesIO() as buf:
                                         buf.write(myfile.read())
@@ -173,6 +204,22 @@ def process_uploaded(sender, instance, **kwargs):
 
                 SampleRecord.objects.filter(pk=instance.pk).update(
                     quanlity_check=newtask.pk)
+=======
+                                path = z.extract(
+                                    target_file,
+                                    os.path.join(
+                                        settings.MEDIA_ROOT,
+                                        "primary_storage/"
+                                        "dataqueue/uniquetempfolder"))
+                                setattr(
+                                    newtask, f"input_file_{n}", path)
+                newtask.save()
+                SampleRecord.objects.filter(pk=instance.pk).update(
+                    quanlity_check=newtask.pk)
+        logger.info(
+            f"New sample record {instance.pk} was created "
+            f"by {instance.record_creator}")
+>>>>>>> adding_process_node
 
     SampleRecord.objects.filter(pk=instance.pk).update(
         is_processed=True)
@@ -184,7 +231,10 @@ class UserSettings(models.Model):
                              null=True)
 
     hide_othersresult = models.BooleanField(default=False, null=True)
+<<<<<<< HEAD
     hide_other_apps = models.BooleanField(default=False, null=True)
+=======
+>>>>>>> adding_process_node
     # formate for qc_pro_tool is process_app_pk + "qc" + preset_number
     QC_pro_tool = models.TextField(
         max_length=100, blank=True, null=True, default="None")
@@ -196,6 +246,13 @@ class UserSettings(models.Model):
         max_length=100, blank=True, null=True, default="PSM")
     qc_4_name = models.TextField(
         max_length=100, blank=True, null=True, default="MS2")
+<<<<<<< HEAD
+=======
+    # advanced setting, only accessible in the Django-admin Module
+    conversion_settings = models.JSONField(
+        default=settings.DEFAULT_MZML_CONVERSION_SETTING, null=True)
+    replace_raw_with_mzML = models.BooleanField(default=False, null=True)
+>>>>>>> adding_process_node
 
     def __str__(self):
         return 'Profile of user: {}'.format(self.user.username)
@@ -216,6 +273,16 @@ class SystemSettings(models.Model):
 
     system_version = models.TextField(
         max_length=1000, blank=True, null=True)
+<<<<<<< HEAD
+=======
+    app_store_server = models.TextField(
+        max_length=1000,
+        blank=True,
+        default="https://proteomicsdata.com/",
+        null=True)
+    secret_mode = models.BooleanField(default=False, null=True)
+    # user can only view their own file unless stuff
+>>>>>>> adding_process_node
 
 
 class WorkerStatus(models.Model):
@@ -285,10 +352,16 @@ class DataAnalysisQueue(models.Model):
 def move_file(sender, instance, **kwargs):
     """_move uploaded file to year/month/date folder_
     """
+<<<<<<< HEAD
     file_list = ["input_file_1", "input_file_2", "input_file_3",
                  "output_file_1", "output_file_2", "output_file_3", ]
     update_url = {}
     for item in file_list:
+=======
+
+    update_url = {}
+    for item in settings.PROCESS_FILE_LIST:
+>>>>>>> adding_process_node
         old_file_path = getattr(instance, item).name
         if old_file_path:
             if "uniquetempfolder" in old_file_path:
@@ -298,14 +371,21 @@ def move_file(sender, instance, **kwargs):
                 file_year, file_month, file_day = \
                     submit_time.year, submit_time.month, \
                     submit_time.day
+<<<<<<< HEAD
                 filename = old_file_path.split('/')[-1]
                 new_url = f"{settings.STORAGE_LIST[0]}/dataqueue/" \
                     f"{file_year}/{file_month}/{file_day}/"
+=======
+                filename = os.path.basename(old_file_path)
+                new_url = f"{settings.STORAGE_LIST[0]}/dataqueue/" \
+                    f"{file_year}/{file_month}/{file_day}/{instance.pk}"
+>>>>>>> adding_process_node
                 check_folder = os.path.isdir(os.path.join(
                     settings.MEDIA_ROOT, new_url))
                 if not check_folder:
                     os.makedirs(os.path.join(
                         settings.MEDIA_ROOT, new_url))
+<<<<<<< HEAD
                 shutil.move(
                     (os.path.join(
                         settings.MEDIA_ROOT, old_file_path)),
@@ -314,6 +394,25 @@ def move_file(sender, instance, **kwargs):
                         new_url + item + "_" + filename))
 
                 update_url[item] = new_url + item + "_" + filename
+=======
+
+                if os.path.exists(os.path.join(
+                        settings.MEDIA_ROOT,
+                        new_url + filename)):
+                    random_str = "".join(random.choice(
+                        string.ascii_lowercase) for i in range(4))
+                    root_ext = os.path.splitext(filename)
+                    filename = root_ext[0] + f"_{random_str}"+root_ext[1]
+
+                shutil.move(
+                    (os.path.join(
+                        settings.MEDIA_ROOT, old_file_path)),
+                    (os.path.join(
+                        settings.MEDIA_ROOT, new_url + filename))
+                )
+
+                update_url[item] = new_url + filename
+>>>>>>> adding_process_node
     DataAnalysisQueue.objects.filter(pk=instance.pk).update(**update_url)
 
 
@@ -335,6 +434,7 @@ class SavedVisualization(models.Model):
     settings = models.JSONField(default=dict, null=True)
 
 
+<<<<<<< HEAD
 class Review(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.SET_NULL, blank=True,
@@ -367,6 +467,12 @@ class ProcessingApp(models.Model):
     name = models.TextField(
         max_length=100, blank=True, null=True)
     version = models.TextField(
+=======
+class ProcessingApp(models.Model):
+    name = models.TextField(
+        max_length=100, blank=True, null=True)
+    installed_version = models.TextField(
+>>>>>>> adding_process_node
         max_length=100, blank=True, null=True)
     is_enabled = models.BooleanField(default=False, null=True)
     description = models.TextField(
@@ -380,7 +486,11 @@ class ProcessingApp(models.Model):
     process_package = models.FileField(
         upload_to=f"{settings.STORAGE_LIST[0]}/systemfiles/codes/processing",
         blank=True, null=True)
+<<<<<<< HEAD
     app_url = models.TextField(
+=======
+    app_homepage_url = models.TextField(
+>>>>>>> adding_process_node
         max_length=100, blank=True, null=True)
     preset_1 = models.FileField(
         upload_to=f"{settings.STORAGE_LIST[0]}e/systemfiles/presets/",
@@ -406,6 +516,7 @@ class ProcessingApp(models.Model):
     preset_8 = models.FileField(
         upload_to=f"{settings.STORAGE_LIST[0]}/systemfiles/presets/",
         blank=True, null=True)
+<<<<<<< HEAD
     preset_9 = models.FileField(
         upload_to=f"{settings.STORAGE_LIST[0]}/systemfiles/presets/",
         blank=True, null=True)
@@ -425,16 +536,42 @@ class ProcessingApp(models.Model):
         null=True,
         blank=True,
     )
+=======
+    user_preset_1 = models.FileField(
+        upload_to=f"{settings.STORAGE_LIST[0]}/systemfiles/presets/",
+        blank=True, null=True)
+    user_preset_2 = models.FileField(
+        upload_to=f"{settings.STORAGE_LIST[0]}/systemfiles/presets/",
+        blank=True, null=True)
+
+    app_author = models.TextField(
+        max_length=100, blank=True, null=True)
+    last_install = models.DateTimeField(blank=True, null=True)
+    downloaded_version = models.TextField(
+        max_length=100, blank=True, null=True)
+    is_installed = models.BooleanField(default=False, null=True)
+    # how to generate import uuid; uuid.uuid4().hex.upper()[0:12]
+    UUID = models.TextField(
+        max_length=100, blank=True, null=True)  # used for server side ID
+    progam_file_name = models.TextField(
+        max_length=100, blank=True, null=True)
+    # progam_file_name must match module main py name
+>>>>>>> adding_process_node
 
 
 class VisualizationApp(models.Model):
     name = models.TextField(
         max_length=100, blank=True, null=True)
+<<<<<<< HEAD
     version = models.TextField(
+=======
+    installed_version = models.TextField(
+>>>>>>> adding_process_node
         max_length=100, blank=True, null=True)
     is_enabled = models.BooleanField(default=False, null=True)
     description = models.TextField(
         max_length=5000, blank=True, null=True)
+<<<<<<< HEAD
     icon = models.FileField(
         upload_to=f"{settings.STORAGE_LIST[0]}/systemfiles/images/",
         blank=True, null=True)
@@ -453,3 +590,26 @@ class VisualizationApp(models.Model):
         null=True,
         blank=True,
     )
+=======
+    install_package = models.FileField(
+        upload_to=f"{settings.STORAGE_LIST[0]}/systemfiles/codes/install",
+        blank=True, null=True)
+    icon = models.FileField(
+        upload_to=f"{settings.STORAGE_LIST[0]}/systemfiles/images/",
+        blank=True, null=True)
+    app_homepage_url = models.TextField(
+        max_length=100, blank=True, null=True)
+    support_process_apps = models.TextField(
+        max_length=5000, blank=True, null=True)
+    app_author = models.TextField(
+        max_length=100, blank=True, null=True)
+    last_install = models.DateTimeField(blank=True, null=True)
+    downloaded_version = models.TextField(
+        max_length=100, blank=True, null=True)
+    is_installed = models.BooleanField(default=False, null=True)
+    UUID = models.TextField(
+        max_length=100, blank=True, null=True)
+    progam_file_name = models.TextField(
+        max_length=100, blank=True, null=True)
+    # progam_file_name must match module main py name
+>>>>>>> adding_process_node

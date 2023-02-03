@@ -15,9 +15,17 @@ services:
     restart: always
     command: >
       sh -c "/venv/bin/python3 manage.py collectstatic --noinput   && /venv/bin/uwsgi   --ini /app/datamanager.uwsgi.ini --enable-threads"
+    env_file:
+      - ./.django_secrets.env #change the content of this file
+    environment:
+      is_docker: "True"
+      TZ: "America/Denver"
     volumes:
       - uwsgi_data:/tmp/uwsgi/
       - web_static:/app/static/
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/temp/:/app/media/temp/ # volume file conversion
+      #add you file/drive settings
       - type: bind
         source: //d/docker/primary_storage #host folder in windows, means d:/docker/primary_raw
         target: //app/media//primary_storage
