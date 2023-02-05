@@ -167,11 +167,7 @@
             <div class="form-row">
              {% for app in processing_apps %}
              <div class="col">
-<<<<<<< HEAD
-              <a href="/files/processing/{{ app.app_url }}">
-=======
               <a href="/files/processing/{{app.UUID}}/">
->>>>>>> adding_process_node
                <img height="80" src="/{{app.icon}}"/>
                {{ app.name}}
               </a>
@@ -185,15 +181,9 @@
             {% csrf_token %}
            </p>
           </div>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
           <button class="btn btn-primary" name="get_more" onclick="window.location.href='/files/app_center/';" type="button">
            Get More
           </button>
->>>>>>> 6f55db5 (before processor client side)
->>>>>>> adding_process_node
          </form>
          <form enctype="multipart/form-data" method="post">
           <div style="visibility: hidden; display:inline;">
@@ -257,11 +247,7 @@
              {{ item.processing_app.name}}
             </td>
             <td>
-<<<<<<< HEAD
-             {{ item.seq_number}}
-=======
              {{ item.pk}}
->>>>>>> adding_process_node
             </td>
             <td>
              {{ item.worker_ip}}
@@ -390,7 +376,7 @@
          <div class="col">
          </div>
          <div class="col">
-          <button class="btn btn-primary" name="data_filter" type="submut">
+          <button class="btn btn-primary" name="data_filter" type="submit">
            Search
           </button>
          </div>

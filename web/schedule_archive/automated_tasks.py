@@ -1,43 +1,34 @@
-from django.core import management
-from django.db.models import Q
-from datetime import datetime, timedelta
-from django.db.models import Count
-from django.db.models.functions import TruncDay
-from django.db.models.functions.datetime import TruncMonth
+import os
 import time
 import pickle
-import errno
-import os
-from django.utils import timezone
 import random
 import string
-
-import subprocess
-import glob
 import shutil
-from django.contrib.auth import get_user_model
+import glob
+import subprocess
+
+from datetime import datetime, timedelta
+
 from django.conf import settings
-from file_manager.models import FileStorage, SampleRecord, UserSettings,\
-<<<<<<< HEAD
-    SystemSettings, WorkerStatus, DataAnalysisQueue, AppAuthor, ProcessingApp,\
-    VisualizationApp
+from django.core import management
+from django.db.models import Q, Count
+from django.db.models.functions import TruncDay, TruncMonth
+from django.utils import timezone
 from django.utils.timezone import utc
-User = get_user_model()
-startTime = time.time()
+from django.contrib.auth import get_user_model
 
-
-=======
-    SystemSettings, WorkerStatus, DataAnalysisQueue,  ProcessingApp,\
-    VisualizationApp
-from django.utils.timezone import utc
+from file_manager.models import FileStorage, SampleRecord, \
+    SystemSettings,  DataAnalysisQueue
+from file_manager.views import CACHE_FILE
 import logging
+
+
 logger = logging.getLogger(__name__)
 
 
 User = get_user_model()
 startTime = time.time()
 
->>>>>>> adding_process_node
 # Generated default system settings
 
 
@@ -47,11 +38,7 @@ startTime = time.time()
 try:
     current_backup_settings = \
         SystemSettings.objects.first().auto_backup_settings
-<<<<<<< HEAD
-    current_surge_settings = \
-=======
     current_purge_settings = \
->>>>>>> adding_process_node
         SystemSettings.objects.first().auto_purge_settings
 except AttributeError:
     form_data = {
@@ -60,72 +47,34 @@ except AttributeError:
     SystemSettings.objects.create(**form_data, )
     current_backup_settings = \
         SystemSettings.objects.first().auto_backup_settings
-<<<<<<< HEAD
-    current_surge_settings = \
-=======
     current_purge_settings = \
->>>>>>> adding_process_node
         SystemSettings.objects.first().auto_purge_settings
 task_list = ["database", "rawfile", "processed_file"]
 
 
 def hourly_task():
-<<<<<<< HEAD
-    print(datetime.now(), "Hourly task started")
-    generate_cache_files()
-    backup_task("Hourly")
-    backup_systemfile()
-
-    # remove_unused_files(SsdStorage, 4)
-    # keep_storage_below("/", 90)
-    print("Hourly task finished")
-=======
+    """_Hourly task_
+    """
     logger.info("Hourly task started")
     generate_cache_files()
     backup_task("Hourly")
-
-    # remove_unused_files(SsdStorage, 4)
-    # keep_storage_below("/", 90)
     logger.info("Hourly task finished")
->>>>>>> adding_process_node
 
 
 def daily_task():
-    """deleted ssd record that are older than 1 month and uploaded more than
-    a week ago
+    """_Perform daily task_
     """
-<<<<<<< HEAD
-    print(datetime.now(), " Daily task started")
-
-    backup_task("Daily")
-    purge_task()
-    print(" Daily task finished")
-    backup_systemfile()
-
-
-def weekly_task():
-    print(datetime.now())
-    backup_task("Weekly")
-
-
-def monthly_task():
-    print(datetime.now())
-    backup_task("Monthly")
-=======
     logger.info("Daily task started")
-
     backup_task("Daily")
     auto_purge_task()
     storage_purge_task()
     backup_systemfile()
-
     logger.info("Daily task finished")
 
 
 def weekly_task():
     logger.info("Weekly task started")
     backup_task("Weekly")
-
     logger.info("Weekly task finished")
 
 
@@ -133,53 +82,26 @@ def monthly_task():
     logger.info("Monthly task started")
     backup_task("Monthly")
     logger.info("Monthly task finished")
->>>>>>> adding_process_node
 
 
 def backup_task(time_string):
+    """_Perform backup task for raw files, processed file, database files_
+
+    Args:
+        time_string (_type_): _Hourly, Daily, Weekly or Monthly_
+    """
     for key, value in current_backup_settings.items():
-<<<<<<< HEAD
-        if value == time_string:
-            key_list = key.split("_")  # _storage_task
-=======
         if value == time_string:  # Perform task if time_string matches setting
             key_list = key.split("_")  # backup_storage_task
->>>>>>> adding_process_node
             storage_index = int(key_list[-2])
             task_type = int(key_list[-1])
 
-            if storage_index == 0 and task_type == 0:
-<<<<<<< HEAD
-                print("backup database")
-                management.call_command('dbbackup', '-z', "--clean")
-                # database back to primary storage
-            elif task_type == 0:
-                # copy lastest database to corresponding folder respectively
-                try:
-                    current_datafile = glob.glob(
-                        os.path.join(settings.MEDIA_ROOT,
-                                     f"{settings.STORAGE_LIST[0]}"
-                                     f"/database_backup/*.gz"
-                                     ))[-1]
-                    target_datafile = \
-                        current_datafile.replace(
-                            settings.STORAGE_LIST[0],
-                            settings.STORAGE_LIST[storage_index],
-                            1)
-                    shutil.copy(current_datafile, target_datafile)
-                except IOError as e:
-                    # try creating parent directories
-                    os.makedirs(os.path.dirname(target_datafile))
-                    shutil.copy(current_datafile, target_datafile)
-            elif task_type == 1:  # backup rawfile
-                # not most efficient, step through all recrod check missing
-                for record in SampleRecord.objects.all():
-=======
-                # backup database to primary storage
+            if storage_index == 0 and task_type == 0:  # backup database to
+                # primary storage
                 logger.info("backup database")
                 management.call_command('dbbackup', '-z', "--clean")
-            elif task_type == 0:
-                # copy lastest database to corresponding folder respectively
+            elif task_type == 0:  # copy lastest database to corresponding
+                # folder respectively
                 try:
                     current_datafile_list = glob.glob(
                         os.path.join(settings.MEDIA_ROOT,
@@ -208,72 +130,11 @@ def backup_task(time_string):
                 for record in SampleRecord.objects.filter(
                         uploaded_time__gte=datetime.today()-timedelta(
                         days=90)):
->>>>>>> adding_process_node
                     is_backup = False
                     for item in record.file_storage_indeces.all():
                         if int(item.file_type) == storage_index+1:
                             is_backup = True
                     if not is_backup:
-<<<<<<< HEAD
-                        storage_index = storage_index
-
-                        # try:
-                        current_raw = os.path.join(
-                            settings.MEDIA_ROOT,
-                            record.newest_raw.file_location.name)
-                        file_path, file_name = \
-                            os.path.split(
-                                record.newest_raw.file_location.name)
-                        to_tz = timezone.get_default_timezone()
-
-                        acquisition_time = \
-                            record.acquisition_time.astimezone(to_tz)
-                        file_year, file_month, file_day = \
-                            acquisition_time.year, acquisition_time.month,\
-                            acquisition_time.day
-
-                        new_name = \
-                            f"{settings.STORAGE_LIST[storage_index]}/" \
-                            f"rawfiles/{file_year}/{file_month}/{file_day}/" \
-                            f"{file_name}"
-                        file_extension = file_name.split(".")[-1]
-
-                        new_name = new_name.replace(
-                            "." + file_extension, ".7z")
-                        if os.path.exists(os.path.join(
-                                settings.MEDIA_ROOT, new_name)):
-                            random_str = "".join(random.choice(
-                                string.ascii_lowercase) for i in range(4))
-                            new_name = new_name.replace(
-                                ".7z", "_" + random_str+".7z")
-                        subprocess.run(['7z', 'a',  os.path.join(
-                            settings.MEDIA_ROOT, new_name), current_raw,
-                            "-mx=9", "-mmt=2"])
-
-                        if (os.path.exists(os.path.join(
-                                settings.MEDIA_ROOT, new_name))):
-                            FileStorageform = {
-                                "file_location": new_name,
-                                'file_type': storage_index+1
-                            }
-                            fileStorage_new = FileStorage.objects.create(
-                                **FileStorageform, )
-                            record.file_storage_indeces.add(
-                                fileStorage_new)
-                            print(
-                                record.pk,
-                                storage_index, task_type,
-                                " backup finished")
-                        else:
-                            print(
-                                record.pk,
-                                storage_index, task_type,
-                                " backup failed")
-
-            elif task_type == 2:  # backup processed_file
-                # not most efficient, step through all recrod check missing
-                for record in DataAnalysisQueue.objects.all():
-=======
                         try:
                             if record.newest_raw is None:
                                 logger.error(
@@ -338,14 +199,12 @@ def backup_task(time_string):
                         except Exception as err:
                             logger.error(
                                 f"{record.pk} raw back up failed, {err}")
-
             elif task_type == 2:  # backup processed_file
                 # processed in the last 90 days, hard coded here should be ok
                 # not most efficient, step through all recrod check missing
                 for record in DataAnalysisQueue.objects.filter(
                     finish_time__gte=datetime.today()-timedelta(
                         days=90)):
->>>>>>> adding_process_node
                     if record.finish_time is None:  # not finished running
                         continue
                     is_backup = False
@@ -353,69 +212,6 @@ def backup_task(time_string):
                         if int(item.file_type) == storage_index+6:
                             is_backup = True
                     if not is_backup:
-<<<<<<< HEAD
-                        # try:
-                        file_list = ["input_file_1", "input_file_2",
-                                     "input_file_3", "output_file_1",
-                                     "output_file_2", "output_file_3", ]
-
-                        url_list = []
-                        to_tz = timezone.get_default_timezone()
-
-                        finish_time = record.finish_time.astimezone(
-                            to_tz)
-                        file_year, file_month, file_day = finish_time.year, \
-                            finish_time.month, finish_time.day
-                        zip_name = \
-                            f"{settings.STORAGE_LIST[storage_index]}/"
-                        f"processqueue/{file_year}/{file_month}/"
-                        f"{file_day}/{record.processing_name}.7z"
-                        if os.path.exists(os.path.join(
-                                settings.MEDIA_ROOT, zip_name)):
-                            random_str = "".join(random.choice(
-                                string.ascii_lowercase) for i in range(4))
-                            zip_name = zip_name.replace(
-                                ".7z", "_" + random_str+".7z")
-
-                        for item_name in file_list:
-                            current_url = getattr(record, item_name)
-                            if current_url is not None and current_url != "":
-
-                                add_file_name = \
-                                    os.path.join(
-                                        settings.MEDIA_ROOT, current_url.name)
-                                subprocess.run(['7z', 'a',  os.path.join(
-                                    settings.MEDIA_ROOT, zip_name),
-                                    add_file_name,
-                                    "-mx=9", "-mmt=2"])
-
-                        if (os.path.exists(os.path.join(
-                                settings.MEDIA_ROOT, zip_name))):
-                            FileStorageform = {
-                                "file_location": zip_name,
-                                'file_type': storage_index+6
-                            }
-                            fileStorage_new = FileStorage.objects.create(
-                                **FileStorageform, )
-                            record.backup_indeces.add(
-                                fileStorage_new)
-                            print(
-                                record.pk,
-                                storage_index, task_type,
-                                "process backup finished")
-                        else:
-                            print(
-                                record.pk,
-                                storage_index, task_type,
-                                "process backup failed")
-
-
-def purge_task():
-    now = datetime.utcnow().replace(tzinfo=utc)
-
-    for key, value in current_surge_settings.items():
-        if value is None or value == "":
-=======
                         try:
                             to_tz = timezone.get_default_timezone()
 
@@ -472,15 +268,15 @@ def purge_task():
 
 
 def auto_purge_task():
-    """_Delete empty records, already deleted record files, etc_
+    """_Delete files (cache, raw, processed, attachment) that not related to
+    any records (SampleRecord deleted).
     """
-
-    now = datetime.now()
-
     # delete file that not related to any records and old than
     #
     for record in FileStorage.objects.filter(file_type=0,
                                              cache_pkl__isnull=True):
+        # delete cahche file that not related to any records (already deleted)
+        # type 0
         full_file_path = os.path.join(
             settings.MEDIA_ROOT, record.file_location.name)
         if os.path.isfile(full_file_path):
@@ -493,6 +289,8 @@ def auto_purge_task():
 
     for record in FileStorage.objects.filter(file_type=5,
                                              attachments__isnull=True):
+        # delete attachment  that not related to any records (already deleted)
+        # type 5
         full_file_path = os.path.join(
             settings.MEDIA_ROOT, record.file_location.name)
         if os.path.isfile(full_file_path):
@@ -503,10 +301,12 @@ def auto_purge_task():
             f"due to no related record.")
         FileStorage.objects.filter(pk=record.pk).delete()
 
-    # can 3 is remote, 4 if offline, maybe should add 3
+    # type 3 is remote, 4 if offline, maybe should add 3
     for record in FileStorage.objects.filter(file_type__in=[1, 2],
                                              newest_raw__isnull=True,
                                              storage__isnull=True):
+        # delete raw file that not related to any records (already deleted)
+        # type 1, 2, type 3 is remote, 4 if offline, maybe should add 3
 
         full_file_path = os.path.join(
             settings.MEDIA_ROOT, record.file_location.name)
@@ -520,6 +320,8 @@ def auto_purge_task():
 
     for record in FileStorage.objects.filter(file_type__in=[6, 7, 8, 9],
                                              procee_queue_backup=True):
+        # delete process file that not related to any records (already deleted)
+        # type 6, 7, 8, 9, different storage locations
         full_file_path = os.path.join(
             settings.MEDIA_ROOT, record.file_location.name)
         if os.path.isfile(full_file_path):
@@ -532,8 +334,8 @@ def auto_purge_task():
 
 
 def storage_purge_task():
-    """_delet old files that exceeed the purge critias in the settings,
-    purge_storageindex_tasktype_
+    """_delet old files(database, raw, processed) that exceeed the purge
+    critias in the settings, purge_storageindex_tasktype_
     """
 
     now = datetime.now()
@@ -548,7 +350,6 @@ def storage_purge_task():
     # purge files specified in the settings
     for key, value in current_purge_settings.items():
         if value is None or value == "" or int(value) == 0:
->>>>>>> adding_process_node
             continue
         key_list = key.split("_")  # _storage_task
         storage_index = int(key_list[-2])
@@ -560,61 +361,6 @@ def storage_purge_task():
                     f"{settings.STORAGE_LIST[storage_index]}"
                     f"/database_backup/"
                 )
-<<<<<<< HEAD
-
-                current_time = time.time()  # TODO change to datetime format
-                for f in os.listdir(pruge_direct):
-                    creation_time = os.path.getctime(f)
-                    if (current_time - creation_time) // (24 * 3600) \
-                            >= int(value):
-                        os.remove(f)
-                        print('{} removed'.format(f))
-
-            except Exception as e:
-                print(e)
-        elif task_type == 1:  # purge old raw file
-            for record in SampleRecord.objects.all():
-                if (now - record.uploaded_time).days >= int(value):
-                    print((now - record.uploaded_time).days)
-                    for item in record.file_storage_indeces.all():
-                        if int(item.file_type) == storage_index+1:
-                            try:
-                                os.remove(os.path.join(
-                                    settings.MEDIA_ROOT, item.file_location))
-                                item.file_location = None
-                                item.save()
-                            except Exception as error:
-                                print(
-                                    f"{error} remove {item.file_location}")
-
-        elif task_type == 2:  # purge old process file
-            for record in DataAnalysisQueue.objects.all():
-                if (now - record.finish_time).days >= int(value):
-                    print((now - record.finish_time).days)
-
-                    for item in record.backup_indeces.all():
-                        if int(item.file_type) == storage_index+1:
-                            try:
-                                os.remove(os.path.join(
-                                    settings.MEDIA_ROOT, item.file_location))
-                                item.file_location = None
-                                item.save()
-                            except Exception as error:
-                                print(
-                                    f"{error} remove {item.file_location}")
-
-
-def backup_systemfile():
-    print("backup system supporting files, e.g., process app etc")
-    sys_file_backup = SystemSettings.objects.first().systemfile_backup_settings
-    folder_to_back = os.path.join(
-        settings.MEDIA_ROOT, f"{settings.STORAGE_LIST[0]}/systemfiles_backup")
-    target_file = os.path.join(
-        settings.MEDIA_ROOT,
-        f"{sys_file_backup['system_file_backup_target']}/backups/backup.zip")
-    subprocess.run(['7z', 'a',  target_file, folder_to_back,
-                    "-mx=9", "-mmt=2"])
-=======
                 current_time = time.time()
                 if not os.path.exists(pruge_direct):
                     continue
@@ -713,6 +459,8 @@ def backup_systemfile():
 
 
 def backup_systemfile():
+    """_Backup all system files to storage as a 7z file_
+    """
     sys_file_backup = SystemSettings.objects.first().systemfile_backup_settings
     if bool(sys_file_backup):
         folder_to_back = os.path.join(
@@ -732,12 +480,11 @@ def backup_systemfile():
         subprocess.run(['7z', 'a',  target_file, folder_to_back,
                         "-mx=9", "-mmt=2"])
     logger.info(f"System file backup finished. {target_file}")
->>>>>>> adding_process_node
 
 
 def generate_cache_files():
-    cache_file = "file_manager/cache/dash_cache.pickle"
-
+    """_Generate cache files for the dashboard page used in the views_
+    """
     data_daily = SampleRecord.objects.all().annotate(date=TruncDay(
         'acquisition_time')).values("date").annotate(
         created_count=Count('id')).order_by("-date")
@@ -759,11 +506,7 @@ def generate_cache_files():
                     data_daily[29-n]["date"].strftime("%B-%d-%Y"))
                 daily_data.append(data_daily[29-n]["created_count"])
         except IndexError:
-<<<<<<< HEAD
-            print(f"Less than {29-n} days of data")
-=======
             logger.error(f"Less than {29-n} days of data")
->>>>>>> adding_process_node
     for n in range(0, 12):
         try:
             if data_monthly[11-n]["month"] is not None:
@@ -771,11 +514,7 @@ def generate_cache_files():
                     data_monthly[11-n]["month"].strftime("%B-%Y"))
                 monthly_data.append(data_monthly[11-n]["created_count"])
         except IndexError:
-<<<<<<< HEAD
-            print(f"Less than {11-n} month of data")
-=======
             logger.error(f"Less than {11-n} month of data")
->>>>>>> adding_process_node
     for item in by_user[:10]:
         if item["record_creator_id"] is not None:
             user_names.append(User.objects.get(
@@ -840,11 +579,9 @@ def generate_cache_files():
         'user_data': user_counts,
         'user_labels': user_names,
     }
-    with open(cache_file, 'wb') as handle:
+    with open(CACHE_FILE, 'wb') as handle:
         pickle.dump(cached_data, handle, protocol=pickle.HIGHEST_PROTOCOL)
-<<<<<<< HEAD
-=======
 
-
+# generate cache files on startup when uncommented, can affect debug speed as
+# it takes a few seconds to generate
 # generate_cache_files()
->>>>>>> adding_process_node

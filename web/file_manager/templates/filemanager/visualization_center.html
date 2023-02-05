@@ -167,11 +167,7 @@
             <div class="form-row">
              {% for app in visualization_apps %}
              <div class="col">
-<<<<<<< HEAD
-              <a href="/files/visual/{{ app.app_url }}">
-=======
               <a href="/files/visual/{{ app.UUID }}/">
->>>>>>> adding_process_node
                <img height="80" src="/{{app.icon}}"/>
                {{ app.name}}
               </a>
@@ -180,15 +176,9 @@
             </div>
            </div>
           </div>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
           <button class="btn btn-primary" name="get_more" onclick="window.location.href='/files/app_center/';" type="button">
            Get More
           </button>
->>>>>>> 6f55db5 (before processor client side)
->>>>>>> adding_process_node
           <div style="visibility: hidden; display:inline;">
            <p>
             {% csrf_token %}

@@ -441,7 +441,7 @@
                                      <button class="btn btn-primary" name="toinstall_p_{{app.pk}}" type="submit">
                                       Install
                                      </button>
-                                     <button class="btn btn-primary" name="removeapp_p_{{app.id}}" type="submit">
+                                     <button class="btn btn-primary disabled" disabled="" name="removeapp_p_{{app.id}}" type="submit">
                                       Delete from my PDM
                                      </button>
                                      {% elif app.is_installed is True  and app.is_enabled is not True%}
@@ -584,7 +584,7 @@
                                               <button class="btn btn-primary" name="toinstall_v_{{app.pk}}" type="submit">
                                                Install
                                               </button>
-                                              <button class="btn btn-primary" name="removeapp_v_{{app.id}}" type="submit">
+                                              <button class="btn btn-primary disabled" disabled="" name="removeapp_v_{{app.id}}" type="submit">
                                                Delete from my PDM
                                               </button>
                                               {% elif app.is_installed is True  and app.is_enabled is not True%}

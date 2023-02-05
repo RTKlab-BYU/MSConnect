@@ -149,20 +149,6 @@
           <div class="form-row">
            <div class="col">
             <p>
-             Pk(record number) range (e.g., 4000-4200)
-             <input class="form-control" name="pk_range" type="text" value="{{formdata.pk_range}}"/>
-            </p>
-           </div>
-           <div class="col">
-            <p>
-             QC1 range (e.g., 3800-4100)
-             <input class="form-control" name="qc_range" type="text" value="{{formdata.qc_range}}"/>
-            </p>
-           </div>
-          </div>
-          <div class="form-row">
-           <div class="col">
-            <p>
              Record Name
              <input class="form-control" name="record_name" type="text" value="{{formdata.record_name}}"/>
             </p>
@@ -171,6 +157,20 @@
             <p>
              Project Name
              <input class="form-control" name="project_name" type="text" value="{{formdata.project_name}}"/>
+            </p>
+           </div>
+          </div>
+          <div class="form-row">
+           <div class="col">
+            <p>
+             Pk(record number) range (e.g., 4000-4200)
+             <input class="form-control" name="pk_range" type="text" value="{{formdata.pk_range}}"/>
+            </p>
+           </div>
+           <div class="col">
+            <p>
+             QC1 range (e.g., 3800-4100)
+             <input class="form-control" name="qc_range" type="text" value="{{formdata.qc_range}}"/>
             </p>
            </div>
           </div>
@@ -194,9 +194,11 @@
              Record Creator
             </p>
             <select name="record_creator" width="100%">
+             {% if fotosList|length == 1 %}
              <option value="">
               All
              </option>
+             {% endif %}
              {% for item in users %}
              <div>
               {% if formdata.record_creator == item.pk|stringformat:"i" %}

@@ -124,13 +124,10 @@
     </ul>
    </div>
    <div class="d-flex flex-column" id="content-wrapper">
-<<<<<<< HEAD
-=======
     <script type="text/javascript">
      if ("{{message|safe}}" != "")
     {alert("{{ message|safe }}");}
     </script>
->>>>>>> adding_process_node
     <div id="main">
      <div class="container-fluid">
       <form enctype="multipart/form-data" method="post">
@@ -198,11 +195,7 @@
         <div class="col">
          <p class="text-center">
           <strong>
-<<<<<<< HEAD
-           Auto-backup strategy(how often new files are backed up, modification takes affect after reboot)
-=======
            Auto-backup strategy(how often new files are backed up, modification takes effect after reboot)
->>>>>>> adding_process_node
           </strong>
          </p>
         </div>
@@ -236,11 +229,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-<<<<<<< HEAD
-          primary_storage
-=======
           Primary_storage
->>>>>>> adding_process_node
           <br/>
          </label>
         </div>
@@ -269,11 +258,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-<<<<<<< HEAD
-          secondary_storage
-=======
           Secondary_storage
->>>>>>> adding_process_node
           <br/>
          </label>
         </div>
@@ -332,11 +317,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-<<<<<<< HEAD
-          remote_storage
-=======
           Remote_storage
->>>>>>> adding_process_node
           <br/>
          </label>
         </div>
@@ -395,11 +376,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-<<<<<<< HEAD
-          offline_storage
-=======
           Offline_storage
->>>>>>> adding_process_node
           <br/>
          </label>
         </div>
@@ -476,11 +453,7 @@
         <div class="col">
          <p class="text-center">
           <strong>
-<<<<<<< HEAD
-           Auto-Purge strategy (Delete after n days, 0 = never, purge performs daily, modification takes affect after reboot)
-=======
            Auto-Purge strategy (Delete after n days, 0 = never, purge performs daily, modification takes effect after reboot)
->>>>>>> adding_process_node
           </strong>
          </p>
         </div>
@@ -494,31 +467,19 @@
         </div>
         <div class="col">
          <label class="col-form-label">
-<<<<<<< HEAD
-          Database backup
-=======
           Database Purge
->>>>>>> adding_process_node
           <br/>
          </label>
         </div>
         <div class="col">
          <label class="col-form-label">
-<<<<<<< HEAD
-          Raw file backup
-=======
           Raw file Purge
->>>>>>> adding_process_node
           <br/>
          </label>
         </div>
         <div class="col">
          <label class="col-form-label">
-<<<<<<< HEAD
-          Processed file backup
-=======
           Processed file Purge
->>>>>>> adding_process_node
           <br/>
          </label>
         </div>
@@ -526,11 +487,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-<<<<<<< HEAD
-          primary_storage
-=======
           Primary_storage
->>>>>>> adding_process_node
           <br/>
          </label>
         </div>
@@ -574,11 +531,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-<<<<<<< HEAD
-          secondary_storage
-=======
           Secondary_storage
->>>>>>> adding_process_node
           <br/>
          </label>
         </div>
@@ -637,11 +590,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-<<<<<<< HEAD
-          remote_storage
-=======
           Remote_storage
->>>>>>> adding_process_node
           <br/>
          </label>
         </div>
@@ -700,11 +649,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-<<<<<<< HEAD
-          offline_storage
-=======
           Offline_storage
->>>>>>> adding_process_node
           <br/>
          </label>
         </div>
@@ -844,11 +789,7 @@
         <div class="col">
          <p class="text-center">
           <strong>
-<<<<<<< HEAD
-           System File backup and restore option(takes affect after reboot)
-=======
            System/Supplements File backup and restore option(takes effect after reboot)
->>>>>>> adding_process_node
           </strong>
           <br/>
          </p>
@@ -904,35 +845,21 @@
        </div>
        <div class="form-row">
         <div class="col">
-<<<<<<< HEAD
-         <p class="text-center">
-          <strong>
-           Backup Management(Restoration, deletion, copying, etc)
-=======
          <p class="text-center" style="color: var(--red);">
           <strong>
            Backup Management(Restoration, deletion, copying, etc,), Please read manual at github wiki before start.
->>>>>>> adding_process_node
           </strong>
          </p>
          <div class="form-row">
           <div class="col">
            <label class="col-form-label">
-<<<<<<< HEAD
-            Source
-=======
             Source Device
->>>>>>> adding_process_node
             <br/>
            </label>
           </div>
           <div class="col">
            <label class="col-form-label">
-<<<<<<< HEAD
-            Target
-=======
             Target device(only used for migration)
->>>>>>> adding_process_node
             <br/>
            </label>
           </div>
@@ -944,17 +871,7 @@
           </div>
           <div class="col">
            <label class="col-form-label">
-<<<<<<< HEAD
-            Data type
-            <br/>
-           </label>
-          </div>
-          <div class="col">
-           <label class="col-form-label">
-            index range/number(2-5)
-=======
             Parameters, restoration index, etc.
->>>>>>> adding_process_node
             <br/>
            </label>
           </div>
@@ -995,25 +912,6 @@
           <div class="col">
            <select class="form-control" name="action_type">
             <option selected="" value="0">
-<<<<<<< HEAD
-             Replace_from_source_to_target
-            </option>
-            <option value="1">
-             Remove_from_source
-            </option>
-           </select>
-          </div>
-          <div class="col">
-           <select class="form-control" name="data_type">
-            <option selected="" value="0">
-             Database
-            </option>
-            <option value="1">
-             Raw file
-            </option>
-            <option value="2">
-             Processed File
-=======
              Restore rawfile from backup
             </option>
             <option value="1">
@@ -1027,16 +925,11 @@
             </option>
             <option value="4">
              Copy all files to new Storage(migration)
->>>>>>> adding_process_node
             </option>
            </select>
           </div>
           <div class="col">
-<<<<<<< HEAD
-           <input class="form-control" name="index_range" type="text"/>
-=======
            <input class="form-control" name="restore_para" type="text"/>
->>>>>>> adding_process_node
           </div>
          </div>
          <div class="form-row">

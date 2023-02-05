@@ -1,7 +1,15 @@
 version: "1.0"
 services:
-  nginx:
-    build: ./nginx/
+  data_manager-nginx:
+
+    image: xiexf128/data_manager-nginx:latest
+    #comment build section if not built from local
+    build:
+      context: nginx/
+      tags:
+        - xiexf128/data_manager-nginx:1.0
+        - xiexf128/data_manager-nginx:latest
+
     restart: always
     volumes:
       - uwsgi_data:/tmp/uwsgi/
@@ -9,9 +17,16 @@ services:
     ports:
       - "8090:80"
     depends_on:
-      - django
-  django:
-    build: ./web/
+      - data_manager-django
+  data_manager-django:
+    &django_project
+    image: xiexf128/data_manager-django:latest
+    #comment build section if not built from local
+    build:
+      context: ./web/
+      tags:
+        - xiexf128/data_manager-django:1.0
+        - xiexf128/data_manager-django:latest
     restart: always
     command: >
       sh -c "/venv/bin/python3 manage.py collectstatic --noinput   && /venv/bin/uwsgi   --ini /app/datamanager.uwsgi.ini --enable-threads"
@@ -19,7 +34,6 @@ services:
       - ./.django_secrets.env #change the content of this file
     environment:
       is_docker: "True"
-      TZ: "America/Denver"
     volumes:
       - uwsgi_data:/tmp/uwsgi/
       - web_static:/app/static/
@@ -28,16 +42,24 @@ services:
       #add you file/drive settings
       - type: bind
         source: //d/docker/primary_storage #host folder in windows, means d:/docker/primary_raw
-        target: //app/media//primary_storage
+        target: //app/media//primary_storage #don't change
       - type: bind
         source: //d/docker/secondary_storage # means d:/docker/secondary_raw
-        target: //app/media//secondary_storage
+        target: //app/media//secondary_storage #don't change
       - type: bind
         source: //d/docker/remote_storage #means d:/docker/remote
-        target: //app/media//remote_storage
+        target: //app/media//remote_storage #don't change
       - type: bind
         source: //d/docker/offline_storage #means d:/docker/offline
-        target: //app/media//offline_storage
+        target: //app/media//offline_storage #don't change
+
+  data_manager-JupiterNotebook:
+    <<: *django_project
+    command: >
+      sh -c "/venv/bin/python3 manage.py shell_plus --notebook"
+    ports:
+      - "8080:8080"
+
 volumes:
   uwsgi_data:
   web_static:

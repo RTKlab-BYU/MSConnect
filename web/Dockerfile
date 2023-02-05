@@ -2,14 +2,6 @@ FROM ubuntu:22.04
 LABEL maintainer = Xiaofeng Xie xiexf128@gmail.com
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
-<<<<<<< HEAD
-RUN apt-get -y install python3 python3-pip python3-venv python3-wheel 
-RUN apt-get install -y --no-install-recommends p7zip-full
-RUN apt-get install -y mono-complete
-# ARG USER=root
-# USER $USER
-RUN python3 -m venv venv
-=======
 RUN apt-get -y install python3 python3-pip python3-venv python3-wheel wget 
 RUN apt-get install -y --no-install-recommends p7zip-full
 RUN apt-get install -y mono-complete
@@ -22,26 +14,26 @@ RUN echo "deb [signed-by=/usr/share/keyrings/r-project.gpg] https://cloud.r-proj
 RUN apt update
 RUN apt install -y --no-install-recommends r-base
 
-RUN python3 -m venv venv
 RUN apt update && apt -y install locales && locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
->>>>>>> adding_process_node
 WORKDIR /app
+#set up python environment
+ENV VIRTUAL_ENV=/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH" 
 COPY requirements.txt requirements.txt
 RUN /venv/bin/pip install -r requirements.txt
 RUN /venv/bin/pip install uwsgi
-<<<<<<< HEAD
-=======
-#RUN /venv/bin/pip install --upgrade requests
->>>>>>> adding_process_node
+
+#set up R environment for Juipter Nootebook
+COPY install.R install.R
+RUN Rscript /app/install.R 
+
 
 COPY . .
-#RUN /venv/bin/activate
-#EXPOSE 8000
-CMD ["/venv/bin/uwsgi", "--ini", "/app/datamanager.uwsgi.ini"]
-# RUN python3 manage.py runserver 0.0.0.0:8000
 
-#RUN chmod +x /app/start.sh
-#ENTRYPOINT ["./start.sh"]
+
+
+CMD ["/venv/bin/uwsgi", "--ini", "/app/datamanager.uwsgi.ini"]
