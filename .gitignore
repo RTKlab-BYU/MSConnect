@@ -60,7 +60,6 @@ var/
 
 
 # temp files
-web/data_conversion_v0_to_v1/
 web/file_manager/__pycache__
 web/media/primary_storage/
 web/media/secondary_storage/
