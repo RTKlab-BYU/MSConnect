@@ -54,20 +54,21 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
-web/media/
+*.pickle
+*.raw
+*.7z
 
 
 # temp files
 web/data_conversion_v0_to_v1/
 web/file_manager/__pycache__
-<<<<<<< HEAD
-web/temp_2022-10-18/
-=======
-web/temp_2022-10-18/
-web/cache/
+web/media/primary_storage/
+web/media/secondary_storage/
+web/media/remote_storage/
+web/media/offline_storage/
+web/media/temp
+web/file_manager/cache/
 
-# raw file
-*.raw
-*.zip
-*.z7
->>>>>>> 357d529 (Feb Prototype)
+django_secrets.txt
+web/data_manager/env
+web/file_manager/cache/dash_cache.pickle

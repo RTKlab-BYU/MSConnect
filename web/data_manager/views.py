@@ -1,16 +1,13 @@
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required, permission_required
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib.auth.models import User, Group
-from rest_framework import viewsets
-from rest_framework import permissions
+from django.contrib.auth import authenticate, login
+from django.shortcuts import redirect, render
 
 
 from .forms import SignUpForm
 
 
 def signup(request):
+    """_User sign up page_
+    """
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():

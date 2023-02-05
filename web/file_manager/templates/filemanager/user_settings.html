@@ -41,7 +41,6 @@
       </a>
      </li>
      <li>
-<<<<<<< HEAD:web/file_manager/templates/filemanager/user_settings.html
      </li>
      <li>
       <a href="/files/visualization/" title="Visualization">
@@ -55,21 +54,6 @@
       </a>
      </li>
      <li>
-=======
-     </li>
-     <li>
-      <a href="/files/visualization/" title="Visualization">
-       <i class="fa fa-vimeo">
-       </i>
-       <div class="nt-tooltip">
-        <p style="font-family:'Ubuntu Condensed', sans-serif;">
-         Visualization
-        </p>
-       </div>
-      </a>
-     </li>
-     <li>
->>>>>>> adding_process_node:file_manager/templates/filemanager/settings.html
       <a href="/files/processing/" title="Processing Center">
        <i class="fa fa-product-hunt">
        </i>
@@ -165,8 +149,6 @@
           </label>
           <select class="form-control" name="hide_othersresult">
            {% if settings.hide_othersresult == True %}
-<<<<<<< HEAD:web/file_manager/templates/filemanager/user_settings.html
-=======
            <option selected="" value="True">
             Yes
            </option>
@@ -239,6 +221,23 @@
           </select>
          </div>
          <div class="col">
+          <label>
+           Automatic workflow setting (process app +preset)
+          </label>
+          <select class="form-control" name="workflow_selector">
+           {% for key,value in qc_settings.items %}
+    
+{% if settings.workflow_tool == key %}
+           <option selected="" value="{{key}}">
+            {{value}}
+           </option>
+           {% else %}
+           <option value="{{key}}">
+            {{value}}
+           </option>
+           {% endif %}    
+    {% endfor %}
+          </select>
          </div>
         </div>
         <div class="form-row">
@@ -250,7 +249,6 @@
           </label>
           <select class="form-control" name="replace_raw_with_mzML">
            {% if settings.replace_raw_with_mzML == True %}
->>>>>>> adding_process_node:file_manager/templates/filemanager/settings.html
            <option selected="" value="True">
             Yes
            </option>
@@ -269,64 +267,6 @@
          </div>
          <div class="col">
          </div>
-<<<<<<< HEAD:web/file_manager/templates/filemanager/user_settings.html
-        </div>
-        <div class="form-row">
-         <div class="col">
-          <label>
-           qc_1_name:
-           <br/>
-          </label>
-          <input class="form-control" name="qc_1_name" type="text" value="{{settings.qc_1_name}}"/>
-         </div>
-         <div class="col">
-          <label>
-           qc_2_name:
-           <br/>
-          </label>
-          <input class="form-control" name="qc_2_name" type="text" value="{{settings.qc_2_name}}"/>
-         </div>
-        </div>
-        <div class="form-row">
-         <div class="col">
-          <label>
-           qc_3_name:
-           <br/>
-          </label>
-          <input class="form-control" name="qc_3_name" type="text" value="{{settings.qc_3_name}}"/>
-         </div>
-         <div class="col">
-          <label>
-           qc_4_name:
-           <br/>
-          </label>
-          <input class="form-control" name="qc_4_name" type="text" value="{{settings.qc_4_name}}"/>
-         </div>
-        </div>
-        <div class="form-row">
-         <div class="col">
-          <label>
-           Automatic QC setting (process app +preset)
-          </label>
-          <select class="form-control" name="qc_selector">
-           {% for key,value in qc_settings.items %}
-    
-{% if settings.QC_pro_tool == key %}
-           <option selected="" value="{{key}}">
-            {{value}}
-           </option>
-           {% else %}
-           <option value="{{key}}">
-            {{value}}
-           </option>
-           {% endif %}    
-    {% endfor %}
-          </select>
-         </div>
-         <div class="col">
-         </div>
-=======
->>>>>>> adding_process_node:file_manager/templates/filemanager/settings.html
         </div>
         <div class="form-row">
          <div class="col">

@@ -1,20 +1,21 @@
-from django.contrib.auth.models import User
-from .models import FileStorage, SampleRecord, UserSettings, SystemSettings, \
-<<<<<<< HEAD
-    WorkerStatus, DataAnalysisQueue, Review, \
-    AppAuthor, ProcessingApp, VisualizationApp
-=======
-    WorkerStatus, DataAnalysisQueue, ProcessingApp, VisualizationApp
->>>>>>> adding_process_node
+
+"""
+Django project is used to serialize and deserialize data between the database
+ and the application. The serializers define how data should be converted to
+ and from Python data structures (such as dictionaries) and the
+ data representation used in the database (such as JSON or XML).
+ Here it is done through the django-rest-framework library and for the
+ REST API.
+ """
+
+from .models import FileStorage, SampleRecord,  \
+    WorkerStatus, DataAnalysisQueue, ProcessingApp
 from rest_framework import serializers
 
 
 class FileStorageSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileStorage
-<<<<<<< HEAD
-        fields = ['pk', 'file_location', 'file_type', 'modified_time']
-=======
         fields = ['pk', 'file_location', 'file_type']
 
 
@@ -22,31 +23,20 @@ class ProcessingAppSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProcessingApp
         fields = ['pk', 'name']
->>>>>>> adding_process_node
 
 
 class SampleRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = SampleRecord
-<<<<<<< HEAD
-        fields = ['pk', 'record_name', 'record_description',
-                  'instrument_model', 'instrument_SN', "column_sn", "spe_sn",
-                  "quanlity_check", "is_temp", "record_creator",
-                  "acquisition_time", "uploaded_time", "temp_rawfile",
-                  "sample_info", "file_size", "is_processed",
-                  "file_storage_indeces", "cache_pkl", "file_attachments",
-                  "newest_raw"]
-=======
         fields = ['pk', 'record_name', 'record_description', "file_vendor",
                   'instrument_model', 'instrument_sn', "column_sn", "spe_sn",
                   "is_temp", "record_creator", "uploaded_time", "temp_rawfile",
-                  "project_name", "sample_type", "factor_1_name", "newest_raw",
+                  "project_name", "sample_type", "newest_raw", "factor_1_name",
                   "factor_1_value", "factor_2_name", "factor_2_value",
                   "factor_3_name", "factor_3_value", "factor_4_name",
                   "factor_4_value", "factor_5_name", "factor_5_value",
                   "factor_6_name", "factor_6_value", "factor_7_name",
                   "factor_7_value", "factor_8_name", "factor_8_value"]
->>>>>>> adding_process_node
 
 
 class WorkerStatusSerializer(serializers.ModelSerializer):
