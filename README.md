@@ -33,6 +33,8 @@ For technical documentation on the platform, including hardware requirements and
 ## Requests for Collaboration
 To propose new collaborations or participate in development, submit a request or contact us directly.
 
+## How to cite
+A manuscript is currently being prepared and will be available soon.
 ## Screenshoots
 ![dashboard](https://user-images.githubusercontent.com/77813931/217036159-7bcc1e1c-e11c-4495-8cf7-ee797b3c83f7.PNG)![UI](https://user-images.githubusercontent.com/77813931/217036175-6988f010-5114-4f1d-aa2f-5f0e1bf532a1.PNG)
 
