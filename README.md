@@ -9,7 +9,7 @@ Proteomic Data Manager is a Web-based, flexible, open-source platform for automa
 ![drawing_smaller](https://user-images.githubusercontent.com/77813931/217049351-eab79f9a-9c97-4c17-9ed8-cfb0f9bd660d.png)
 
 
-## key features of platform include:
+## Key features of platform include:
 1. Automated raw file upload with meta data from instrument control PCs in a vendor-independent fashion.
 2. User-configurable, automated, redundant data backup and purging. 
 3. Automated and distributed data processing using various 3rd party software kits that support command line. 
