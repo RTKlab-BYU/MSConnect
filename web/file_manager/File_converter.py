@@ -134,7 +134,11 @@ class FileConverter():
                 logger.error(f"During Docker process for conversion,"
                              f" this is {retry_dock} try {error}")
                 os.remove(self.mzML)
-        time.sleep(5)
+            time.sleep(5)
+            if os.path.exists(self.mzML):
+                docker_sucess = True
+            else:
+                retry_dock += 1
         if os.path.exists(self.mzML):
             return True
         else:
