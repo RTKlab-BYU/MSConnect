@@ -44,7 +44,7 @@ urlpatterns = [
     path("settings/", views.user_settings, name='Settings'),
     path("system_settings/", views.system_settings, name='system_settings'),
     path("help/", views.help, name='Help'),
-    # path("upload/", views.uploader, name='uploader'),  # test purpose
+    path("upload/", views.uploader, name='uploader'),  # test purpose
     path('logs/', include('log_viewer.urls')),
 ]
 

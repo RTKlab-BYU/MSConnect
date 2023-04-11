@@ -111,11 +111,11 @@ def user_settings(request):
             user=request.user.id).update(qc_4_name=request.
                                          POST.get('qc_4_name'))
         UserSettings.objects.filter(
-            user=request.user.id).update(QC_pro_tool=request.
+            user=request.user.id).update(QC_tool=request.
                                          POST.get('qc_selector'))
         UserSettings.objects.filter(
             user=request.user.id).update(workflow_tool=request.
-                                         POST.get('workflow_selector'))
+                                         POST.getlist('workflow_selector'))
 
     # create user settings if not exist
     if UserSettings.objects.filter(
@@ -128,7 +128,7 @@ def user_settings(request):
 
     # generate list of all apps with presets as a list
     qc_preset_dict = {}
-    for item in ProcessingApp.objects.all():
+    for item in ProcessingApp.objects.filter(is_enabled=True).all():
         for n in range(1, 9):
             preset_name = getattr(item, f"preset_{n}")
             if preset_name:
@@ -1115,7 +1115,7 @@ def app_center(request):
                             "progam_file_name": app_info['progam_file_name'],
                             "app_author": app_info['app_author'],
                             "app_homepage_url":
-                                store_url + "/apps/details/2/" +
+                                store_url + "/apps/details/1/" +
                             str(app_info['id'])
 
                         }
@@ -1167,7 +1167,7 @@ def app_center(request):
                                 app_info['support_process_apps'],
                             "app_author": app_info['app_author'],
                             "app_homepage_url":
-                                store_url + "/apps/details/1/" +
+                                store_url + "/apps/details/2/" +
                             str(app_info['id'])
 
                         }
@@ -1213,6 +1213,8 @@ def app_center(request):
                         if preset_file:
                             try:
                                 os.remove(preset_file.path)
+                            except OSError:
+                                pass  # file not found
                             finally:
                                 setattr(app_obj, f"preset_{n}", None)
                     for n in range(1, 3):
@@ -1220,6 +1222,8 @@ def app_center(request):
                         if preset_file:
                             try:
                                 os.remove(preset_file.path)
+                            except OSError:
+                                pass  # file not found
                             finally:
                                 setattr(app_obj, f"user_preset_{n}", None)
                     app_obj.save()
@@ -1232,10 +1236,10 @@ def app_center(request):
                         installed_version=None)
                     file_name = VisualizationApp.objects.filter(
                         pk=a_list[-1])[0].progam_file_name
-                    os.remove(os.path.join(
-                        "file_manager/"
-                        f"visualization_apps/{file_name}.py"))
                     try:
+                        os.remove(os.path.join(
+                            "file_manager/"
+                            f"visualization_apps/{file_name}.py"))
                         os.remove(
                             f"file_manager/templates/filemanager/"
                             f"{file_name}.html")
@@ -1257,6 +1261,7 @@ def app_center(request):
                     installaton_file = os.path.join(
                         settings.MEDIA_ROOT,
                         attached_file_version_string)
+                    UUID = process_app.UUID
 
                     if os.path.exists(installaton_file):
                         logger.info(
@@ -1274,11 +1279,11 @@ def app_center(request):
                             if file.endswith('.zip'):
                                 archive.extract(
                                     file, f"media/{settings.STORAGE_LIST[0]}"
-                                    "/systemfiles/presets/")
+                                    f"/systemfiles/{UUID}/presets/")
                                 setattr(process_app,
                                         f"preset_{preset_index}",
                                         f"{settings.STORAGE_LIST[0]}"
-                                        "/systemfiles/presets/" + file)
+                                        f"/systemfiles/{UUID}/presets/" + file)
                                 preset_index += 1
 
                     process_app.is_installed = True
@@ -1331,7 +1336,7 @@ def app_center(request):
     return render(request, 'filemanager/app_center.html', args)
 
 
-''' uploader for internal test purpose
+# uploader for internal test purpose
 @ csrf_exempt
 @ login_required
 def uploader(request):  # internal test purpose
@@ -1347,7 +1352,7 @@ def uploader(request):  # internal test purpose
         SampleRecord.objects.create(**form_data, )
 
     return render(request, 'filemanager/uploader.html')
-'''
+
 
 # viewset for REST API
 
@@ -1389,21 +1394,26 @@ class DataAnalysisQueueViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows DataAnalysisQueue to be viewed or edited.
     """
-    queryset = DataAnalysisQueue.objects.filter(
-        run_status=False).filter().order_by('-pk')
+    queryset = DataAnalysisQueue.objects.filter().filter().order_by('-pk')
     serializer_class = DataAnalysisQueueSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         qs = super().get_queryset()
         process_app_id = self.request.query_params.get('processappid')
+        run_complete = self.request.query_params.get('run_complete')
+        # use yes and no, as true and false can conflict with the condition
         if process_app_id:
-            return qs.filter(processing_app=int(process_app_id))
-        else:
-            return qs
-
+            qs = qs.filter(processing_app=int(process_app_id))
+        if run_complete == "yes":
+            qs = qs.filter(run_status=True)
+        elif run_complete == "no":
+            qs = qs.filter(run_status=False)
+        return qs
 
 # https://goodcode.io/articles/django-download-url-to-file-field/
+
+
 def download_to_file_field(url, field):
     """_Download file to datafield_
 

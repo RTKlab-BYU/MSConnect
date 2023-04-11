@@ -40,7 +40,8 @@ DEFAULT_MZML_CONVERSION_SETTING = {
 
 
 PROCESS_FILE_LIST = ["input_file_1", "input_file_2", "input_file_3",
-                     "output_file_1", "output_file_2", "output_file_3", ]
+                     "output_file_1", "output_file_2", "output_file_3",
+                     "output_file_4", "output_file_5", "output_file_6"]
 
 
 TEMP_FOLDER = "/temp/"
@@ -148,7 +149,7 @@ LOG_VIEWER_PAGE_LENGTH = 100       # total log lines per-page
 LOG_VIEWER_MAX_READ_LINES = 10000  # total log lines will be read
 # Max log files loaded in Datatable per page
 LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE = 50
-LOG_VIEWER_PATTERNS = ['[INFO]', '[DEBUG]',
+LOG_VIEWER_PATTERNS = ['[DEBUG]', '[INFO]',
                        '[WARNING]', '[ERROR]', '[CRITICAL]']
 # String regex expression to exclude the log from line
 LOG_VIEWER_EXCLUDE_TEXT_PATTERN = None
@@ -308,6 +309,8 @@ NOTEBOOK_ARGUMENTS = [
 database_file = os.path.join(
     MEDIA_ROOT, f"{STORAGE_LIST[0]}/database.sqlite3")
 
+#########################################################
+# database restore if not exist
 
 init_database = os.path.join(
     MEDIA_ROOT, "backup.sqlite3")

@@ -460,6 +460,15 @@
             <th>
              output_file_3
             </th>
+            <th>
+             output_file_4
+            </th>
+            <th>
+             output_file_5
+            </th>
+            <th>
+             output_file_6
+            </th>
            </tr>
           </thead>
           <tbody>
@@ -545,6 +554,27 @@
              {% if item.output_file_3 %}
              <a href="/files/{{item.output_file_3|default_if_none:1}}">
               output_file_3
+             </a>
+             {% endif %}
+            </td>
+            <td>
+             {% if item.output_file_4 %}
+             <a href="/files/{{item.output_file_4|default_if_none:1}}">
+              output_file_4
+             </a>
+             {% endif %}
+            </td>
+            <td>
+             {% if item.output_file_5 %}
+             <a href="/files/{{item.output_file_5|default_if_none:1}}">
+              output_file_5
+             </a>
+             {% endif %}
+            </td>
+            <td>
+             {% if item.output_file_6 %}
+             <a href="/files/{{item.output_file_6|default_if_none:1}}">
+              output_file_6
              </a>
              {% endif %}
             </td>

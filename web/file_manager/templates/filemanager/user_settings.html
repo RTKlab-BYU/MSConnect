@@ -208,7 +208,7 @@
           <select class="form-control" name="qc_selector">
            {% for key,value in qc_settings.items %}
     
-{% if settings.QC_pro_tool == key %}
+{% if settings.QC_tool == key %}
            <option selected="" value="{{key}}">
             {{value}}
            </option>
@@ -222,12 +222,12 @@
          </div>
          <div class="col">
           <label>
-           Automatic workflow setting (process app +preset)
+           Automatic workflow settings (process app +preset)
           </label>
-          <select class="form-control" name="workflow_selector">
+          <select class="form-control" multiple="" name="workflow_selector">
            {% for key,value in qc_settings.items %}
     
-{% if settings.workflow_tool == key %}
+{% if key in settings.workflow_tool %}
            <option selected="" value="{{key}}">
             {{value}}
            </option>

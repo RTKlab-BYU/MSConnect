@@ -7,5 +7,6 @@ from .models import *
 # Register your models here.
 admin.site.register([
     FileStorage, SampleRecord, UserSettings, SystemSettings,
-    WorkerStatus, DataAnalysisQueue, ProcessingApp, VisualizationApp
+    WorkerStatus, DataAnalysisQueue, ProcessingApp, VisualizationApp,
+    SavedVisualization
 ])

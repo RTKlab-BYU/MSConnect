@@ -3,30 +3,30 @@ services:
   data_manager-nginx:
 
     image: xiexf128/data_manager-nginx:latest
-    #comment build section if not built from local
-    build:
-      context: nginx/
-      tags:
-        - xiexf128/data_manager-nginx:1.0
-        - xiexf128/data_manager-nginx:latest
+    #uncomment build section if built from local
+    # build:
+    #   context: nginx/
+    #   tags:
+    #     - xiexf128/data_manager-nginx:1.0
+    #     - xiexf128/data_manager-nginx:latest
 
     restart: always
     volumes:
       - uwsgi_data:/tmp/uwsgi/
       - web_static:/var/www/datamanager/assets/:ro
     ports:
-      - "8090:80"
+      - "80:80"
     depends_on:
       - data_manager-django
   data_manager-django:
     &django_project
     image: xiexf128/data_manager-django:latest
-    #comment build section if not built from local
-    build:
-      context: ./web/
-      tags:
-        - xiexf128/data_manager-django:1.0
-        - xiexf128/data_manager-django:latest
+    # uncomment build section if built from local
+    # build:
+    #   context: ./web/
+    #   tags:
+    #     - xiexf128/data_manager-django:1.0
+    #     - xiexf128/data_manager-django:latest
     restart: always
     command: >
       sh -c "/venv/bin/python3 manage.py collectstatic --noinput   && /venv/bin/uwsgi   --ini /app/datamanager.uwsgi.ini --enable-threads"
