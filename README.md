@@ -18,11 +18,11 @@ Proteomic Data Manager is a Web-based, flexible, open-source platform for automa
 6. Integration of the Django REST framework for API access and Jupyter Notebook for scripting with Python and R. 
 7. An app-store style module distribution system between developers and users.
 
-## How to install or depoly
-To deploy the platform, use Docker Compose. Make sure to properly install Docker Compose following the [official guide](https://docs.docker.com/compose/install/)
- 1. Download the repository to your local folder
- 2. Configure .django_secrets.env and docker-compose.yml (instructions available on the [wiki page](https://github.com/RTKlab-BYU/Proteomic-Data-Manager/wiki/How-to-install)).
- 3. Start the app with "docker compose up" or other methods
+## Installation or Deployment Guide
+Deploying the platform involves three simple steps and typically takes less than 20 minutes (detailed instructions are available on the [wiki page](https://github.com/RTKlab-BYU/Proteomic-Data-Manager/wiki/How-to-install)):
+ 1. Install Docker by following the [official guide](https://docs.docker.com/compose/install/).
+ 2. Download the repository to your local folder. Configure the docker-compose.yml and .django_secrets.env files to specify the file storage location and make other optional settings.
+ 3. Start the app with "docker compose up".
 
 
 ## Documentation
@@ -31,7 +31,7 @@ For technical documentation on the platform, including hardware requirements and
 
 
 ## Requests for Collaboration
-To propose new collaborations or participate in development, submit a request or contact us directly.
+To propose new collaborations or participate in development, submit a request or contact us directly ryan.kelly@byu.edu.
 
 ## How to cite
 If you use Proteomic Data Manager for your work, we request that you cite Proteomic Data Manager in relevant papers. A manuscript is currently being prepared and will be available soon.
