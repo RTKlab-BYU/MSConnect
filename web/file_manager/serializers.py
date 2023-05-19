@@ -54,6 +54,7 @@ class DataAnalysisQueueSerializer(serializers.ModelSerializer):
                   'run_status', 'start_time', 'finish_time', 'process_creator',
                   'input_file_1', 'input_file_2', 'input_file_3',
                   'output_file_1', 'output_file_2', 'output_file_3',
+                  'output_file_4', 'output_file_5', 'output_file_6',
                   'output_QC_number_1', 'output_QC_number_2',
                   'output_QC_number_3', 'output_QC_number_4'
                   ]

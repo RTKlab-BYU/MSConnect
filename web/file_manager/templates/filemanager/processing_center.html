@@ -15,8 +15,8 @@
   <link href="{% static '/assets/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet"/>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet"/>
+  <link href="{% static '/assets/fonts/font-awesome.min.css' %}" rel="stylesheet"/>
+  <link href="{% static '/assets/fonts/ionicons.min.css' %}" rel="stylesheet"/>
   <link href="{% static '/assets/css/styles.min.css' %}" rel="stylesheet"/>
   <link href="{% static '/assets/css/SO-floating-nav_15.min.css' %}" rel="stylesheet"/>
  </head>
@@ -460,6 +460,15 @@
             <th>
              output_file_3
             </th>
+            <th>
+             output_file_4
+            </th>
+            <th>
+             output_file_5
+            </th>
+            <th>
+             output_file_6
+            </th>
            </tr>
           </thead>
           <tbody>
@@ -548,6 +557,27 @@
              </a>
              {% endif %}
             </td>
+            <td>
+             {% if item.output_file_4 %}
+             <a href="/files/{{item.output_file_4|default_if_none:1}}">
+              output_file_4
+             </a>
+             {% endif %}
+            </td>
+            <td>
+             {% if item.output_file_5 %}
+             <a href="/files/{{item.output_file_5|default_if_none:1}}">
+              output_file_5
+             </a>
+             {% endif %}
+            </td>
+            <td>
+             {% if item.output_file_6 %}
+             <a href="/files/{{item.output_file_6|default_if_none:1}}">
+              output_file_6
+             </a>
+             {% endif %}
+            </td>
            </tr>
            {% endfor %}
           </tbody>
@@ -563,9 +593,9 @@
   </div>
   <div class="col">
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+  <script src="{% static '/assets/js/jquery.min.js' %}">
   </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/js/bootstrap.bundle.min.js">
+  <script src="{% static '/assets/bootstrap/js/bootstrap.min.js' %}">
   </script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js">
   </script>

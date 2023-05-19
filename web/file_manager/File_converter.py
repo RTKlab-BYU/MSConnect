@@ -54,8 +54,9 @@ class FileConverter():
             '.mzML')
 
         try:
-            if self.convert():
-                self.create_cache()
+            if self.creator_setting.first().perform_extraction:
+                if self.convert():
+                    self.create_cache()
         except Exception as err:
             logger.error(f"During convert and cache creation, {err}")
         finally:
@@ -134,13 +135,19 @@ class FileConverter():
                 logger.error(f"During Docker process for conversion,"
                              f" this is {retry_dock} try {error}")
                 os.remove(self.mzML)
-        time.sleep(5)
+            time.sleep(5)
+            if os.path.exists(self.mzML):
+                docker_sucess = True
+            else:
+                retry_dock += 1
         if os.path.exists(self.mzML):
             return True
         else:
             self.record.notes = "Raw file extraction failed "
             logger.error("No mzML file was found after conversion")
             return False
+
+    #
 
     def create_cache(self):
         """_Create pkl cache file from mzMl for display_

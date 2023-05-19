@@ -44,7 +44,7 @@ urlpatterns = [
     path("settings/", views.user_settings, name='Settings'),
     path("system_settings/", views.system_settings, name='system_settings'),
     path("help/", views.help, name='Help'),
-    # path("upload/", views.uploader, name='uploader'),  # test purpose
+    path("upload/", views.uploader, name='uploader'),  # test purpose
     path('logs/', include('log_viewer.urls')),
 ]
 
@@ -55,7 +55,7 @@ urlpatterns = [
 
 for app in ProcessingApp.objects.filter(is_installed=True):
     try:
-        module_name = app.progam_file_name
+        module_name = app.program_file_name
         string = f'from file_manager.processing_apps import {module_name}'
         exec(string)
         string2 = f'urlpatterns += [path("processing/{app.UUID}/", ' \
@@ -66,7 +66,7 @@ for app in ProcessingApp.objects.filter(is_installed=True):
 
 for app in VisualizationApp.objects.filter(is_installed=True):
     try:
-        module_name = app.progam_file_name
+        module_name = app.program_file_name
         string = f'from file_manager.visualization_apps import {module_name}'
         exec(string)
         string2 = f'urlpatterns += [path("visual/{app.UUID}/", ' \
