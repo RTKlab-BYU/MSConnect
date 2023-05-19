@@ -1,13 +1,13 @@
-version: "1.0"
+version: "1.5"
 services:
   data_manager-nginx:
 
     image: xiexf128/data_manager-nginx:latest
-    #uncomment build section if built from local
+    #comment the build section if want to download from docker hub
     # build:
     #   context: nginx/
     #   tags:
-    #     - xiexf128/data_manager-nginx:1.0
+    #     - xiexf128/data_manager-nginx:1.5
     #     - xiexf128/data_manager-nginx:latest
 
     restart: always
@@ -21,12 +21,12 @@ services:
   data_manager-django:
     &django_project
     image: xiexf128/data_manager-django:latest
-    # uncomment build section if built from local
-    # build:
-    #   context: ./web/
-    #   tags:
-    #     - xiexf128/data_manager-django:1.0
-    #     - xiexf128/data_manager-django:latest
+    #comment the build section if want to download from docker hub
+    build:
+      context: ./web/
+      tags:
+        - xiexf128/data_manager-django:1.5
+        - xiexf128/data_manager-django:latest
     restart: always
     command: >
       sh -c "/venv/bin/python3 manage.py collectstatic --noinput   && /venv/bin/uwsgi   --ini /app/datamanager.uwsgi.ini --enable-threads"
@@ -41,16 +41,16 @@ services:
       - /var/temp/:/app/media/temp/ # volume file conversion
       #add you file/drive settings
       - type: bind
-        source: //d/docker/primary_storage #host folder in windows, means d:/docker/primary_raw
+        source: /e/docker/primary_storage #host folder in windows, means d:/docker/primary_raw
         target: //app/media//primary_storage #don't change
       - type: bind
-        source: //d/docker/secondary_storage # means d:/docker/secondary_raw
+        source: /e/docker/secondary_storage # means d:/docker/secondary_raw
         target: //app/media//secondary_storage #don't change
       - type: bind
-        source: //d/docker/remote_storage #means d:/docker/remote
+        source: /e/docker/remote_storage #means d:/docker/remote
         target: //app/media//remote_storage #don't change
       - type: bind
-        source: //d/docker/offline_storage #means d:/docker/offline
+        source: /e/docker/offline_storage #means d:/docker/offline
         target: //app/media//offline_storage #don't change
 
   data_manager-JupiterNotebook:

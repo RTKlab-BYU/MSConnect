@@ -116,7 +116,9 @@ def user_settings(request):
         UserSettings.objects.filter(
             user=request.user.id).update(workflow_tool=request.
                                          POST.getlist('workflow_selector'))
-
+        UserSettings.objects.filter(
+            user=request.user.id).update(perform_extraction=request.
+                                         POST.get('perform_extraction'))
     # create user settings if not exist
     if UserSettings.objects.filter(
             user=request.user.id).first() is None:
@@ -1112,7 +1114,7 @@ def app_center(request):
                             "name": app_info['name'],
                             "downloaded_version": app_info['lastest_version'],
                             "UUID": app_info['UUID'],
-                            "progam_file_name": app_info['progam_file_name'],
+                            "program_file_name": app_info['progam_file_name'],
                             "app_author": app_info['app_author'],
                             "app_homepage_url":
                                 store_url + "/apps/details/1/" +
@@ -1162,7 +1164,7 @@ def app_center(request):
                             "name": app_info['name'],
                             "downloaded_version": app_info['lastest_version'],
                             "UUID": app_info['UUID'],
-                            "progam_file_name": app_info['progam_file_name'],
+                            "program_file_name": app_info['progam_file_name'],
                             "support_process_apps":
                                 app_info['support_process_apps'],
                             "app_author": app_info['app_author'],
@@ -1196,7 +1198,7 @@ def app_center(request):
                     app_obj.is_installed = False
                     app_obj.is_enabled = False  # redundant
                     app_obj.installed_version = None
-                    file_name = app_obj.progam_file_name
+                    file_name = app_obj.program_file_name
                     try:
                         os.remove(os.path.join(
                             "file_manager/"
@@ -1235,7 +1237,7 @@ def app_center(request):
                     VisualizationApp.objects.filter(pk=a_list[-1]).update(
                         installed_version=None)
                     file_name = VisualizationApp.objects.filter(
-                        pk=a_list[-1])[0].progam_file_name
+                        pk=a_list[-1])[0].program_file_name
                     try:
                         os.remove(os.path.join(
                             "file_manager/"
@@ -1257,7 +1259,7 @@ def app_center(request):
                     attached_version = float(
                         attached_file_version_string.split("version")[1])
 
-                    file_name = process_app.progam_file_name
+                    file_name = process_app.program_file_name
                     installaton_file = os.path.join(
                         settings.MEDIA_ROOT,
                         attached_file_version_string)
@@ -1298,7 +1300,7 @@ def app_center(request):
                         visual_app.install_package.name
                     attached_version = float(
                         attached_file_version_string.split("version")[1])
-                    file_name = visual_app.progam_file_name
+                    file_name = visual_app.program_file_name
                     installaton_file = os.path.join(
                         settings.MEDIA_ROOT,
                         attached_file_version_string)

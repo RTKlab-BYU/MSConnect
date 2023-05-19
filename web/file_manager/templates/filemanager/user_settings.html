@@ -15,8 +15,8 @@
   <link href="{% static '/assets/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet"/>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet"/>
+  <link href="{% static '/assets/fonts/font-awesome.min.css' %}" rel="stylesheet"/>
+  <link href="{% static '/assets/fonts/ionicons.min.css' %}" rel="stylesheet"/>
   <link href="{% static '/assets/css/styles.min.css' %}" rel="stylesheet"/>
   <link href="{% static '/assets/css/SO-floating-nav_15.min.css' %}" rel="stylesheet"/>
  </head>
@@ -266,6 +266,28 @@
           </select>
          </div>
          <div class="col">
+          <label>
+           <strong>
+            Enable extraction information from uploaded file(require large ram)
+           </strong>
+          </label>
+          <select class="form-control" name="perform_extraction">
+           {% if settings.perform_extraction == True %}
+           <option selected="" value="True">
+            Yes
+           </option>
+           <option value="False">
+            No
+           </option>
+           {% else %}
+           <option value="True">
+            Yes
+           </option>
+           <option selected="" value="False">
+            No
+           </option>
+           {% endif %}
+          </select>
          </div>
         </div>
         <div class="form-row">
@@ -302,9 +324,9 @@
     </div>
    </div>
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+  <script src="{% static '/assets/js/jquery.min.js' %}">
   </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/js/bootstrap.bundle.min.js">
+  <script src="{% static '/assets/bootstrap/js/bootstrap.min.js' %}">
   </script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js">
   </script>

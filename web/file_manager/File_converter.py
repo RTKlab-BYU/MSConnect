@@ -54,8 +54,9 @@ class FileConverter():
             '.mzML')
 
         try:
-            if self.convert():
-                self.create_cache()
+            if self.creator_setting.first().perform_extraction:
+                if self.convert():
+                    self.create_cache()
         except Exception as err:
             logger.error(f"During convert and cache creation, {err}")
         finally:
@@ -145,6 +146,8 @@ class FileConverter():
             self.record.notes = "Raw file extraction failed "
             logger.error("No mzML file was found after conversion")
             return False
+
+    #
 
     def create_cache(self):
         """_Create pkl cache file from mzMl for display_

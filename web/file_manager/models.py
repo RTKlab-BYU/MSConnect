@@ -47,7 +47,7 @@ class SampleRecord(models.Model):
     record_description = models.TextField(
         max_length=1000, blank=True, null=True)
     file_vendor = models.TextField(
-        max_length=20, blank=True, null=True)  # vendor and type
+        max_length=40, blank=True, null=True)  # vendor and type
     instrument_model = models.TextField(max_length=100, blank=True, null=True)
     instrument_sn = models.TextField(max_length=100, blank=True, null=True)
 
@@ -245,11 +245,11 @@ def create_process_task(qc_setting_list, instance, task_name, record_list, keep_
 
     # TODO There is a race condition here, the task is created but not yet
     # processed by the auto_processing, the client processor can start before
-    # the auto_processing is done. hopefully the auto_processing is fast.
+    # the auto_processing is done. hopefully the auto_processing is faster.
 
     # if the processing app used by auto_qc or workflow_tool need
     # to be further processed, run auto_processing from the module
-    module_name = process_app.progam_file_name
+    module_name = process_app.program_file_name
     if module_name not in dir():
         # if module has not already been imported
         string = \
@@ -293,13 +293,26 @@ class UserSettings(models.Model):
     qc_4_name = models.TextField(
         max_length=10, blank=True, null=True, default="MS2")
     save_qc_file = models.BooleanField(default=False, null=True)
+    # whether perfrom file extraction after uploading (large Ram needed)
+    perform_extraction = models.BooleanField(default=False, null=True)
     # advanced setting, only accessible in the Django-admin Module
     conversion_settings = models.JSONField(
         default=settings.DEFAULT_MZML_CONVERSION_SETTING, null=True)
     replace_raw_with_mzML = models.BooleanField(default=False, null=True)
+    other_settings = models.JSONField(null=True)  # for further expansion
 
     def __str__(self):
         return 'Profile of user: {}'.format(self.user.username)
+
+
+@receiver(post_save, sender=UserSettings)
+def new_instance_created(sender, instance, created, **kwargs):
+    """_get default user setting values from system settings for
+    newly created instances_
+    """
+    if created:
+        instance.perform_extraction = SystemSettings.objects.first().perform_extraction
+        instance.save()
 
 
 class SystemSettings(models.Model):
@@ -320,7 +333,10 @@ class SystemSettings(models.Model):
         default="https://proteomicsdata.com/",
         null=True)
     secret_mode = models.BooleanField(default=False, null=True)
+    # system default setting for user settings
+    perform_extraction = models.BooleanField(default=True, null=True)
     # user can only view their own file unless stuff if secret_mode is True
+    other_settings = models.JSONField(null=True)  # for further expansion
 
 
 class WorkerStatus(models.Model):
@@ -451,7 +467,7 @@ def move_file(sender, instance, **kwargs):
 
     if instance.finish_time != instance._original_finish_time:
         # perform process app's post_processing  if finish_time is updated
-        module_name = instance.processing_app.progam_file_name
+        module_name = instance.processing_app.program_file_name
 
         if module_name not in dir():
             # if module has not already been imported
@@ -548,9 +564,9 @@ class ProcessingApp(models.Model):
     # how to generate import uuid; uuid.uuid4().hex.upper()[0:12]
     UUID = models.TextField(
         max_length=50, blank=True, null=True)  # used for server side ID
-    progam_file_name = models.TextField(
+    program_file_name = models.TextField(
         max_length=20, blank=True, null=True)
-    # progam_file_name must match module main py name
+    # program_file_name must match module main py name
 
 
 class VisualizationApp(models.Model):
@@ -580,6 +596,6 @@ class VisualizationApp(models.Model):
     is_installed = models.BooleanField(default=False, null=True)
     UUID = models.TextField(
         max_length=50, blank=True, null=True)
-    progam_file_name = models.TextField(
+    program_file_name = models.TextField(
         max_length=20, blank=True, null=True)
-    # progam_file_name must match module main py name
+    # program_file_name must match module main py name

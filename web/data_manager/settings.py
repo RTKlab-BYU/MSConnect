@@ -310,8 +310,7 @@ database_file = os.path.join(
     MEDIA_ROOT, f"{STORAGE_LIST[0]}/database.sqlite3")
 
 #########################################################
-# database restore if not exist
-
+# restore database  if not exist (for new installation)
 init_database = os.path.join(
     MEDIA_ROOT, "backup.sqlite3")
 
