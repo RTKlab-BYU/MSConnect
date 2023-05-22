@@ -4,11 +4,11 @@ services:
 
     image: xiexf128/data_manager-nginx:latest
     #comment the build section if want to download from docker hub
-    # build:
-    #   context: nginx/
-    #   tags:
-    #     - xiexf128/data_manager-nginx:1.5
-    #     - xiexf128/data_manager-nginx:latest
+    build:
+      context: nginx/
+      tags:
+        - xiexf128/data_manager-nginx:1.5
+        - xiexf128/data_manager-nginx:latest
 
     restart: always
     volumes:
@@ -41,16 +41,16 @@ services:
       - /var/temp/:/app/media/temp/ # volume file conversion
       #add you file/drive settings
       - type: bind
-        source: /e/docker/primary_storage #host folder in windows, means d:/docker/primary_raw
+        source: /c/ # default saving everything in C drive root, please change
         target: //app/media//primary_storage #don't change
       - type: bind
-        source: /e/docker/secondary_storage # means d:/docker/secondary_raw
+        source: /c/ # /d/docker/primary_storage means d:/docker/primary_storage
         target: //app/media//secondary_storage #don't change
       - type: bind
-        source: /e/docker/remote_storage #means d:/docker/remote
+        source: /c/ # linux just use linux folder formate
         target: //app/media//remote_storage #don't change
       - type: bind
-        source: /e/docker/offline_storage #means d:/docker/offline
+        source: /c/ #
         target: //app/media//offline_storage #don't change
 
   data_manager-JupiterNotebook:

@@ -334,7 +334,7 @@ class SystemSettings(models.Model):
         null=True)
     secret_mode = models.BooleanField(default=False, null=True)
     # system default setting for user settings
-    perform_extraction = models.BooleanField(default=True, null=True)
+    perform_extraction = models.BooleanField(default=False, null=True)
     # user can only view their own file unless stuff if secret_mode is True
     other_settings = models.JSONField(null=True)  # for further expansion
 
