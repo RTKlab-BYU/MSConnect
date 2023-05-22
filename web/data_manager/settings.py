@@ -89,9 +89,11 @@ INSTALLED_APPS = [
 
 
 log_folder = 'media/primary_storage/log/'
+system_folder = 'media/primary_storage/systemfiles/'
 
-if not os.path.isdir(log_folder):
-    os.makedirs(log_folder)
+for item in [log_folder, system_folder]:
+    if not os.path.isdir(item):
+        os.makedirs(item)
 
 LOGGING = {
     'version': 1,

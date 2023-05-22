@@ -192,7 +192,7 @@ def system_settings(request):
         for key, value in dict(request.POST.lists()).items():
             if "schedule" in key:
                 schedule_setting_dict[key] = value[0]
-        with open(settings.SCHEDULE_SETTING_FILE, 'wb') as f:
+        with open(settings.SCHEDULE_SETTING_FILE, 'wb+') as f:
             pickle.dump(schedule_setting_dict, f)
     elif request.method == 'POST' and 'reboot' in request.POST:
         from pathlib import Path

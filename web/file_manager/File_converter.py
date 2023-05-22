@@ -54,7 +54,7 @@ class FileConverter():
             '.mzML')
 
         try:
-            if self.creator_setting.first().perform_extraction:
+            if self.creator_setting.exists() and self.creator_setting.first().perform_extraction:
                 if self.convert():
                     self.create_cache()
         except Exception as err:
