@@ -1,8 +1,8 @@
 <h1 style="text-align: center;">
-Proteomic Data Manager
+MS Connect
 </h1>
 
-Proteomic Data Manager is a Web-based, flexible, open-source platform for automated high-throughput MS-based omics. This platform supports a variety of existing tools, allowing for a fully autonomous workflow from data collection to data backup, processing with different 3rd party software, and finally generating tables and figures for data visualization.The platform is built with Python Django, JavaScript, and HTML and works with [Raw file uploader](https://github.com/RTKlab-BYU/Raw_File_Uploader) and [Processor](https://github.com/RTKlab-BYU/Proteomics_Data_Processor). 
+MS Connect is a Web-based, flexible, open-source platform for automated high-throughput MS-based omics. This platform supports a variety of existing tools, allowing for a fully autonomous workflow from data collection to data backup, processing with different 3rd party software, and finally generating tables and figures for data visualization.The platform is built with Python Django, JavaScript, and HTML and works with [Raw file uploader](https://github.com/RTKlab-BYU/Raw_File_Uploader) and [Processor](https://github.com/RTKlab-BYU/Proteomics_Data_Processor). 
 
 <h4>Please note: while the platform supports all 3rd party applications, they are not included and licensing requirements should be consulted with their respective owners.</h4>
 
@@ -34,7 +34,7 @@ For technical documentation on the platform, including hardware requirements and
 To propose new collaborations or participate in development, submit a request or contact us directly ryan.kelly@byu.edu.
 
 ## How to cite
-If you use Proteomic Data Manager for your work, we request that you cite Proteomic Data Manager in relevant papers. A manuscript is currently being prepared and will be available soon.
+If you use MS Connect for your work, we request that you cite MS Connect in relevant papers. A manuscript is currently being prepared and will be available soon.
 ## Screenshoots
 ![dashboard](https://user-images.githubusercontent.com/77813931/217036159-7bcc1e1c-e11c-4495-8cf7-ee797b3c83f7.PNG)![UI](https://user-images.githubusercontent.com/77813931/217036175-6988f010-5114-4f1d-aa2f-5f0e1bf532a1.PNG)
 
