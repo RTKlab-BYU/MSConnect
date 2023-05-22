@@ -3,13 +3,12 @@ services:
   data_manager-nginx:
 
     image: xiexf128/data_manager-nginx:latest
-    #comment the build section if want to download from docker hub
-    build:
-      context: nginx/
-      tags:
-        - xiexf128/data_manager-nginx:1.5
-        - xiexf128/data_manager-nginx:latest
-
+    #comment the build section if you want to download from docker hub
+    # build:
+    #   context: nginx/
+    #   tags:
+    #     - xiexf128/data_manager-nginx:1.5
+    #     - xiexf128/data_manager-nginx:latest
     restart: always
     volumes:
       - uwsgi_data:/tmp/uwsgi/
@@ -21,17 +20,17 @@ services:
   data_manager-django:
     &django_project
     image: xiexf128/data_manager-django:latest
-    #comment the build section if want to download from docker hub
-    build:
-      context: ./web/
-      tags:
-        - xiexf128/data_manager-django:1.5
-        - xiexf128/data_manager-django:latest
+    #comment the build section if you want to download from docker hub
+    # build:
+    #   context: ./web/
+    #   tags:
+    #     - xiexf128/data_manager-django:1.5
+    #     - xiexf128/data_manager-django:latest
     restart: always
     command: >
       sh -c "/venv/bin/python3 manage.py collectstatic --noinput   && /venv/bin/uwsgi   --ini /app/datamanager.uwsgi.ini --enable-threads"
     env_file:
-      - ./.django_secrets.env #change the content of this file
+      - ./.django_secrets.env #app configure file
     environment:
       is_docker: "True"
     volumes:
@@ -39,16 +38,25 @@ services:
       - web_static:/app/static/
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/temp/:/app/media/temp/ # volume file conversion
-      #add you file/drive settings
+      #Please configure your folder/drive to save the data, make sure folders exist
+      #in Windows, /d/docker/primary_storage means d:/docker/primary_storage
+      #in Linux please just use linux folder native format
+      #primary storage location, required
+      #all other are optional, but recommended, doesn't need to adhere strictly to
+      #the meaning of folder name, i.e., remote_storage doesn't need to be remote
+      
       - type: bind
-        source: /c/ # default saving everything in C drive root, please change
+        source: /c/ # primary storage, default saving everything in C drive root, please change
         target: //app/media//primary_storage #don't change
+      #secondary_storage, optional but recommended
       - type: bind
-        source: /c/ # /d/docker/primary_storage means d:/docker/primary_storage
+        source: /c/ 
         target: //app/media//secondary_storage #don't change
+      #remote_storage, optional but recommended
       - type: bind
-        source: /c/ # linux just use linux folder formate
+        source: /c/ # 
         target: //app/media//remote_storage #don't change
+      #offline_storage, optional but recommended  
       - type: bind
         source: /c/ #
         target: //app/media//offline_storage #don't change
