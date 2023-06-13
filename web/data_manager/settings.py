@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+import shutil
 
 from pathlib import Path
 import os
@@ -309,7 +310,7 @@ NOTEBOOK_ARGUMENTS = [
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 database_file = os.path.join(
-    MEDIA_ROOT, f"{STORAGE_LIST[0]}/database.sqlite3")
+    MEDIA_ROOT, f"{STORAGE_LIST[0]}/database/database.sqlite3")
 
 #########################################################
 # restore database  if not exist (for new installation)
@@ -319,7 +320,11 @@ init_database = os.path.join(
 is_database = os.path.isfile(database_file)
 
 if not is_database:
-    import shutil
+    datbase_folder = os.path.dirname(database_file)
+    check_databasedir = os.path.isdir(datbase_folder)
+
+    if not check_databasedir:
+        os.makedirs(datbase_folder)
     shutil.copyfile(init_database, database_file)
 
 #########################################################
