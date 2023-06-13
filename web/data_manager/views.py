@@ -22,6 +22,6 @@ def signup(request):
     return render(request, 'registration/signup.html', {'form': form})
 
 
-def contact(request):
+def contact(request,  *args, **kwargs):
 
     return render(request, 'registration/contact.html')

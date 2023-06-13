@@ -19,9 +19,13 @@ from django.contrib.staticfiles.urls import static, staticfiles_urlpatterns
 from django.shortcuts import redirect
 from django.urls import include, path
 from . import settings, views
-
+from django.urls import re_path
 
 urlpatterns = [
+    # block user direct access to database folder
+    re_path(r'^files/primary_storage/database/(?P<path>.*)',
+            views.contact,
+            name="contact"),
     path('admin/', admin.site.urls),
     path('files/', include('file_manager.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
