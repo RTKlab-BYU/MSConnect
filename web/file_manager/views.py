@@ -569,8 +569,14 @@ def records(request):
             result_queryset = result_queryset.filter(
                 notes__contains=request.POST.get('notes')).order_by('-pk')
         if request.POST.get('record_creator') != "":
-            result_queryset = result_queryset.filter(
-                record_creator=request.POST.get('record_creator')).order_by(
+            if request.POST.get('record_creator') == "All" and \
+                request.user.is_superuser is not True:
+                # Prevent non-superuser from seeing all records, already
+                # disabled all option in template
+                result_queryset = None
+            else:
+                result_queryset = result_queryset.filter(
+                    record_creator=request.POST.get('record_creator')).order_by(
                     '-pk')
         if request.POST.get('start_time') != "":
             result_queryset = result_queryset.filter(
@@ -647,6 +653,7 @@ def records(request):
         user=request.user.id).first().qc_3_name
     args["qc4"] = UserSettings.objects.filter(
         user=request.user.id).first().qc_4_name
+    args["is_superuser"] = request.user.is_superuser
 
     return render(request, 'filemanager/records.html', args)
 
