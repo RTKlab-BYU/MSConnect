@@ -194,7 +194,7 @@
              Record Creator
             </p>
             <select name="record_creator" width="100%">
-             {% if fotosList|length == 1 %}
+             {% if is_superuser %}
              <option value="">
               All
              </option>
