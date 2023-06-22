@@ -309,9 +309,7 @@ NOTEBOOK_ARGUMENTS = [
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-database_file = os.path.join(
-    MEDIA_ROOT, f"{STORAGE_LIST[0]}/database/database.sqlite3")
-
+database_file = BASE_DIR / 'database.sqlite3'
 #########################################################
 # restore database  if not exist (for new installation)
 init_database = os.path.join(
@@ -331,7 +329,8 @@ if not is_database:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': database_file,
+        'NAME': BASE_DIR / 'database.sqlite3',
+
 
     }
 }
