@@ -127,6 +127,7 @@ def backup_task(time_string):
                 # not most efficient, step through all recrod to check missing
                 # raw backup files, file_type is 1-4 for primary, secondary...
                 # see Filestorage in Models for more detail
+                # compress to 7z if it's 3 and 4 (remote and offline)
                 for record in SampleRecord.objects.filter(
                         uploaded_time__gte=datetime.today()-timedelta(
                         days=90)):
@@ -165,19 +166,33 @@ def backup_task(time_string):
                                 f"rawfiles/{file_year}/{file_month}/" \
                                 f"{file_day}/{file_name}"
                             file_extension = file_name.split(".")[-1]
-
-                            new_name = new_name.replace(
-                                "." + file_extension, ".7z")
-                            if os.path.isfile(os.path.join(
-                                    settings.MEDIA_ROOT, new_name)):
-                                random_str = "".join(random.choice(
-                                    string.ascii_lowercase) for i in range(4))
+                            if storage_index != 1:  # compress to 7z
                                 new_name = new_name.replace(
-                                    ".7z", "_" + random_str+".7z")
+                                    "." + file_extension, ".7z")
+                                if os.path.isfile(os.path.join(
+                                        settings.MEDIA_ROOT, new_name)):
+                                    random_str = "".join(random.choice(
+                                        string.ascii_lowercase) for i in range(4))
+                                    new_name = new_name.replace(
+                                        ".7z", "_" + random_str+".7z")
 
-                            subprocess.run(['7z', 'a',  os.path.join(
-                                settings.MEDIA_ROOT, new_name), current_raw,
-                                "-mx=9", "-mmt=2"])
+                                subprocess.run(['7z', 'a',  os.path.join(
+                                    settings.MEDIA_ROOT, new_name),
+                                    current_raw,
+                                    "-mx=9",
+                                    "-mmt=2"])
+                            else:  # copy directly
+                                if os.path.isfile(os.path.join(
+                                            settings.MEDIA_ROOT, new_name)):
+                                    random_str = "".join(random.choice(
+                                        string.ascii_lowercase) for i in range(4))
+                                    # get a file extension from the full path
+                                    new_name = new_name.replace(
+                                        "."+file_extension, "_" + random_str + file_extension)
+                                os.makedirs(os.path.dirname(os.path.join(
+                                            settings.MEDIA_ROOT, new_name)), exist_ok=True)
+                                shutil.copy(current_raw, os.path.join(
+                                            settings.MEDIA_ROOT, new_name))
 
                             if (os.path.isfile(os.path.join(
                                     settings.MEDIA_ROOT, new_name))):

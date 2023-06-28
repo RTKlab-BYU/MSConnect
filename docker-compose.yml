@@ -21,11 +21,11 @@ services:
     &django_project
     image: xiexf128/data_manager-django:latest
     #comment the build section if you want to download from docker hub
-#     build:
-#       context: ./web/
-#       tags:
-#         - xiexf128/data_manager-django:1.5.1
-#         - xiexf128/data_manager-django:latest
+    # build:
+    #   context: ./web/
+    #   tags:
+    #     - xiexf128/data_manager-django:1.5.1
+    #     - xiexf128/data_manager-django:latest
     restart: always
     command: >
       sh -c "/venv/bin/python3 manage.py collectstatic --noinput   && /venv/bin/uwsgi   --ini /app/datamanager.uwsgi.ini --enable-threads"
@@ -46,7 +46,7 @@ services:
       #the meaning of folder name, i.e., remote_storage doesn't need to be remote
       
       - type: bind
-        source: /D/docker/ # primary storage, default saving everything in C drive root, please change
+        source: /D/docker/primary_storage # primary storage, default saving everything in C drive root, please change
         target: //app/media//primary_storage #don't change
       #secondary_storage, optional but recommended
       - type: bind
