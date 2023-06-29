@@ -161,10 +161,17 @@ def backup_task(time_string):
                                 acquisition_time.year, acquisition_time.month,\
                                 acquisition_time.day
 
-                            new_name = \
-                                f"{settings.STORAGE_LIST[storage_index]}/" \
-                                f"rawfiles/{file_year}/{file_month}/" \
-                                f"{file_day}/{file_name}"
+                            if record.project_name is not None or \
+                                    record.project_name != "":
+                                new_name = \
+                                    f"{settings.STORAGE_LIST[storage_index]}/" \
+                                    f"rawfiles/{file_year}/{file_month}/" \
+                                    f"{record.project_name}/{file_name}"
+                            else:
+                                new_name = \
+                                    f"{settings.STORAGE_LIST[storage_index]}/" \
+                                    f"rawfiles/{file_year}/{file_month}/" \
+                                    f"{file_day}/{file_name}"
                             file_extension = file_name.split(".")[-1]
                             if storage_index != 1:  # compress to 7z
                                 new_name = new_name.replace(
