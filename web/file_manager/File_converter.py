@@ -11,15 +11,17 @@ import shutil
 import string
 import time
 import xmltodict
-
 # Third-party imports
 import pickle
 from python_on_whales import docker
 from zipfile import ZipFile
+import xml.sax
+from collections import deque
 
 # Django imports
 from django.conf import settings
 from django.utils import timezone
+from .XMLReader import CustomContentHandler
 
 
 logger = logging.getLogger(__name__)
@@ -54,7 +56,8 @@ class FileConverter():
             '.mzML')
 
         try:
-            if self.creator_setting.exists() and self.creator_setting.first().perform_extraction:
+            if self.creator_setting.exists() and \
+                    self.creator_setting.first().perform_extraction:
                 if self.convert():
                     self.create_cache()
         except Exception as err:
@@ -147,8 +150,6 @@ class FileConverter():
             logger.error("No mzML file was found after conversion")
             return False
 
-    #
-
     def create_cache(self):
         """_Create pkl cache file from mzMl for display_
         """
@@ -157,9 +158,8 @@ class FileConverter():
         # file conversion fails sometimes, a re-try upto 6 time was used
         while (retry < settings.FILE_CONVERT_RETRY and not is_converted):
             try:
-                with open(self.mzML, "r") as xml_obj:
-                    # coverting the xml data to Python dictionary
-                    my_dict = xmltodict.parse(xml_obj.read())
+                xml_parse = CustomContentHandler()
+                xml.sax.parse(self.mzML, xml_parse)
             except Exception as error:
                 logger.warning(f"Convertion failed {retry+1} time, "
                                f"will retry until failed 5 times, {error}")
@@ -167,7 +167,6 @@ class FileConverter():
             else:
                 is_converted = True
             finally:
-                xml_obj.close()
                 retry = retry + 1
                 if retry >= settings.FILE_CONVERT_RETRY and not is_converted:
                     logger.error(
@@ -177,88 +176,21 @@ class FileConverter():
         if not self.creator_setting.exists() or \
                 not self.creator_setting.first().replace_raw_with_mzML:
             os.remove(self.mzML)
-        ms1_rt = []
-        ms1_basemzintensity = []
-        ms1_ticintensity = []
-        ms2_rt = []
-        ms2_injectiontime = []
-        instrument_info = my_dict["indexedmzML"]["mzML"][
-            "referenceableParamGroupList"][
-            "referenceableParamGroup"]["cvParam"]
 
-        if isinstance(instrument_info, list):
-            self.record.instrument_model = instrument_info[0]["@name"]
-            self.record.instrument_sn = next(
-                item for item in instrument_info if item[
-                    "@name"] == "instrument serial number")["@value"]
-
-        else:  # for Bruker
-            self.record.instrument_model = instrument_info["@name"]
-            self.record.instrument_sn = my_dict["indexedmzML"][
-                "mzML"]["instrumentConfigurationList"][
-                "instrumentConfiguration"]["cvParam"]["@value"]
-        self.record.acquisition_time = datetime.datetime.strptime(
-            my_dict["indexedmzML"]["mzML"][
-                "run"]["@startTimeStamp"], "%Y-%m-%dT%H:%M:%SZ")
+        self.record.instrument_model = xml_parse.model
+        self.record.instrument_sn = xml_parse.SN
+        self.record.acquisition_time = xml_parse.acquisition_time
 
         self.file_year, self.file_month, self.file_day = \
             self.record.acquisition_time.year, \
             self.record.acquisition_time.month, \
             self.record.acquisition_time.day
 
-        for item in my_dict["indexedmzML"]["mzML"]["run"][
-                "spectrumList"]["spectrum"]:
-            if next(item for item in item["cvParam"] if item[
-                    "@name"] == "ms level")["@value"] == "1":
-
-                if isinstance(item["scanList"]["scan"]["cvParam"], list):
-                    ms1_rt.append(float(next(
-                        item for item in item["scanList"]["scan"][
-                            "cvParam"] if item[
-                            "@name"] == "scan start time")["@value"]))
-                else:
-                    ms1_rt.append(
-                        float(item["scanList"]["scan"]["cvParam"]["@value"]))
-
-                if isinstance(item["cvParam"], list):
-                    ms1_basemzintensity.append(float(next(
-                        item for item in item["cvParam"] if item[
-                            "@name"] == "base peak intensity")["@value"]))
-                else:
-                    ms1_basemzintensity.append(
-                        float(item["cvParam"]["@value"]))
-
-                if isinstance(item["cvParam"], list):
-                    ms1_ticintensity.append(float(next(
-                        item for item in item["cvParam"] if item[
-                            "@name"] == "total ion current")["@value"]))
-                else:
-                    ms1_ticintensity.append(float(item["cvParam"]["@value"]))
-
-            try:
-                if next(item for item in item["cvParam"] if item[
-                        "@name"] == "ms level")[
-                        "@value"] == "2":
-                    ion_injection_time = float(next(
-                        item for item in item["scanList"][
-                            "scan"]["cvParam"] if item[
-                            "@name"] == "ion injection time")["@value"])
-                    if ion_injection_time != 0:
-                        ms2_rt.append(float(next(
-                            item for item in item["scanList"]["scan"][
-                                "cvParam"] if item[
-                                "@name"] == "scan start time")["@value"]))
-                        ms2_injectiontime.append(ion_injection_time)
-            except TypeError:
-                pass  # only thermo data with MS has this info
-            except Exception as err:
-                logger.error(f'Error message during read xml {err}')
-        plot_data = {"MS1_RT": ms1_rt,
-                     "MS1_Basemzintensity": ms1_basemzintensity,
-                     "MS1_Ticintensity": ms1_ticintensity,
-                     "MS2_RT": ms2_rt,
-                     "MS2_Injectiontime": ms2_injectiontime}
-
+        plot_data = {"MS1_RT": xml_parse.ms1_rt,
+                     "MS1_Basemzintensity": xml_parse.ms1_basemzintensity,
+                     "MS1_Ticintensity": xml_parse.ms1_ticintensity,
+                     "MS2_RT": xml_parse.ms2_rt,
+                     "MS2_Injectiontime": xml_parse.ms2_injectiontime}
         pkl_location = f"primary_storage/pkl/{self.file_year}/" \
             f"{self.file_month}/{self.file_day}/"\
             f"{self.filename}.pkl"
