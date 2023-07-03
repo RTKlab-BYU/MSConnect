@@ -2,6 +2,8 @@ FROM ubuntu:22.04
 LABEL maintainer = Xiaofeng Xie xiexf128@gmail.com
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
+RUN apt install -y git
+RUN apt install -y rsync
 RUN apt-get -y install python3 python3-pip python3-venv python3-wheel wget 
 RUN apt-get install -y --no-install-recommends p7zip-full
 

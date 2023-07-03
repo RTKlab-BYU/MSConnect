@@ -1,4 +1,4 @@
-version: "1.5"
+version: "1.6.0"
 services:
   data_manager-nginx:
 
@@ -21,11 +21,11 @@ services:
     &django_project
     image: xiexf128/data_manager-django:latest
     #comment the build section if you want to download from docker hub
-    # build:
-    #   context: ./web/
-    #   tags:
-    #     - xiexf128/data_manager-django:1.5.1
-    #     - xiexf128/data_manager-django:latest
+    build:
+      context: ./web/
+      tags:
+        - xiexf128/data_manager-django:1.5.1
+        - xiexf128/data_manager-django:latest
     restart: always
     command: >
       sh -c "/venv/bin/python3 manage.py collectstatic --noinput   && /venv/bin/uwsgi   --ini /app/datamanager.uwsgi.ini --enable-threads"
@@ -33,6 +33,7 @@ services:
       - ./.django_secrets.env #app configure file
     environment:
       is_docker: "True"
+      system_version: "1.6.0_87727da"  # docker version number_app git commit hash
     volumes:
       - uwsgi_data:/tmp/uwsgi/
       - web_static:/app/static/
