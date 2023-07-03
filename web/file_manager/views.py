@@ -70,9 +70,9 @@ else:
 try:
     # read verion from a file named git_version
     # check if file exist git_version
-    version_file = "app/file_manager/git_version"
+    version_file = "/app/file_manager/git_version"
     if os.path.exists(version_file):
-        with open("git_version", "r") as f:
+        with open(version_file, "r") as f:
             git_hash = f.read().strip()
     else:
         git_hash = None
