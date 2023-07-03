@@ -50,13 +50,37 @@ from .models import FileStorage, SampleRecord, UserSettings, SystemSettings, \
 from .serializers import FileStorageSerializer,  SampleRecordSerializer, \
     WorkerStatusSerializer, DataAnalysisQueueSerializer, \
     ProcessingAppSerializer
-
+from .update import update_system
 CACHE_FILE = "file_manager/cache/dash_cache.pickle"
 
 User = get_user_model()
 startTime = time.time()
 
 logger = logging.getLogger(__name__)
+
+# get docker/app version number
+# read from environ variable from docker-compose.yml
+if "system_version" in os.environ:
+    compose_version = os.environ['system_version']
+    docker_version, app_version = compose_version.split("_")
+else:
+    docker_version = "None"
+    app_version = "unknown"
+# get the git commit hash
+try:
+    # read verion from a file named git_version
+    # check if file exist git_version
+    version_file = "app/file_manager/git_version"
+    if os.path.exists(version_file):
+        with open("git_version", "r") as f:
+            git_hash = f.read().strip()
+    else:
+        git_hash = None
+except Exception:
+    git_hash = None
+else:
+    if git_hash is not None:
+        app_version = git_hash
 
 
 # used for authenticated through API, will return render error on server log
@@ -200,6 +224,12 @@ def system_settings(request):
         Path('manage.py').touch()
         # for production server
         os.system('/venv/bin/uwsgi --reload /app/datamanager-master.pid')
+
+    # update app through git pull
+    elif request.method == 'POST' and "update_app_version" in request.POST:
+        if "is_docker" in os.environ:  # only work inside docker
+            update_system()
+            os.system('/venv/bin/uwsgi --reload /app/datamanager-master.pid')
     elif request.method == 'POST' and 'start_process' in request.POST:
         if request.POST.get('action_type') == "0":  # restore raw file
             para = request.POST.get('restore_para')
@@ -509,6 +539,8 @@ def system_settings(request):
         'current_sysfile_backup':
             SystemSettings.objects.first().systemfile_backup_settings,
         "message": message,
+        "app_version": app_version,
+        "docker_version": docker_version,
 
     }
     return render(request, 'filemanager/system_settings.html', args)
@@ -1436,3 +1468,4 @@ def download_to_file_field(url, field):
                    File(open(tempname, 'rb')))
     finally:
         urlcleanup()
+

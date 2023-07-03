@@ -951,6 +951,64 @@
        </div>
        <div class="form-row" style="text-align: center;">
         <div class="col">
+        </div>
+       </div>
+      </form>
+      <form enctype="multipart/form-data" method="post">
+       <div style="visibility: hidden; display:inline;">
+        <p>
+         {% csrf_token %}
+        </p>
+       </div>
+       <div class="form-row">
+        <div class="col">
+         <p class="text-center">
+          <strong>
+           Update System
+          </strong>
+          <br/>
+         </p>
+         <div class="form-row">
+          <div class="col">
+           <label class="col-form-label">
+            Docker image version:
+            <br/>
+           </label>
+          </div>
+          <div class="col">
+           <label class="col-form-label">
+            {{docker_version}}
+            <br/>
+           </label>
+          </div>
+          <div class="col">
+           <label class="col-form-label">
+            <br/>
+           </label>
+          </div>
+         </div>
+         <div class="form-row">
+          <div class="col">
+           <label class="col-form-label">
+            system app version:
+            <br/>
+           </label>
+          </div>
+          <div class="col">
+           <label class="col-form-label">
+            {{app_version}}
+            <br/>
+           </label>
+          </div>
+          <div class="col">
+           <label class="col-form-label">
+            <button class="btn btn-primary" name="update_app_version" type="submit">
+             Update to latest
+            </button>
+            <br/>
+           </label>
+          </div>
+         </div>
          <footer class="bg-white sticky-footer">
           <div class="container my-auto">
            <div class="text-center my-auto copyright">

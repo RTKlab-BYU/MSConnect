@@ -1,4 +1,4 @@
-version: "1.5"
+version: "1.6.0"
 services:
   data_manager-nginx:
 
@@ -33,6 +33,7 @@ services:
       - ./.django_secrets.env #app configure file
     environment:
       is_docker: "True"
+      system_version: "1.6.0_87727da"  # docker version number_app git commit hash
     volumes:
       - uwsgi_data:/tmp/uwsgi/
       - web_static:/app/static/
