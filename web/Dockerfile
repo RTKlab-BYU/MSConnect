@@ -19,16 +19,7 @@ RUN echo \
 RUN apt-get update
 RUN apt-get install -y docker-ce-cli
 
-
-
-#for R
-RUN wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | gpg --dearmor -o /usr/share/keyrings/r-project.gpg
-RUN echo "deb [signed-by=/usr/share/keyrings/r-project.gpg] https://cloud.r-project.org/bin/linux/ubuntu jammy-cran40/" | tee -a /etc/apt/sources.list.d/r-project.list
-RUN apt update
-RUN apt-get install -y gfortran libreadline6-dev libx11-dev libxt-dev libpng-dev libjpeg-dev libcairo2-dev xvfb libzstd-dev texinfo texlive texlive-fonts-extra screen  zlib1g-dev libbz2-dev liblzma-dev libpcre2-dev libcurl4-openssl-dev openjdk-11-jdk
-RUN apt install -y --no-install-recommends r-base
-#RUN apt-get install -y r-base-core
-
+#set up locale
 RUN apt update && apt -y install locales && locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
@@ -43,13 +34,18 @@ COPY requirements.txt requirements.txt
 RUN /venv/bin/pip install -r requirements.txt
 RUN /venv/bin/pip install uwsgi
 
+#set up R
+RUN wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | gpg --dearmor -o /usr/share/keyrings/r-project.gpg
+RUN echo "deb [signed-by=/usr/share/keyrings/r-project.gpg] https://cloud.r-project.org/bin/linux/ubuntu jammy-cran40/" | tee -a /etc/apt/sources.list.d/r-project.list
+RUN apt update
+RUN apt-get install  -y r-base-dev
+RUN apt-get install -y libxml2-dev
+RUN apt-get install -y r-cran-devtools
+
 #set up R environment for Juipter Nootebook
 COPY install.R install.R
 RUN Rscript /app/install.R 
 
-
 COPY . .
-
-
 
 CMD ["/venv/bin/uwsgi", "--ini", "/app/datamanager.uwsgi.ini"]
