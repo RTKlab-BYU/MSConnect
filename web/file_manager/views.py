@@ -228,7 +228,7 @@ def system_settings(request):
     # update app through git pull
     elif request.method == 'POST' and "update_app_version" in request.POST:
         if "is_docker" in os.environ:  # only work inside docker
-            update_system()
+            update_system(system_settings.objects.first().other_settings)
             os.system('/venv/bin/uwsgi --reload /app/datamanager-master.pid')
     elif request.method == 'POST' and 'start_process' in request.POST:
         if request.POST.get('action_type') == "0":  # restore raw file
