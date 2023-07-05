@@ -12,7 +12,7 @@ def update_system(other_settings=None):
     if ('repository' in other_settings and len(other_settings['repository']) != 0) and (
         'branch' in other_settings and len(other_settings['branch']) != 0):
         subprocess.call([
-            "git", "clone","--single-branch", f"--branch {other_settings['branch']}",
+            "git", "clone", f"-b{other_settings['branch']}", "--single-branch",
             other_settings['repository'],"/home/git_download"])
     else:
         subprocess.call(["git", "clone", "https://github.com/RTKlab-BYU/Proteomic-Data-Manager.git", "/home/git_download"])
