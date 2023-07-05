@@ -5,8 +5,17 @@ import subprocess
 import time
 
 
-def update_system():
-    subprocess.call(["git", "clone", "https://github.com/RTKlab-BYU/Proteomic-Data-Manager.git", "/home/git_download"])
+def update_system(other_settings=None):
+    """
+    Updates the system by pulling the latest version of the code from github or system setting.
+    """
+    if ('repository' in other_settings and len(other_settings['repository']) != 0) and (
+        'branch' in other_settings and len(other_settings['branch']) != 0):
+        subprocess.call([
+            "git", "clone", f"-b{other_settings['branch']}", "--single-branch",
+            other_settings['repository'],"/home/git_download"])
+    else:
+        subprocess.call(["git", "clone", "https://github.com/RTKlab-BYU/Proteomic-Data-Manager.git", "/home/git_download"])
     f = open("/home/git_download/web/file_manager/git_version", "w")
     subprocess.call(["git", "-C", "/home/git_download", "rev-parse", "--short", "HEAD"], stdout=f)
     f.close()
