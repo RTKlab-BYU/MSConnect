@@ -128,7 +128,8 @@ def process_uploaded(sender, instance, **kwargs):
         convert = FileConverter(
             instance,
             FileStorage,
-            UserSettings.objects.filter(user=instance.record_creator))
+            UserSettings.objects.filter(user=instance.record_creator),
+            SystemSettings.objects.first(),)
         if convert.sucess:
             # Automatically create QC based on user settings(app/preset)
             if UserSettings.objects.filter(

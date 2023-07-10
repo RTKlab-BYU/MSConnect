@@ -32,11 +32,12 @@ class FileConverter():
     data
     """
 
-    def __init__(self, instance=None, FileStorage=None, creator_setting=None):
+    def __init__(self, instance=None, FileStorage=None, creator_setting=None,system_setting=None):
         self.record = instance
         self.sucess = False
         self.filestorage = FileStorage
         self.creator_setting = creator_setting
+        self.system_setting = system_setting
         self.filename = os.path.splitext(instance.temp_rawfile.name)[
             0].split('/')[-1]
         self.extension = os.path.splitext(self.record.temp_rawfile.name)[1][1:]
@@ -216,14 +217,33 @@ class FileConverter():
     def move_file(self):
         """_Move the file to the right location and save related info_
         """
-        if self.record.project_name != "":
-            file_dir = f"primary_storage/rawfiles/{self.file_year}/"\
-                f"{self.file_month}/{self.record.project_name}/"
-        else:
-            file_dir = f"primary_storage/rawfiles/{self.file_year}/"\
-                f"{self.file_month}/{self.file_day}/"
-        check_folder = os.path.isdir(os.path.join(
-            settings.MEDIA_ROOT, file_dir))
+        # separate file by group if enabled by admin
+
+        try:
+            group_name = self.record.record_creator.groups.all()[0]
+        except Exception as error:
+            group_name = "others"
+        if "enabled_group_folder" in \
+                self.system_setting.other_settings.keys() and \
+                self.system_setting.other_settings[
+                        "enabled_group_folder"] == "TRUE":
+            if self.record.project_name != "":
+                file_dir = f"primary_storage/rawfiles/{group_name}/"\
+                    f"{self.file_year}/{self.record.project_name}/"
+            else:
+                file_dir = f"primary_storage/rawfiles/{group_name}/"\
+                    f"{self.file_year}//{self.file_day}/"
+            check_folder = os.path.isdir(os.path.join(
+                settings.MEDIA_ROOT, file_dir))
+        else:  # separate file by month without group
+            if self.record.project_name != "":
+                file_dir = f"primary_storage/rawfiles/{self.file_year}/"\
+                    f"{self.file_month}/{self.record.project_name}/"
+            else:
+                file_dir = f"primary_storage/rawfiles/{self.file_year}/"\
+                    f"{self.file_month}/{self.file_day}/"
+            check_folder = os.path.isdir(os.path.join(
+                settings.MEDIA_ROOT, file_dir))
         if not check_folder:
             os.makedirs(os.path.join(
                 settings.MEDIA_ROOT, file_dir))
