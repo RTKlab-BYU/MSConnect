@@ -47,8 +47,13 @@ class FileConverter():
         #  "project_name, enablebatch(True or False), txtbatchname, userslist"
         self.record.project_name, self.enable_batch, self.batch_name,\
             self.assigned_user = self.record.project_name.split(',')
-        if self.record.record_creator.is_staff:
-            self.record.record_creator = User.objects.get(pk=int(self.assigned_user.split('_')[0]))
+        try:
+            self.assigned_user = int(self.assigned_user.split('_')[0])
+        except Exception as error:  # not a user
+            pass
+        else:
+            if self.record.record_creator.is_staff and self.assigned_user != 0:
+                self.record.record_creator = User.objects.get(pk=self.assigned_user)
         to_tz = timezone.get_default_timezone()
         self.record.acquisition_time = self.record.uploaded_time
         # compromise, otherwise on acquisition time for sort
