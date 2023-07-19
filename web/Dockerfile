@@ -10,7 +10,7 @@ RUN apt-get install -y --no-install-recommends p7zip-full
 # install docker-ce-cli
 RUN  apt-get install -y ca-certificates curl gnupg
 RUN install -m 0755 -d /etc/apt/keyrings
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+RUN curl -fsSL -k https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 RUN chmod a+r /etc/apt/keyrings/docker.gpg
 RUN echo \
     "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \

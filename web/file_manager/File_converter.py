@@ -22,6 +22,7 @@ from collections import deque
 from django.conf import settings
 from django.utils import timezone
 from .XMLReader import CustomContentHandler
+from django.contrib.auth.models import User
 
 
 logger = logging.getLogger(__name__)
@@ -32,7 +33,7 @@ class FileConverter():
     data
     """
 
-    def __init__(self, instance=None, FileStorage=None, creator_setting=None,system_setting=None):
+    def __init__(self, instance=None, FileStorage=None, creator_setting=None, system_setting=None):
         self.record = instance
         self.sucess = False
         self.filestorage = FileStorage
@@ -42,7 +43,17 @@ class FileConverter():
             0].split('/')[-1]
         self.extension = os.path.splitext(self.record.temp_rawfile.name)[1][1:]
         self.fullname = self.filename + "." + self.extension
-
+        # unpack the content in the string of project_name in the formate of
+        #  "project_name, enablebatch(True or False), txtbatchname, userslist"
+        self.record.project_name, self.enable_batch, self.batch_name,\
+            self.assigned_user = self.record.project_name.split(',')
+        try:
+            self.assigned_user = int(self.assigned_user.split('_')[0])
+        except Exception as error:  # not a user
+            pass
+        else:
+            if self.record.record_creator.is_staff and self.assigned_user != 0:
+                self.record.record_creator = User.objects.get(pk=self.assigned_user)
         to_tz = timezone.get_default_timezone()
         self.record.acquisition_time = self.record.uploaded_time
         # compromise, otherwise on acquisition time for sort
@@ -227,23 +238,24 @@ class FileConverter():
                 self.system_setting.other_settings.keys() and \
                 self.system_setting.other_settings[
                         "enabled_group_folder"] == "TRUE":
-            if self.record.project_name != "":
+            if self.enable_batch == "True" and self.batch_name != "":
                 file_dir = f"primary_storage/rawfiles/{group_name}/"\
-                    f"{self.file_year}/{self.record.project_name}/"
+                    f"{self.record.record_creator}/" \
+                    f"{self.record.project_name}/{self.batch_name}/"
             else:
                 file_dir = f"primary_storage/rawfiles/{group_name}/"\
-                    f"{self.file_year}//{self.file_day}/"
-            check_folder = os.path.isdir(os.path.join(
-                settings.MEDIA_ROOT, file_dir))
-        else:  # separate file by month without group
-            if self.record.project_name != "":
+                    f"{self.record.record_creator}/" \
+                    f"{self.record.project_name}/"
+
+        else:  # separate file by month without group and user
+            if self.enable_batch == "True" and self.batch_name != "":
+                file_dir = f"primary_storage/rawfiles/{self.file_year}/"\
+                    f"{self.file_month}/{self.record.project_name}/{self.batch_name}/"
+            else:
                 file_dir = f"primary_storage/rawfiles/{self.file_year}/"\
                     f"{self.file_month}/{self.record.project_name}/"
-            else:
-                file_dir = f"primary_storage/rawfiles/{self.file_year}/"\
-                    f"{self.file_month}/{self.file_day}/"
-            check_folder = os.path.isdir(os.path.join(
-                settings.MEDIA_ROOT, file_dir))
+        check_folder = os.path.isdir(os.path.join(
+            settings.MEDIA_ROOT, file_dir))
         if not check_folder:
             os.makedirs(os.path.join(
                 settings.MEDIA_ROOT, file_dir))

@@ -38,6 +38,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.timezone import utc
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
+from rest_framework import generics
+from rest_framework.permissions import IsAdminUser
+
 
 # Django REST Framework imports
 from rest_framework import permissions, viewsets
@@ -49,7 +53,7 @@ from .models import FileStorage, SampleRecord, UserSettings, SystemSettings, \
     WorkerStatus, DataAnalysisQueue, ProcessingApp, VisualizationApp
 from .serializers import FileStorageSerializer,  SampleRecordSerializer, \
     WorkerStatusSerializer, DataAnalysisQueueSerializer, \
-    ProcessingAppSerializer
+    ProcessingAppSerializer, UserSerializer
 from .update import update_system
 CACHE_FILE = "file_manager/cache/dash_cache.pickle"
 
@@ -1396,6 +1400,14 @@ def uploader(request):  # internal test purpose
 
 
 # viewset for REST API
+
+class UserListViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows admin user to pull user list.
+    """
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
 
 
 class FileStorageViewSet(viewsets.ModelViewSet):
