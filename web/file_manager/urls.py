@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 
 # Wire up our API using automatic URL routing.
 router = routers.DefaultRouter()
+router.register(r'Users', views.UserListViewSet)
 router.register(r'FileStorage', views.FileStorageViewSet)
 router.register(r'SampleRecord', views.SampleRecordViewSet)
 router.register(r'WorkerStatus', views.WorkerStatusViewSet)

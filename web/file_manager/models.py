@@ -123,7 +123,7 @@ def process_uploaded(sender, instance, **kwargs):
     including file convertion, meta info extraction, flag: is_processed
     """
     if not instance.is_processed:
-        logger.info("Start processing uploaded file")
+        logger.info(f"Start processing uploaded file {instance.pk}")
 
         convert = FileConverter(
             instance,
