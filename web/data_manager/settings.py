@@ -259,7 +259,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.'
                                 'pagination.PageNumberPagination',
     'DATETIME_FORMAT': "%Y-%m-%d %H:%M:%S",
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': 100,
     'DEFAULT_PERMISSION_CLASSES': [
         # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
         'rest_framework.permissions.DjangoModelPermissions',

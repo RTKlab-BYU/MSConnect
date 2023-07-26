@@ -48,12 +48,13 @@ class FileConverter():
         self.record.project_name, self.enable_batch, self.batch_name,\
             self.assigned_user = self.record.project_name.split(',')
         try:
-            self.assigned_user = int(self.assigned_user.split('_')[0])
+            self.assigned_user = int(self.assigned_user)
         except Exception as error:  # not a user
             pass
         else:
             if self.record.record_creator.is_staff and self.assigned_user != 0:
-                self.record.record_creator = User.objects.get(pk=self.assigned_user)
+                self.record.record_creator = User.objects.get(
+                    pk=self.assigned_user)
         to_tz = timezone.get_default_timezone()
         self.record.acquisition_time = self.record.uploaded_time
         # compromise, otherwise on acquisition time for sort
@@ -174,7 +175,9 @@ class FileConverter():
                 xml.sax.parse(self.mzML, xml_parse)
             except Exception as error:
                 logger.warning(f"Convertion failed {retry+1} time, "
-                               f"will retry until failed 5 times, {error}")
+                               f"will retry until failed 6 times, {error}")
+                os.remove(self.mzML) if os.path.exists(self.mzML) else None
+                time.sleep(10)
                 self.convert()
             else:
                 is_converted = True
@@ -184,10 +187,10 @@ class FileConverter():
                     logger.error(
                         f"{self.fullname} Convertion "
                         f"abandoned after {retry} retries.")
-                    return
+                    return False
         if not self.creator_setting.exists() or \
                 not self.creator_setting.first().replace_raw_with_mzML:
-            os.remove(self.mzML)
+            os.remove(self.mzML) if os.path.exists(self.mzML) else None
 
         self.record.instrument_model = xml_parse.model
         self.record.instrument_sn = xml_parse.SN
@@ -259,7 +262,7 @@ class FileConverter():
         if not check_folder:
             os.makedirs(os.path.join(
                 settings.MEDIA_ROOT, file_dir))
-
+        # keep the original raw file or converted mzML file
         if self.creator_setting.exists() and \
                 self.creator_setting.first().replace_raw_with_mzML:
             newfile_name = f"{file_dir}/{self.filename + '.mzML'}"
