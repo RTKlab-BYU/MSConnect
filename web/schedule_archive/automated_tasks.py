@@ -125,9 +125,9 @@ def backup_task(time_string):
             elif task_type == 1:  # backup rawfile
                 # uploaded in the last 90 days, hard coded here should be ok
                 # not most efficient, step through all recrod to check missing
-                # raw backup files, file_type is 1-4 for primary, secondary...
+                # raw backup files, file_type is 0-3 for primary, secondary...
                 # see Filestorage in Models for more detail
-                # compress to 7z if it's 3 and 4 (remote and offline)
+                # compress to 7z if it's 2 and 3 (remote and offline)
                 for record in SampleRecord.objects.filter(
                         uploaded_time__gte=datetime.today()-timedelta(
                         days=90)):
@@ -157,14 +157,13 @@ def backup_task(time_string):
                                                     record.newest_raw.file_location.name.split("/", 1)[1])
                             if storage_index != 1:  # compress to 7z
                                 new_name = new_name.replace(
-                                    "." + file_extension, ".7z")
+                                    file_extension, ".7z")
                                 if os.path.isfile(os.path.join(
                                         settings.MEDIA_ROOT, new_name)):
                                     random_str = "".join(random.choice(
                                         string.ascii_lowercase) for i in range(4))
                                     new_name = new_name.replace(
                                         ".7z", "_" + random_str+".7z")
-
                                 subprocess.run(['7z', 'a',  os.path.join(
                                     settings.MEDIA_ROOT, new_name),
                                     current_raw,
