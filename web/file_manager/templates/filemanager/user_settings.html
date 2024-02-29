@@ -171,14 +171,14 @@
         <div class="form-row">
          <div class="col">
           <label>
-           QC 1 Name:
+           qc_1_name:
            <br/>
           </label>
           <input class="form-control" name="qc_1_name" type="text" value="{{settings.qc_1_name}}"/>
          </div>
          <div class="col">
           <label>
-           QC 2 Name:
+           qc_2_name:
            <br/>
           </label>
           <input class="form-control" name="qc_2_name" type="text" value="{{settings.qc_2_name}}"/>
@@ -187,14 +187,14 @@
         <div class="form-row">
          <div class="col">
           <label>
-           QC 3 Name:
+           qc_3_name:
            <br/>
           </label>
           <input class="form-control" name="qc_3_name" type="text" value="{{settings.qc_3_name}}"/>
          </div>
          <div class="col">
           <label>
-           QC 4 Name:
+           qc_4_name:
            <br/>
           </label>
           <input class="form-control" name="qc_4_name" type="text" value="{{settings.qc_4_name}}"/>
@@ -203,7 +203,7 @@
         <div class="form-row">
          <div class="col">
           <label>
-           Automatic QC Setting (Process App + Preset)
+           Automatic QC setting (process app +preset)
           </label>
           <select class="form-control" name="qc_selector">
            {% for key,value in qc_settings.items %}
@@ -222,7 +222,7 @@
          </div>
          <div class="col">
           <label>
-           Automatic Workflow Settings (Process App + Preset)
+           Automatic workflow settings (process app +preset)
           </label>
           <select class="form-control" multiple="" name="workflow_selector">
            {% for key,value in qc_settings.items %}
@@ -268,7 +268,7 @@
          <div class="col">
           <label>
            <strong>
-            Enable extraction information from uploaded file (Requires large RAM)
+            Enable extraction information from uploaded file(require large ram)
            </strong>
           </label>
           <select class="form-control" name="perform_extraction">
@@ -298,7 +298,7 @@
          </div>
          <div class="col">
           <button class="btn btn-primary" name="system_settings" onclick="window.location.href='/files/system_settings/';" type="button">
-           Advance System Settings (Admin Only)
+           Advance system settings(admin only)
           </button>
          </div>
         </div>

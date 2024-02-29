@@ -141,7 +141,7 @@
          <div class="col">
           <p class="text-center" style="font-size: 24px;">
            <strong>
-            Advance System Settings (Admin Only)
+            System Settings (stuff/admin only)
            </strong>
           </p>
          </div>
@@ -150,7 +150,7 @@
          <div class="col">
           <p class="text-center">
            <strong>
-            Database Restoration (Whole System Database Rollback)
+            Database Restoration(whole system database rollback)
            </strong>
           </p>
          </div>
@@ -165,13 +165,13 @@
            {% endfor %}
           </select>
           <label style="text-align: center;">
-           Choose An Earlier Database For Rollback
+           Choose an early database to Roll back
           </label>
          </div>
          <div class="col">
           <button class="btn btn-primary" name="backup_now" style="text-align: center;background: var(--green);color: var(--white);font-weight: bold;border-style: none;" type="submit">
            <strong>
-            Backup Now
+            Backup_now
            </strong>
            <br/>
           </button>
@@ -195,7 +195,7 @@
         <div class="col">
          <p class="text-center">
           <strong>
-           Auto-backup Settings (When New Files Will Be backed Up, Modification Takes Effect After Reboot)
+           Auto-backup strategy(how often new files are backed up, modification takes effect after reboot)
           </strong>
          </p>
         </div>
@@ -203,25 +203,25 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-          Storage Type
+          Storage type
           <br/>
          </label>
         </div>
         <div class="col">
          <label class="col-form-label">
-          Database Backup
+          Database backup
           <br/>
          </label>
         </div>
         <div class="col">
          <label class="col-form-label">
-          Raw File Backup
+          Raw file backup
           <br/>
          </label>
         </div>
         <div class="col">
          <label class="col-form-label">
-          Processed File Backup
+          Processed file backup
           <br/>
          </label>
         </div>
@@ -229,7 +229,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-          Primary Storage
+          Primary_storage
           <br/>
          </label>
         </div>
@@ -258,7 +258,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-          Secondary Storage
+          Secondary_storage
           <br/>
          </label>
         </div>
@@ -317,7 +317,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-          Remote Storage
+          Remote_storage
           <br/>
          </label>
         </div>
@@ -376,7 +376,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-          Offline Storage
+          Offline_storage
           <br/>
          </label>
         </div>
@@ -453,7 +453,7 @@
         <div class="col">
          <p class="text-center">
           <strong>
-           Auto-Purge Settings (Deletes After n Days, Purge Performed Daily, Modification Takes Effect After Reboot)
+           Auto-Purge strategy (Delete after n days, 0 = never, purge performs daily, modification takes effect after reboot)
           </strong>
          </p>
         </div>
@@ -461,7 +461,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-          Storage Type
+          Storage type
           <br/>
          </label>
         </div>
@@ -473,13 +473,13 @@
         </div>
         <div class="col">
          <label class="col-form-label">
-          Raw File Purge
+          Raw file Purge
           <br/>
          </label>
         </div>
         <div class="col">
          <label class="col-form-label">
-          Processed File Purge
+          Processed file Purge
           <br/>
          </label>
         </div>
@@ -487,7 +487,7 @@
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-          Primary Storage
+          Primary_storage
           <br/>
          </label>
         </div>
@@ -495,262 +495,213 @@
         </div>
         <div class="col">
          <select class="form-control" name="purge_0_1">
-{% for item in purge_options %}
-{% comment %} item are 0, 90, 180, 360, 1000, 3600 {% endcomment %}
+          {% for item in purge_options %}
        
-{% comment %} current_purge.purge_0_1 is viewed to see if it is selected {% endcomment %}
     
-      {% if current_purge.purge_0_1 == item or item == 0 and current_purge.purge_0_1 == None %}   
-            {% if item == "0" %}
-                  <option selected="" value="{{item}}">  Never  </option>
-            {% else %}
-                  <option selected="" value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-
-{% comment %} This is for unselected Value {% endcomment %}
-      {% else %}
-            {% if item == "0" %}
-                  <option value="{{item}}">  Never  </option>
-            {% else %}
-                  <option value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% endif %}
-{% endfor %}
-
+    {% if current_purge.purge_0_1 == item    or item == 0 and current_purge.purge_0_1 == None %}
+          <option selected="" value="{{item}}">
+           After {{item}} day
+          </option>
+          {% else %}
+          <option value="{{item}}">
+           After {{item}} day
+          </option>
+          {% endif %}
+    {% endfor %}
          </select>
         </div>
         <div class="col">
          <select class="form-control" name="purge_0_2">
-{% for item in purge_options %}
+          {% for item in purge_options %}
        
     
-      {% if current_purge.purge_0_2 == item    or item == 0 and current_purge.purge_0_2 == None %}
-            {% if item == "0" %}
-                  <option selected="" value="{{item}}">  Never  </option>
-            {% else %}
-                  <option selected="" value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% else %}
-            {% if item == "0" %}
-                  <option value="{{item}}">  Never  </option>
-            {% else %}
-                  <option value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% endif %}
-{% endfor %}
+    {% if current_purge.purge_0_2 == item    or item == 0 and current_purge.purge_0_2 == None %}
+          <option selected="" value="{{item}}">
+           After {{item}} day
+          </option>
+          {% else %}
+          <option value="{{item}}">
+           After {{item}} day
+          </option>
+          {% endif %}
+    {% endfor %}
          </select>
         </div>
        </div>
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-          Secondary Storage
+          Secondary_storage
           <br/>
          </label>
         </div>
         <div class="col">
          <select class="form-control" name="purge_1_0">
-{% for item in purge_options %}
+          {% for item in purge_options %}
        
     
-      {% if current_purge.purge_1_0 == item    or item == 0 and current_purge.purge_1_0 == None %}
-            {% if item == "0" %}
-                  <option selected="" value="{{item}}">  Never  </option>
-            {% else %}
-                  <option selected="" value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% else %}
-            {% if item == "0" %}
-                  <option value="{{item}}">  Never  </option>
-            {% else %}
-                  <option value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% endif %}
-{% endfor %}
+    {% if current_purge.purge_1_0 == item    or item == 0 and current_purge.purge_1_0 == None %}
+          <option selected="" value="{{item}}">
+           After {{item}} day
+          </option>
+          {% else %}
+          <option value="{{item}}">
+           After {{item}} day
+          </option>
+          {% endif %}
+    {% endfor %}
          </select>
         </div>
         <div class="col">
          <select class="form-control" name="purge_1_1">
-{% for item in purge_options %}
+          {% for item in purge_options %}
        
     
-      {% if current_purge.purge_1_1 == item    or item == 0 and current_purge.purge_1_1 == None %}
-            {% if item == "0" %}
-                  <option selected="" value="{{item}}">  Never  </option>
-            {% else %}
-                  <option selected="" value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% else %}
-            {% if item == "0" %}
-                  <option value="{{item}}">  Never  </option>
-            {% else %}
-                  <option value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% endif %}
-{% endfor %}
+    {% if current_purge.purge_1_1 == item    or item == 0 and current_purge.purge_1_1 == None %}
+          <option selected="" value="{{item}}">
+           After {{item}} day
+          </option>
+          {% else %}
+          <option value="{{item}}">
+           After {{item}} day
+          </option>
+          {% endif %}
+    {% endfor %}
          </select>
         </div>
         <div class="col">
          <select class="form-control" name="purge_1_2">
-{% for item in purge_options %}
+          {% for item in purge_options %}
        
     
-      {% if current_purge.purge_1_2 == item    or item == 0 and current_purge.purge_1_2 == None %}
-            {% if item == "0" %}
-                  <option selected="" value="{{item}}">  Never  </option>
-            {% else %}
-                  <option selected="" value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% else %}
-            {% if item == "0" %}
-                  <option value="{{item}}">  Never  </option>
-            {% else %}
-                  <option value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% endif %}
-{% endfor %}
+    {% if current_purge.purge_1_2 == item    or item == 0 and current_purge.purge_1_2 == None %}
+          <option selected="" value="{{item}}">
+           After {{item}} day
+          </option>
+          {% else %}
+          <option value="{{item}}">
+           After {{item}} day
+          </option>
+          {% endif %}
+    {% endfor %}
          </select>
         </div>
        </div>
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-          Remote Storage
+          Remote_storage
           <br/>
          </label>
         </div>
         <div class="col">
          <select class="form-control" name="purge_2_0">
-{% for item in purge_options %}
+          {% for item in purge_options %}
        
     
-      {% if current_purge.purge_2_0 == item    or item == 0 and current_purge.purge_2_0 == None %}
-            {% if item == "0" %}
-                  <option selected="" value="{{item}}">  Never  </option>
-            {% else %}
-                  <option selected="" value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% else %}
-            {% if item == "0" %}
-                  <option value="{{item}}">  Never  </option>
-            {% else %}
-                  <option value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% endif %}
-{% endfor %}
+    {% if current_purge.purge_2_0 == item    or item == 0 and current_purge.purge_2_0 == None %}
+          <option selected="" value="{{item}}">
+           After {{item}} day
+          </option>
+          {% else %}
+          <option value="{{item}}">
+           After {{item}} day
+          </option>
+          {% endif %}
+    {% endfor %}
          </select>
         </div>
         <div class="col">
          <select class="form-control" name="purge_2_1">
-{% for item in purge_options %}
+          {% for item in purge_options %}
        
     
-      {% if current_purge.purge_2_1 == item    or item == 0 and current_purge.purge_2_1 == None %}
-            {% if item == "0" %}
-                  <option selected="" value="{{item}}">  Never  </option>
-            {% else %}
-                  <option selected="" value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% else %}
-            {% if item == "0" %}
-                  <option value="{{item}}">  Never  </option>
-            {% else %}
-                  <option value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% endif %}
-{% endfor %}
+    {% if current_purge.purge_2_1 == item    or item == 0 and current_purge.purge_2_1 == None %}
+          <option selected="" value="{{item}}">
+           After {{item}} day
+          </option>
+          {% else %}
+          <option value="{{item}}">
+           After {{item}} day
+          </option>
+          {% endif %}
+    {% endfor %}
          </select>
         </div>
         <div class="col">
          <select class="form-control" name="purge_2_2">
-{% for item in purge_options %}
+          {% for item in purge_options %}
        
     
-      {% if current_purge.purge_2_2 == item    or item == 0 and current_purge.purge_2_2 == None %}
-            {% if item == "0" %}
-                  <option selected="" value="{{item}}">  Never  </option>
-            {% else %}
-                  <option selected="" value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% else %}
-            {% if item == "0" %}
-                  <option value="{{item}}">  Never  </option>
-            {% else %}
-                  <option value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% endif %}
-{% endfor %}
+    {% if current_purge.purge_2_2 == item    or item == 0 and current_purge.purge_2_2 == None %}
+          <option selected="" value="{{item}}">
+           After {{item}} day
+          </option>
+          {% else %}
+          <option value="{{item}}">
+           After {{item}} day
+          </option>
+          {% endif %}
+    {% endfor %}
          </select>
         </div>
        </div>
        <div class="form-row">
         <div class="col">
          <label class="col-form-label">
-          Offline Storage
+          Offline_storage
           <br/>
          </label>
         </div>
         <div class="col">
          <select class="form-control" name="purge_3_0">
-{% for item in purge_options %}
+          {% for item in purge_options %}
        
     
-      {% if current_purge.purge_3_0 == item    or item == 0 and current_purge.purge_3_0 == None %}
-            {% if item == "0" %}
-                  <option selected="" value="{{item}}">  Never  </option>
-            {% else %}
-                  <option selected="" value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% else %}
-            {% if item == "0" %}
-                  <option value="{{item}}">  Never  </option>
-            {% else %}
-                  <option value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% endif %}
-{% endfor %}
+    {% if current_purge.purge_3_0 == item    or item == 0 and current_purge.purge_3_0 == None %}
+          <option selected="" value="{{item}}">
+           After {{item}} day
+          </option>
+          {% else %}
+          <option value="{{item}}">
+           After {{item}} day
+          </option>
+          {% endif %}
+    {% endfor %}
          </select>
         </div>
         <div class="col">
          <select class="form-control" name="purge_3_1">
-{% for item in purge_options %}
+          {% for item in purge_options %}
        
     
-      {% if current_purge.purge_3_1 == item    or item == 0 and current_purge.purge_3_1 == None %}
-            {% if item == "0" %}
-                  <option selected="" value="{{item}}">  Never  </option>
-            {% else %}
-                  <option selected="" value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% else %}
-            {% if item == "0" %}
-                  <option value="{{item}}">  Never  </option>
-            {% else %}
-                  <option value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% endif %}
-{% endfor %}
+    {% if current_purge.purge_3_1 == item    or item == 0 and current_purge.purge_3_1 == None %}
+          <option selected="" value="{{item}}">
+           After {{item}} day
+          </option>
+          {% else %}
+          <option value="{{item}}">
+           After {{item}} day
+          </option>
+          {% endif %}
+    {% endfor %}
          </select>
         </div>
         <div class="col">
          <select class="form-control" name="purge_3_2">
-{% for item in purge_options %}
+          {% for item in purge_options %}
        
     
-      {% if current_purge.purge_3_2 == item    or item == 0 and current_purge.purge_3_2 == None %}
-            {% if item == "0" %}
-                  <option selected="" value="{{item}}">  Never  </option>
-            {% else %}
-                  <option selected="" value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% else %}
-            {% if item == "0" %}
-                  <option value="{{item}}">  Never  </option>
-            {% else %}
-                  <option value="{{item}}">  After {{item}} Days  </option>
-            {% endif %}
-      {% endif %}
-{% endfor %}
+    {% if current_purge.purge_3_2 == item    or item == 0 and current_purge.purge_3_2 == None %}
+          <option selected="" value="{{item}}">
+           After {{item}} day
+          </option>
+          {% else %}
+          <option value="{{item}}">
+           After {{item}} day
+          </option>
+          {% endif %}
+    {% endfor %}
          </select>
         </div>
        </div>
@@ -775,31 +726,31 @@
         <div class="col">
          <p class="text-center">
           <strong>
-           Automated Task Schedule (Modification Takes Effect After Reboot)
+           Automated task schedule (Modification takes affect after reboot)
           </strong>
          </p>
          <div class="form-row">
           <div class="col">
            <label class="col-form-label">
-            Hourly (0-59 Minutes)
+            Hourly(min 0-59)
             <br/>
            </label>
           </div>
           <div class="col">
            <label class="col-form-label">
-            Daily (0-23 hours)
+            Daily(hour 0-23)
             <br/>
            </label>
           </div>
           <div class="col">
            <label class="col-form-label">
-            Weekly (1-7 Days)
+            Weekly(day 1-7)
             <br/>
            </label>
           </div>
           <div class="col">
            <label class="col-form-label">
-            Monthly (1-31 Days)
+            Monthly(day 1-31)
             <br/>
            </label>
           </div>
@@ -821,7 +772,7 @@
          <div class="form-row">
           <div class="col">
            <button class="btn btn-primary" name="save_schedule_settings" type="submit">
-            Save Schedule Time
+            Save schedule time
            </button>
           </div>
          </div>
@@ -838,7 +789,7 @@
         <div class="col">
          <p class="text-center">
           <strong>
-           System/Supplements File Backup And Restore Option (Takes Effect After Reboot)
+           System/Supplements File backup and restore option(takes effect after reboot)
           </strong>
           <br/>
          </p>
@@ -874,12 +825,12 @@
          <div class="form-row">
           <div class="col">
            <button class="btn btn-primary" name="save_system_file_setting" type="submit">
-            Save Setting
+            Save setting
            </button>
           </div>
           <div class="col">
            <button class="btn btn-primary" name="system_file_restore" type="submit">
-            Restore System File From Backup
+            Restore system file from backup
            </button>
           </div>
          </div>
@@ -896,7 +847,7 @@
         <div class="col">
          <p class="text-center" style="color: var(--red);">
           <strong>
-           Backup Management (Restoration, Deletion, Copying, etc.) Read The Manual On The Github Wiki Before Starting.
+           Backup Management(Restoration, deletion, copying, etc,), Please read manual at github wiki before start.
           </strong>
          </p>
          <div class="form-row">
@@ -908,7 +859,7 @@
           </div>
           <div class="col">
            <label class="col-form-label">
-            Target Device (Only Used For Migration)
+            Target device(only used for migration)
             <br/>
            </label>
           </div>
@@ -920,7 +871,7 @@
           </div>
           <div class="col">
            <label class="col-form-label">
-            Parameters, Restoration Index, etc.
+            Parameters, restoration index, etc.
             <br/>
            </label>
           </div>
@@ -929,51 +880,51 @@
           <div class="col">
            <select class="form-control" name="source">
             <option selected="" value="0">
-             Primary Storage
+             Primary_storage
             </option>
             <option value="1">
-             Secondary Storage
+             Secondary_storage
             </option>
             <option value="2">
-             Remote Storage
+             Remote_storage
             </option>
             <option value="3">
-             Offline Storage
+             Offline_storage
             </option>
            </select>
           </div>
           <div class="col">
            <select class="form-control" name="target">
             <option selected="" value="0">
-             Primary Storage
+             Primary_storage
             </option>
             <option value="1">
-             Secondary Storage
+             Secondary_storage
             </option>
             <option value="2">
-             Remote Storage
+             Remote_storage
             </option>
             <option value="3">
-             Offline Storage
+             Offline_storage
             </option>
            </select>
           </div>
           <div class="col">
            <select class="form-control" name="action_type">
             <option selected="" value="0">
-             Restore Rawfile From Backup
+             Restore rawfile from backup
             </option>
             <option value="1">
-             Restore Processed File From Backup
+             restore processed file from backup
             </option>
             <option value="2">
-             Restore System File From Backup
+             Restore system file from backup
             </option>
             <option value="3">
-             Copy Database Backups To Primary Backup
+             Copy database backups to Primary backup
             </option>
             <option value="4">
-             Copy All Files To New Storage (Migration)
+             Copy all files to new Storage(migration)
             </option>
            </select>
           </div>
@@ -984,7 +935,7 @@
          <div class="form-row">
           <div class="col">
            <button class="btn btn-primary" name="start_process" type="submit">
-            Start The Process
+            Start the process
            </button>
           </div>
           <div class="col">
@@ -1020,7 +971,7 @@
          <div class="form-row">
           <div class="col">
            <label class="col-form-label">
-            Docker Image Version:
+            Docker image version:
             <br/>
            </label>
           </div>
@@ -1039,7 +990,7 @@
          <div class="form-row">
           <div class="col">
            <label class="col-form-label">
-            system App Version:
+            system app version:
             <br/>
            </label>
           </div>
@@ -1052,7 +1003,7 @@
           <div class="col">
            <label class="col-form-label">
             <button class="btn btn-primary" name="update_app_version" type="submit">
-             Update To Latest
+             Update to latest
             </button>
             <br/>
            </label>
@@ -1064,7 +1015,7 @@
             <span>
              Copyright © 2022 PDM
              <a href="/contact/">
-              Contact Us
+              Contact us
              </a>
             </span>
            </div>
