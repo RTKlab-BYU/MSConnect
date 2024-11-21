@@ -18,24 +18,44 @@ MSConnect is a Web-based, flexible, open-source platform for automated high-thro
 6. Integration of the Django REST framework for API access and Jupyter Notebook for scripting with Python and R. 
 7. An app-store style module distribution system between developers and users.
 
-## Installation or Deployment Guide
-Deploying the platform involves three simple steps and typically takes less than 20 minutes (detailed instructions are available on the [wiki page](https://github.com/RTKlab-BYU/Proteomic-Data-Manager/wiki/How-to-install)):
- 1. Install Docker by following the [official guide](https://docs.docker.com/compose/install/).
- 2. Download the repository to your local folder. Configure the docker-compose.yml and .django_secrets.env files to specify the file storage location and make other optional settings.
- 3. Start the app with "docker compose up".
-
 
 ## Documentation
 For technical documentation on the platform, including hardware requirements and configuration parameters, see the [wiki page](https://github.com/RTKlab-BYU/Proteomic-Data-Manager/wiki).
 
 
-
 ## Requests for Collaboration
 To propose new collaborations or participate in development, submit a request or contact us directly ryan.kelly@byu.edu.
 
+
 ## How to cite
 If you use MSConnect for your work, we request that you cite MSConnect in relevant papers. A manuscript is currently being prepared and will be available soon.
-## Screenshoots
+
+
+## Screenshots
 ![dashboard](https://user-images.githubusercontent.com/77813931/217036159-7bcc1e1c-e11c-4495-8cf7-ee797b3c83f7.PNG)![UI](https://user-images.githubusercontent.com/77813931/217036175-6988f010-5114-4f1d-aa2f-5f0e1bf532a1.PNG)
+
+
+## Table of Contents
+**[Installation](#installation)**<br>
+**[Accessing the App](#getting-started)**<br>
+**[Page Organization](#raw-data-formats)**<br>
+**[Dashboard Page](#spectral-library-formats)**<br>
+**[Visualization Page](#output)**<br>
+**[Processing Page](#library-free-search)**<br>
+**[Record Page](#creation-of-spectral-libraries)**<br>
+**[Settings Page](#match-between-runs)**<br>
+**[Advanced Page](#changing-default-settings)**<br>
+**[App Center](#command-line-tool)**<br>
+**[Django Admin Page](#visualisation)**<br>
+**[Frequently Asked Questions (FAQ)](#automated-pipelines)**<br>
+**[Support](#ptms-and-peptidoforms)**<br>
+
+
+## <a id="installation">Installation</a>
+Deploying the platform involves three simple steps and typically takes less than 20 minutes (detailed instructions are available on the [wiki page](https://github.com/RTKlab-BYU/MSConnect/wiki/Installation)):
+ 1. Install Docker by following the [official guide](https://docs.docker.com/compose/install/).
+ 2. Download the repository to your local folder. Configure the docker-compose.yml and .django_secrets.env files to specify the file storage location and make other optional settings.
+ 3. Start the app with "docker compose up".
+
 
 
