@@ -9,6 +9,9 @@ MSConnect is a Web-based, flexible, open-source platform for automated high-thro
 
 ![Overview](https://github.com/user-attachments/assets/de0d6160-e8a7-4289-bd99-753ad46c69dd)
 
+## $${\color{green} Support \space and \space Setup }$$
+If you require any help with installation, configuration, or general usage, our dedicated support team is here to assist you. Please contact us at msconnectservice@gmail.com.
+
 ## $${\color{green} What \space It \space Does }$$
 MSConnect is a comprehensive platform that automates the following tasks:  
 - Data Management: Streamlines the uploading and organization of raw MS files.
