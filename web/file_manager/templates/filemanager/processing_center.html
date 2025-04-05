@@ -220,22 +220,22 @@
           <thead>
            <tr>
             <th>
-             worker proceesing app
+               Proceesing App
             </th>
             <th>
-             worker seq number
+               Seq Number
             </th>
             <th>
-             worker_ip
+               IP
             </th>
             <th>
-             worker_name
+               Name
             </th>
             <th>
-             worker_last_ping
+               Last Ping
             </th>
             <th>
-             worker last job
+               Last Job
             </th>
            </tr>
           </thead>
@@ -285,13 +285,13 @@
         <div class="form-row">
          <div class="col">
           <p>
-           Queue Pk(record number) range (e.g., 4000-4200)
+           Queue Pk(Record Number) Range (e.g., 4000-4200)
            <input class="form-control" name="pk_range" type="text" value="{{formdata.pk_range}}"/>
           </p>
          </div>
          <div class="col">
           <p>
-           Contain record (e.g., 3821,4051, or logic)
+           Contain Record (e.g., 3821,4051, or Logic)
            <input class="form-control" name="contained_record" type="text" value="{{formdata.contained_record}}"/>
           </p>
          </div>
@@ -330,13 +330,13 @@
         <div class="form-row">
          <div class="col">
           <p>
-           QC1 range (e.g., 3800-4100)
+           QC1 Range (e.g., 3800-4100)
            <input class="form-control" name="qc_range" type="text" value="{{formdata.qc_range}}"/>
           </p>
          </div>
          <div class="col">
           <p>
-           Process apps
+           Process Apps
           </p>
           <select name="process_app" width="100%">
            <option value="">
@@ -361,13 +361,13 @@
         <div class="form-row">
          <div class="col">
           <p>
-           Finish time from
+           Finish Time From
            <input class="form-control" id="startdate" name="start_time" type="date" value="{{formdata.start_time}}"/>
           </p>
          </div>
          <div class="col">
           <p>
-           Finish time up to
+           Finish Time Up To
            <input class="form-control" id="enddate" name="end_time" type="date" value="{{formdata.end_time}}"/>
           </p>
          </div>
@@ -407,67 +407,67 @@
              Queue Pk
             </th>
             <th>
-             Record files pk
+             Record Files pk
             </th>
             <th>
-             Analysis names
+             Analysis Names
             </th>
             <th>
-             processing_app
+             Processing App
             </th>
             <th>
-             Run finished?
+             Is Run Finished?
             </th>
             <th>
-             worker_hostname
+             Worker Hostname
             </th>
             <th>
-             output_QC_number_1
+             Output QC Number 1
             </th>
             <th>
-             output_QC_number_2
+             Output QC Number 2
             </th>
             <th>
-             process_creator
+             Process Creator
             </th>
             <th>
-             Process started
+             Process Started
             </th>
             <th>
-             Process finshed
+             Process Finshed
             </th>
             <th>
-             input_file_1
+             Input File 1
             </th>
             <th>
-             input_file_2
+             Input File 2
             </th>
             <th>
-             output_file_1
+             Output File 1
             </th>
             <th>
-             output_file_2
+             Output File 2
             </th>
             <th>
-             output_QC_number_3
+             Output QC Number 3
             </th>
             <th>
-             output_QC_number_4
+             Output QC number 4
             </th>
             <th>
-             input_file_3
+             Input File 3
             </th>
             <th>
-             output_file_3
+             Output File 3
             </th>
             <th>
-             output_file_4
+             Output file 4
             </th>
             <th>
-             output_file_5
+             Output file 5
             </th>
             <th>
-             output_file_6
+             Output File 6
             </th>
            </tr>
           </thead>
@@ -512,28 +512,28 @@
             <td>
              {% if item.input_file_1 %}
              <a href="/files/{{item.input_file_1|default_if_none:1}}">
-              input_file_1
+              Input File 1
              </a>
              {% endif %}
             </td>
             <td>
              {% if item.input_file_2 %}
              <a href="/files/{{item.input_file_2|default_if_none:1}}">
-              input_file_2
+              Input File 2
              </a>
              {% endif %}
             </td>
             <td>
              {% if item.output_file_1 %}
              <a href="/files/{{item.output_file_1|default_if_none:1}}">
-              output_file_1
+              Output File 1
              </a>
              {% endif %}
             </td>
             <td>
              {% if item.output_file_2 %}
              <a href="/files/{{item.output_file_2|default_if_none:1}}">
-              output_file_2
+              Output File 2
              </a>
              {% endif %}
             </td>
@@ -546,35 +546,35 @@
             <td>
              {% if item.input_file_3 %}
              <a href="/files/{{item.input_file_3|default_if_none:1}}">
-              input_file_3
+              Input File 3
              </a>
              {% endif %}
             </td>
             <td>
              {% if item.output_file_3 %}
              <a href="/files/{{item.output_file_3|default_if_none:1}}">
-              output_file_3
+              Output File 3
              </a>
              {% endif %}
             </td>
             <td>
              {% if item.output_file_4 %}
              <a href="/files/{{item.output_file_4|default_if_none:1}}">
-              output_file_4
+              Output File 4
              </a>
              {% endif %}
             </td>
             <td>
              {% if item.output_file_5 %}
              <a href="/files/{{item.output_file_5|default_if_none:1}}">
-              output_file_5
+              Output File 5
              </a>
              {% endif %}
             </td>
             <td>
              {% if item.output_file_6 %}
              <a href="/files/{{item.output_file_6|default_if_none:1}}">
-              output_file_6
+              Output File 6
              </a>
              {% endif %}
             </td>

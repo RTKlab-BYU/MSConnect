@@ -3,7 +3,7 @@ services:
   data_manager-nginx:
 
     image: xiexf128/data_manager-nginx:latest
-    #comment the build section if you want to download from docker hub
+    # Comment the build section if you want to download from docker hub
     # build:
     #   context: nginx/
     #   tags:
@@ -20,7 +20,8 @@ services:
   data_manager-django:
     &django_project
     image: xiexf128/data_manager-django:latest
-    #comment the build section if you want to download from docker hub
+    # Comment the build section if you want to download from docker hub
+      # Uncomment this out for development: This will create an image from your files rather than the preset docker image
     # build:
     #   context: ./web/
     #   tags:
