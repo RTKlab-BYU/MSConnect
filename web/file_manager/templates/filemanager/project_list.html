@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}My Projects{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <h2 class="mb-4">My Projects</h2>
+  {% if projects %}
+    <ul class="list-group">
+      {% for project in projects %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <a href="{% url 'project_detail' project.pk %}">{{ project.name }}</a>
+          <small class="text-muted">{{ project.created_at|date:"M j, Y" }}</small>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>You have no projects yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

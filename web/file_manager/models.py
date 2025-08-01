@@ -600,3 +600,26 @@ class VisualizationApp(models.Model):
     program_file_name = models.TextField(
         max_length=20, blank=True, null=True)
     # program_file_name must match module main py name
+
+class Project(models.Model):
+    """A user‐owned collection of SampleRecords."""
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="projects"
+    )
+    records = models.ManyToManyField(
+        SampleRecord,
+        blank=True,
+        related_name="projects"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.name} ({self.owner.username})"

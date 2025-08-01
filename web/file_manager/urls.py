@@ -38,6 +38,8 @@ urlpatterns = [
     path('manage/', views.manage_records, name='manage_records'),
     path("records/load/<int:pk>", views.load_record, name='Load_record'),
     path("records/sampleinfo/<int:pk>", views.sample_info, name='sample'),
+    path("projects/", views.ProjectListView.as_view(), name="project_list"),
+    path("projects/<int:pk>/", views.ProjectDetailView.as_view(), name="project_detail"),
     # path("api/DataAnalysisQueue/<int:pk>",
     #      views.ProcessingAppViewset, name='sample'),
     path("processing/", views.processing_center, name='Processing Center'),

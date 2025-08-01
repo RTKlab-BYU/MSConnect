@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <h2>{{ project.name }}</h2>
+  {% if project.description %}
+    <p class="text-muted">{{ project.description }}</p>
+  {% endif %}
+
+  <h4 class="mt-4">Sample Records</h4>
+  {% if project.records.all %}
+    <ul class="list-group">
+      {% for record in project.records.all %}
+        <li class="list-group-item">
+          <a href="{% url 'record_detail' record.pk %}">{{ record.record_name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No sample records assigned.</p>
+  {% endif %}
+</div>
+{% endblock %}

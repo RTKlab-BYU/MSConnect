@@ -1498,3 +1498,25 @@ def manage_records(request):
         'user': user,
     }
     return render(request, 'filemanager/manage_records.html', context)
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, DetailView
+from .models import Project
+
+class ProjectListView(LoginRequiredMixin, ListView):
+    model = Project
+    template_name = "filemanager/project_list.html"
+    context_object_name = "projects"
+
+    def get_queryset(self):
+        return Project.objects.filter(owner=self.request.user)
+
+
+class ProjectDetailView(LoginRequiredMixin, DetailView):
+    model = Project
+    template_name = "filemanager/project_detail.html"
+    context_object_name = "project"
+
+    def get_queryset(self):
+        # ensure user can only see their own
+        return Project.objects.filter(owner=self.request.user)

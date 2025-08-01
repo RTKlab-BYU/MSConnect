@@ -8,5 +8,5 @@ from .models import *
 admin.site.register([
     FileStorage, SampleRecord, UserSettings, SystemSettings,
     WorkerStatus, DataAnalysisQueue, ProcessingApp, VisualizationApp,
-    SavedVisualization
+    SavedVisualization, Project,
 ])
