@@ -35,6 +35,7 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('', views.dashboard, name='Dashboard'),
     path("records/", views.records, name='Records'),
+    path('manage/', views.manage_records, name='manage_records'),
     path("records/load/<int:pk>", views.load_record, name='Load_record'),
     path("records/sampleinfo/<int:pk>", views.sample_info, name='sample'),
     # path("api/DataAnalysisQueue/<int:pk>",

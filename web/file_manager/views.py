@@ -35,6 +35,7 @@ from django.core import management
 from django.core.files import File
 
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.shortcuts import render
 from django.utils.timezone import utc
 from django.views.decorators.csrf import csrf_exempt
@@ -1481,3 +1482,19 @@ def download_to_file_field(url, field):
     finally:
         urlcleanup()
 
+@login_required
+def manage_records(request):
+    user = request.user
+    records = SampleRecord.objects.filter(record_creator=user)
+
+    if request.method == 'POST':
+        selected_ids = request.POST.getlist('record_ids')
+        if selected_ids:
+            SampleRecord.objects.filter(id__in=selected_ids, record_creator=user).delete()
+            return redirect('manage_records')
+
+    context = {
+        'records': records,
+        'user': user,
+    }
+    return render(request, 'filemanager/manage_records.html', context)

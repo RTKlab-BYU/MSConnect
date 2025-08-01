@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manage Your Records{% endblock %}
+
+{% block content %}
+  <h2 class="text-center mb-4">Manage Your Records</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <button type="submit" class="btn btn-danger">
+        <i class="fa fa-trash"></i> Delete Selected
+      </button>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover bg-white">
+        <thead class="thead-light">
+          <tr>
+            <th><input type="checkbox" id="select-all"></th>
+            <th>Record Name</th>
+            <th>File</th>
+            <th>Acquisition Time</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for record in records %}
+            <tr>
+              <td>
+                <input type="checkbox" name="record_ids" value="{{ record.id }}">
+              </td>
+              <td>{{ record.record_name }}</td>
+              <td>
+                <a href="/files/{{ record.newest_raw.file_location }}">Download</a>
+              </td>
+              <td>{{ record.acquisition_time|date:"Y-m-d H:i" }}</td>
+              <td>{{ record.notes }}</td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="5" class="text-center">No records found.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </form>
+
+  <script>
+    document.getElementById('select-all').addEventListener('click', function() {
+      document.querySelectorAll('input[name="record_ids"]').forEach(cb => cb.checked = this.checked);
+    });
+  </script>
+{% endblock %}
