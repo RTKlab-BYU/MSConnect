@@ -10,12 +10,14 @@
 file_manager/__pycache__/
 data_manager/__pycache__/
 byu.sqlite3
+web/database.sqlite3
 *.log
 *.pot
 *.pyc
 *.env
 backup/
 .django_secrets.env
+
 
 #Jupiter_workflow
 Jupiter_workflow/
