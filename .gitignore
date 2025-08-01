@@ -15,6 +15,7 @@ byu.sqlite3
 *.pyc
 *.env
 backup/
+.django_secrets.env
 
 #Jupiter_workflow
 Jupiter_workflow/
