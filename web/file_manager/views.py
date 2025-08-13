@@ -1497,6 +1497,7 @@ def manage_records(request):
         'records': records,
         'user': user,
     }
+<<<<<<< HEAD
     return render(request, 'filemanager/manage_records.html', context)
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -1520,3 +1521,6 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
     def get_queryset(self):
         # ensure user can only see their own
         return Project.objects.filter(owner=self.request.user)
+=======
+    return render(request, 'filemanager/manage_records.html', context)
+>>>>>>> 80039f2 (Add base.html for templates, Add feature/page to delete records)
