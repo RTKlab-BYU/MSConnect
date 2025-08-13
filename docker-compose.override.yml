@@ -1,0 +1,34 @@
+version: "3.9"
+services:
+  data_manager-django:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.dev
+
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+
+    volumes:
+      - ./web/:/app/
+      - static_volume:/app/static/
+      - media_volume:/app/media/
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.django_secrets.env                  
+    environment:
+      DEBUG: "1"
+      is_docker: "True"
+      system_version: "1.6.0_db36a41"
+
+  # data_manager-nginx:
+  #   build: nginx/
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     - data_manager-django
+
+volumes:
+  static_volume:
+  media_volume:
