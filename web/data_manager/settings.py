@@ -86,6 +86,16 @@ INSTALLED_APPS = [
     'dbbackup',  # django-dbbackup
     "django_extensions",  # for Jupiter notebook
     "log_viewer",  # for view log
+    "apps.core",
+    "apps.accounts",
+    "apps.projects",
+    "apps.samples",
+    "apps.files",
+    "apps.processing",
+    "apps.settings_ui",
+    "apps.api",
+    "apps.audits",
+    "apps.visualization",
 ]
 
 
