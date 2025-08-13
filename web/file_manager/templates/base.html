@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Proteomics Data Center{% endblock %}</title>
+
+  <!-- bootstrap & font-awesome etc -->
+  <link href="{% static 'assets/bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
+  <link href="{% static 'assets/fonts/font-awesome.min.css'%}" rel="stylesheet">
+  <link href="{% static 'assets/fonts/ionicons.min.css'%}" rel="stylesheet">
+
+  <!-- main styles -->
+  <link href="{% static 'assets/css/styles.min.css'%}" rel="stylesheet">
+
+  <!-- SO-floating-nav -->
+  <link href="{% static 'assets/css/SO-floating-nav_15.min.css'%}" rel="stylesheet">
+
+  {% block extra_css %}{% endblock %}
+</head>
+<body id="page-top">
+  <div dont-float="true" id="nt-compact">
+    <ul>
+      <li><label style="color: #fff">{{ user.username }}</label></li>
+
+      <li>
+        <a href="{% url 'Dashboard' %}" title="Dashboard">
+          <i class="fa fa-th-large"></i>
+          <div class="nt-tooltip"><p>Dashboard</p></div>
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'Visualization Center' %}" title="Visualization">
+          <i class="fa fa-vimeo"></i>
+          <div class="nt-tooltip"><p>Visualization</p></div>
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'Processing Center' %}" title="Processing">
+          <i class="fa fa-product-hunt"></i>
+          <div class="nt-tooltip"><p>Processing</p></div>
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'Records' %}" title="View Records">
+          <i class="fa fa-list"></i>
+          <div class="nt-tooltip"><p>View Records</p></div>
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'Settings' %}" title="Settings">
+          <i class="fa fa-cogs"></i>
+          <div class="nt-tooltip"><p>Settings</p></div>
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'system_settings' %}" title="System Settings">
+          <i class="fa fa-wrench"></i>
+          <div class="nt-tooltip"><p>System Settings</p></div>
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'Help' %}" title="Help">
+          <i class="fa fa-question"></i>
+          <div class="nt-tooltip"><p>Help</p></div>
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'logout' %}" title="Logout">
+          <i class="fa fa-sign-out"></i>
+          <div class="nt-tooltip"><p>Logout</p></div>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- main page content -->
+  <div class="container-fluid" style="margin-left:80px; padding-top:20px;">
+    {% block content %}{% endblock %}
+  </div>
+
+  <!-- JS dependencies -->
+  <script src="{% static 'assets/js/jquery.min.js'        %}"></script>
+  <script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
+
+  <!-- SO-floating-nav behaviour -->
+  <script src="{% static 'assets/js/SO-floating-nav_15.min.js' %}"></script>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
