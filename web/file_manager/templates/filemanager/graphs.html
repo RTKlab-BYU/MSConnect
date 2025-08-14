@@ -1,0 +1,248 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
+  <title>Graphs</title>
+  <meta content="Graph generation and visualization tools" name="description"/>
+  <link rel="icon" href="{% static '/assets/img/main.png' %}" type="image/png"/>
+  <link href="{% static '/assets/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,700,900" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet"/>
+  <link href="{% static '/assets/fonts/font-awesome.min.css' %}" rel="stylesheet"/>
+  <link href="{% static '/assets/fonts/ionicons.min.css' %}" rel="stylesheet"/>
+  <link href="{% static '/assets/css/styles.min.css' %}" rel="stylesheet"/>
+  <link href="{% static '/assets/css/datatables.min.min.css' %}" rel="stylesheet"/>
+  <link href="{% static '/assets/css/movetotop.min.css' %}" rel="stylesheet"/>
+  <link href="{% static '/assets/css/SO-floating-nav_15.min.css' %}" rel="stylesheet"/>
+</head>
+<body id="page-top">
+<div id="wrapper">
+
+  <!-- Sidebar -->
+  <div dont-float="true" id="nt-compact">
+    <ul>
+      <li><label style="color: white;">{{ user.username }}</label></li>
+      <li><a href="/files/" title="Dashboard"><i class="fa fa-th-large"></i><div class="nt-tooltip"><p>Dashboard</p></div></a></li>
+      <li><a href="/files/worklist/" title="Worklist"><i class="fa fa-bar-chart"></i><div class="nt-tooltip"><p>Worklist</p></div></a></li>
+      <li><a href="/files/visualization/" title="Visualization"><i class="fa fa-vimeo"></i><div class="nt-tooltip"><p>Visualization</p></div></a></li>
+      <li><a href="/files/processing/" title="Processing"><i class="fa fa-product-hunt"></i><div class="nt-tooltip"><p>Processing</p></div></a></li>
+      <li><a href="/files/graphs/" title="Graphs"><i class="fa fa-pie-chart"></i><div class="nt-tooltip"><p>Graphs</p></div></a></li>
+      <li><a href="/files/records/" title="Records"><i class="fa fa-database"></i><div class="nt-tooltip"><p>Records</p></div></a></li>
+      <li><a href="/files/settings/" title="Settings"><i class="fa fa-cogs"></i><div class="nt-tooltip"><p>Settings</p></div></a></li>
+      <li><a href="{% url 'logout' %}" title="Logout"><i class="fa fa-sign-out"></i><div class="nt-tooltip"><p>Logout</p></div></a></li>
+      <li><a href="/files/help/"><i class="fa fa-question-circle"></i><div class="nt-tooltip"><p style="font-family:'Ubuntu Condensed', sans-serif;">Help</p></div></a></li>
+
+    </ul>
+  </div>
+
+  <!-- Content -->
+  <div class="d-flex flex-column" id="content-wrapper">
+    <div id="main">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col">
+
+            <form method="post" action="{% url 'run_graph_pipeline' %}" enctype="multipart/form-data">
+
+              <div style="visibility: hidden; display:inline;">{% csrf_token %}</div>
+
+              <div class="form-row">
+                <div class="col">
+                  <p class="text-dark text-center" style="font-size: 24px;"><strong>Graph Visualization</strong></p>
+                </div>
+              </div>
+
+              <div class="alert alert-info mt-4" role="alert">
+                <strong>Note:</strong> Except for <em>Bar</em>, <em>Box</em>, and <em>Violin</em> plots (which can use both files),
+                the system will use the <strong>Protein file</strong> if provided. If no protein file is uploaded,
+                the <strong>Peptide file</strong> will be used instead.
+              </div>
+
+              <div class="form-row">
+                <div class="col">
+                  <p>Protein TSV File (optional)</p>
+                  <input class="form-control-file" name="protein_file" type="file" accept=".tsv">
+                </div>
+                <div class="col">
+                  <p>Peptide TSV File (optional)</p>
+                  <input class="form-control-file" name="peptide_file" type="file" accept=".tsv">
+                </div>
+              </div>
+
+              <div class="form-row mt-3">
+                <div class="col">
+                  <p>Select Graph Type</p>
+                  <select name="graph_type" id="graph_type" class="form-control" required>
+                    <option value="">-- Select a graph --</option>
+                    <option value="venn">Venn Diagram</option>
+                    <option value="bar">Bar Plot</option>
+                    <option value="box">Box Plot</option>
+                    <option value="violin">Violin Plot</option>
+                    <option value="pca">PCA</option>
+                    <option value="tsne">t-SNE</option>
+                    <option value="heatmap">Heat Map</option>
+                    <option value="volcano">Volcano Plot</option>
+                  </select>
+                </div>
+                <div id="box-violin-options" class="form-row mt-3" style="display: none;">
+                  <div class="col">
+                    <p>Select box/violin plot content:</p>
+                    <select name="box_violin_mode" id="box_violin_mode" class="form-control">
+                    <option value="id">Identification Plot (ID)</option>
+                    <option value="cv">Coefficient of Variation (CV) Plot</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div id="transformation-options" class="form-row mt-3" style="display: none;">
+                <div class="col">
+                  <p><strong>Select preprocessing steps (Recommended steps are already checked):</strong></p>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" name="transform_filter_missing" id="filter_missing"><label class="form-check-label" for="filter_missing">Filter missing values</label></div>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" name="transform_filter_contaminants" id="filter_contaminants"><label class="form-check-label" for="filter_contaminants">Filter contaminants</label></div>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" name="transform_log2" id="log2_transform"><label class="form-check-label" for="log2_transform">Apply log2 transformation</label></div>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" name="transform_normalize" id="normalize"><label class="form-check-label" for="normalize">Normalize data</label></div>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" name="transform_impute" id="impute"><label class="form-check-label" for="impute">Impute missing values</label></div>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" name="transform_batch_correction" id="batch_correction"><label class="form-check-label" for="batch_correction">Apply batch correction</label></div>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" name="transform_iqr_outliers" id="iqr_outliers"><label class="form-check-label" for="iqr_outliers">Remove IQR outliers</label></div>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" name="transform_zscore_outliers" id="zscore_outliers"><label class="form-check-label" for="zscore_outliers">Remove Z-score outliers</label></div>
+                </div>
+              </div>
+              <div id="volcano-options" class="form-row mt-3" style="display: none;">
+                <div class="col">
+                  <label for="volcano_count"><strong>Number of volcano plots to generate:</strong></label>
+                  <input type="number" min="1" max="10" class="form-control" id="volcano_count" name="volcano_count" value="1">
+                  <div id="volcano-condition-selectors" class="mt-3"></div>
+                </div>
+              </div>
+              <div class="form-row mt-3">
+                <div class="col text-center">
+                  <button class="btn btn-primary" type="submit">Generate Graph</button>
+                </div>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer + Scripts -->
+<div class="row text-center">
+  <div class="col"></div>
+  <div class="col">
+    <footer class="bg-white sticky-footer">
+      <div class="container my-auto">
+        <div class="text-center my-auto copyright">
+          <span>Copyright © 2022 PDM <a href="/contact/">Contact us</a></span>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <div class="col">
+    <form>
+      <button class="btn btn-primary" id="myBtn" onclick="gototopFunction()" title="Go to top" type="button">Top</button>
+    </form>
+  </div>
+</div>
+
+<script src="{% static '/assets/js/jquery.min.js' %}"></script>
+<script src="{% static '/assets/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script src="{% static '/assets/js/script.min.js' %}"></script>
+<script src="{% static '/assets/js/results.min.js' %}"></script>
+<script src="{% static '/assets/js/SO-floating-nav_15.min.js' %}"></script>
+<script>
+  const defaultOptions = {
+    venn: [],
+    bar: [],
+    box: [],
+    violin: [],
+    pca: ['filter_missing', 'filter_contaminants', 'log2_transform', 'normalize', 'impute'],
+    tsne: ['filter_missing', 'filter_contaminants', 'log2_transform', 'normalize', 'impute'],
+    heatmap: ['filter_missing', 'filter_contaminants', 'log2_transform', 'normalize'],
+    volcano: ['filter_missing', 'filter_contaminants', 'log2_transform', 'normalize']
+  };
+
+  document.getElementById('graph_type').addEventListener('change', function () {
+    const selected = this.value;
+    const section = document.getElementById('transformation-options');
+    section.style.display = selected ? 'block' : 'none';
+    // Uncheck all first
+    section.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+    // Check defaults
+    if (selected in defaultOptions) {
+      defaultOptions[selected].forEach(id => {
+        const checkbox = document.getElementById(id);
+        if (checkbox) checkbox.checked = true;
+      });
+    }
+    // Show/hide volcano inputs
+    document.getElementById('volcano-options').style.display = (selected === 'volcano') ? 'block' : 'none';
+    // Show/hide box/violin plot option
+    const boxViolinSection = document.getElementById('box-violin-options');
+    boxViolinSection.style.display = (selected === 'box' || selected === 'violin') ? 'block' : 'none';
+  });
+
+
+  // When "Impute" changes, toggle "Batch Correction"
+  document.getElementById('impute').addEventListener('change', function () {
+    const batchBox = document.getElementById('batch_correction');
+    batchBox.disabled = !this.checked;
+    if (!this.checked) batchBox.checked = false;
+  });
+</script>
+<script>
+  const availableConditions = ['Condition A', 'Condition B', 'Condition C', 'Condition D'];  // Replace with dynamic list if needed
+
+  document.getElementById('volcano_count').addEventListener('input', function () {
+    const container = document.getElementById('volcano-condition-selectors');
+    container.innerHTML = '';
+
+    const count = parseInt(this.value);
+    for (let i = 0; i < count; i++) {
+      const wrapper = document.createElement('div');
+      wrapper.classList.add('mb-4', 'p-2', 'border', 'rounded', 'bg-light');
+
+      const label = document.createElement('label');
+      label.classList.add('font-weight-bold');
+      label.textContent = `Plot ${i + 1}:`;
+      wrapper.appendChild(label);
+
+      const row = document.createElement('div');
+      row.classList.add('form-row', 'mt-2', 'align-items-center');
+
+      const col1 = document.createElement('div');
+      col1.classList.add('col');
+      const sel1 = document.createElement('select');
+      sel1.name = `volcano_condition_1_${i}`;
+      sel1.classList.add('form-control');
+      availableConditions.forEach(cond => sel1.appendChild(new Option(cond, cond)));
+      col1.appendChild(sel1);
+
+      const colMiddle = document.createElement('div');
+      colMiddle.classList.add('col-auto', 'text-center');
+      colMiddle.innerHTML = '<span class="font-weight-bold">vs.</span>';
+
+      const col2 = document.createElement('div');
+      col2.classList.add('col');
+      const sel2 = document.createElement('select');
+      sel2.name = `volcano_condition_2_${i}`;
+      sel2.classList.add('form-control');
+      availableConditions.forEach(cond => sel2.appendChild(new Option(cond, cond)));
+      col2.appendChild(sel2);
+
+      row.appendChild(col1);
+      row.appendChild(colMiddle);
+      row.appendChild(col2);
+      wrapper.appendChild(row);
+      container.appendChild(wrapper);
+    }
+  });
+</script>
+</body>
+</html>
