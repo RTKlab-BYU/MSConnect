@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+  <title>Worklist</title>
+  <meta content="Download and upload edited worklist files" name="description" />
+  <link href="{% static '/assets/img/main.png' %}" rel="icon" type="image/png" />
+  <link href="{% static '/assets/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet"/>
+  <link href="{% static '/assets/fonts/font-awesome.min.css' %}" rel="stylesheet" />
+  <link href="{% static '/assets/fonts/ionicons.min.css' %}" rel="stylesheet" />
+  <link href="{% static '/assets/css/styles.min.css' %}" rel="stylesheet" />
+  <link href="{% static '/assets/css/datatables.min.min.css' %}" rel="stylesheet"/>
+  <link href="{% static '/assets/css/movetotop.min.css' %}" rel="stylesheet"/>
+  <link href="{% static '/assets/css/SO-floating-nav_15.min.css' %}" rel="stylesheet"/>
+</head>
+<body id="page-top">
+<div id="wrapper">
+
+  <!-- Sidebar -->
+  <div dont-float="true" id="nt-compact">
+    <ul>
+      <li><label style="color: white;">{{ user.username }}</label></li>
+      <li><a href="/files/" title="Dashboard"><i class="fa fa-th-large"></i><div class="nt-tooltip"><p style="font-family:'Ubuntu Condensed', sans-serif;">Dashboard</p></div></a></li>
+      <li><a href="/files/worklist/" title="Worklist"><i class="fa fa-bar-chart"></i><div class="nt-tooltip"><p style="font-family:'Ubuntu Condensed', sans-serif;">Worklist</p></div></a></li>
+      <li><a href="/files/visualization/"><i class="fa fa-vimeo"></i><div class="nt-tooltip"><p style="font-family:'Ubuntu Condensed', sans-serif;">Visualization</p></div></a></li>
+      <li><a href="/files/processing/"><i class="fa fa-product-hunt"></i><div class="nt-tooltip"><p style="font-family:'Ubuntu Condensed', sans-serif;">Processing</p></div></a></li>
+      <li><a href="/files/graphs/"><i class="fa fa-pie-chart"></i><div class="nt-tooltip"><p style="font-family:'Ubuntu Condensed', sans-serif;">Graphs</p></div></a></li>
+      <li><a href="/files/records/"><i class="fa fa-archive"></i><div class="nt-tooltip"><p style="font-family:'Ubuntu Condensed', sans-serif;">Records</p></div></a></li>
+      <li><a href="/files/settings/"><i class="fa fa-cogs"></i><div class="nt-tooltip"><p style="font-family:'Ubuntu Condensed', sans-serif;">Settings</p></div></a></li>
+      <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i><div class="nt-tooltip"><p style="font-family:'Ubuntu Condensed', sans-serif;">Logout</p></div></a></li>
+      <li><a href="/files/help/"><i class="fa fa-question-circle"></i><div class="nt-tooltip"><p style="font-family:'Ubuntu Condensed', sans-serif;">Help</p></div></a></li>
+    </ul>
+  </div>
+
+  <!-- Content -->
+  <div class="d-flex flex-column" id="content-wrapper">
+    <div class="container mt-5">
+      <h2 class="mb-4">Worklist Generator</h2>
+      <!-- Template Download Button -->
+      <div class="mb-4">
+        <a href="{% url 'download_template' %}" class="btn btn-success">
+          <i class="fa fa-download" aria-hidden="true"></i> Download Worklist Template
+        </a>
+      </div>
+      <!-- Upload Form -->
+      <form method="post" enctype="multipart/form-data" class="border p-4 rounded bg-light">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="excel_file" class="form-label">Upload Edited Excel File</label>
+          <input type="file" name="excel_file" id="excel_file" class="form-control" required accept=".xlsx,.xls" />
+        </div>
+        <button type="submit" class="btn btn-primary">
+          <i class="fa fa-upload" aria-hidden="true"></i> Upload and Run
+        </button>
+      </form>
+      <!-- Upload success or error message -->
+      {% if upload_success %}
+        <div class="alert alert-success mt-3">{{ upload_success }}</div>
+      {% elif upload_error %}
+        <div class="alert alert-danger mt-3">{{ upload_error }}</div>
+      {% endif %}
+      <!-- Conditional: Show CSV download buttons only if ready -->
+      {% if csv1_ready %}
+        <div class="mt-4">
+          <a href="{% url 'download_csv' 'csv1' %}" class="btn btn-success">
+            <i class="fa fa-download" aria-hidden="true"></i> Download MS File
+          </a>
+          <a href="{% url 'download_csv' 'csv2' %}" class="btn btn-success ms-2">
+            <i class="fa fa-download" aria-hidden="true"></i> Download LC File
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+<!-- Footer -->
+<body id="page-top">
+  <div id="wrapper">
+    <!-- sidebar, nav, etc. -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- page content here -->
+    </div>
+
+    <footer class="footer bg-white">
+      <div class="container text-center py-3">
+        <span>
+          Copyright © 2022 PDM
+          <a href="/contact/">Contact us</a>
+        </span>
+      </div>
+    </footer>
+  </div>
+</body>
+
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  #content-wrapper {
+    flex: 1; /* take all the available space */
+  }
+
+  /* Footer styles */
+  .footer {
+    background-color: white;
+    /* height: 60px; optional fixed height */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    /* no position sticky or fixed here */
+  }
+</style>
+
+<!-- Scripts -->
+<script src="{% static '/assets/js/jquery.min.js' %}"></script>
+<script src="{% static '/assets/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static '/assets/js/script.min.js' %}"></script>
+<script src="{% static '/assets/js/SO-floating-nav_15.min.js' %}"></script>
+</body>
+</html>

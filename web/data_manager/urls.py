@@ -27,11 +27,11 @@ urlpatterns = [
             views.contact,
             name="contact"),
     path('admin/', admin.site.urls),
-    path('files/', include('file_manager.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', views.signup, name="sign-up"),
     path('contact/', views.contact, name="contact"),
     path('', lambda req: redirect('/files/'), name='home'),
-
+    path('', include('file_manager.urls')),  # Root loads dashboard
+    path('worklist/', include('worklist.urls')),  # /worklist/* routes
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

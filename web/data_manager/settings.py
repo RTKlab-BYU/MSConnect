@@ -86,6 +86,7 @@ INSTALLED_APPS = [
     'dbbackup',  # django-dbbackup
     "django_extensions",  # for Jupiter notebook
     "log_viewer",  # for view log
+    'worklist.apps.WorklistConfig',
 ]
 
 
@@ -191,7 +192,10 @@ ROOT_URLCONF = 'data_manager.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, '..', 'worklist', 'templates'),
+            os.path.join(BASE_DIR, '..', 'file_manager', 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -273,7 +277,7 @@ REST_FRAMEWORK = {
 MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 
 MEDIA_ROOT = MEDIA_DIR
-MEDIA_URL = '/'
+MEDIA_URL = '/media/'
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
