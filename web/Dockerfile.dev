@@ -1,13 +1,29 @@
 FROM python:3.9-slim
-
+ 
 ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1
+ 
+# Install build dependencies for SCS and other packages
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    python3-dev \
+    libopenblas-dev \
+    liblapack-dev \
+    gfortran \
+    pkg-config \
+&& rm -rf /var/lib/apt/lists/*
+ 
 WORKDIR /app
-
+ 
 COPY requirements.txt .
-RUN pip install -r requirements.txt
-
+ 
+# Install packages with specific handling for problematic ones
+RUN pip install --upgrade pip setuptools wheel && \
+    pip install --prefer-binary --timeout=1000 -r requirements.txt || \
+    (echo "Some packages failed, installing without SCS..." && \
+     sed 's/^scs==3.2.2/#scs==3.2.2/' requirements.txt > requirements-fixed.txt && \
+     pip install -r requirements-fixed.txt)
+ 
 COPY . .
-
-CMD ["sh", "-c", "python manage.py migrate && \
-                  python manage.py runserver 0.0.0.0:8000"]
+ 
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

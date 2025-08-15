@@ -86,9 +86,7 @@ INSTALLED_APPS = [
     'dbbackup',  # django-dbbackup
     "django_extensions",  # for Jupiter notebook
     "log_viewer",  # for view log
-<<<<<<< HEAD
-    'worklist.apps.WorklistConfig',
-=======
+    "apps.worklist.apps.WorklistConfig",
     "apps.core",
     "apps.accounts",
     "apps.projects",
@@ -99,7 +97,6 @@ INSTALLED_APPS = [
     "apps.api",
     "apps.audits",
     "apps.visualization",
->>>>>>> dev
 ]
 
 
